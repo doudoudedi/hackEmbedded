@@ -1,2 +1,2 @@
-# Embedded_device_backdoor-shellcode_tool
+# hackEmbedded
 This tool is used for backdoor and shellcode generation for various architecture devices
