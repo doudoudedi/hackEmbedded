@@ -66,3 +66,7 @@ Allwinner(全志)V3s
 
 Armv8:
 Qualcomm Snapdragon 660
+
+#### One-click build environment
+
+To be added
