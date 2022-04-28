@@ -18,7 +18,7 @@ This tool is embedded in the security test of the device. There are two main fun
 pip install pwn
 ```
 
-​	This tool is developed in python language, so converting python to EL can be done through **nuitka**
+​	This tool is developed in python language, so converting python to ELF can be done through **nuitka**
 
 ```shell
 nuitka hackEmbedded_tool.py
