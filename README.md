@@ -29,7 +29,7 @@ Successfully installed hackebds-0.0.3
 ```
 You can view the function through the dir function
 
-![iShot2022-04-29 13.14.39.png](./img/iShot2022-04-29 13.14.39.png)
+![iShot2022-04-29_13.14.39.png](./img/iShot2022-04-29_13.14.39.png)
 
 ```
  'Corefile', 'armebv5_backdoor', 'armebv5_reverse_sl', 'armebv7_backdoor', 'armebv7_reverse_sl', 'armelv5_backdoor', 'armelv5_reverse_sl', 'armelv7_backdoor', 'armelv7_reverse_sl', 'asm', 'atexception', '
