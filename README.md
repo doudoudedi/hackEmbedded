@@ -2,7 +2,7 @@
 
 ## foreword
 
->In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language
+>In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module
 
 ## fuction
 
@@ -13,9 +13,9 @@ This tool is embedded in the security test of the device. There are two main fun
 2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips are now supported, and they are still being updated**
 
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
-**pip install hackebds==0.0.6**
+**pip install hackebds==0.0.7**
 ```
-pip install hackebds==0.0.6
+pip install hackebds==0.0.7
 ....
 ```
 #### Instructions for use
