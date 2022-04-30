@@ -13,9 +13,9 @@ This tool is embedded in the security test of the device. There are two main fun
 2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips are now supported, and they are still being updated**
 
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
-**pip install hackebds==0.0.7**
+**pip install hackebds==0.0.6**
 ```
-pip install hackebds==0.0.7
+pip install hackebds==0.0.6
 ....
 ```
 #### Instructions for use
