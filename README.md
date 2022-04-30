@@ -123,7 +123,7 @@ Qualcomm Snapdragon 660
 
 ## updating
  2022.4.19 Added support for aarch64 null-byte reverse_shellcode
- 2022.4.30 Reduced amount of code using functions
+ 2022.4.30 Reduced amount of code using functions and support python3
 
 ## One-click build environment
 
