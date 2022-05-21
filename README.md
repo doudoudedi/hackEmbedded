@@ -15,12 +15,12 @@ This tool is embedded in the security test of the device. There are two main fun
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
 **Since it has been updated to python3, please use it under python3**
 
-**pip install hackebds==0.0.8**
+**pip install hackebds==0.0.9**
 
 ```
 apt search binutils | grep arm (The arm here can replace the corresponding architecture required)
 apt install binutils-arm-linux-gnueabi/hirsute
-pip install hackebds==0.0.8
+pip install hackebds==0.0.9
 ....
 ```
 #### Instructions for use
@@ -135,7 +135,9 @@ Qualcomm Snapdragon 660
  
  2022.4.30 Reduced amount of code using functions and support python3
  
- 2022.5.5 Solved the bug that mips_reverse_sl and mipsel_reverse_sl were not enabled, added mips64_backdoor, mips64_reverse_sl generation and mips64el_backdoor, mips64el_reverse_sl generation
+ 2022.5.5 0.0.8 version Solved the bug that mips_reverse_sl and mipsel_reverse_sl were not enabled, added mips64_backdoor, mips64_reverse_sl generation and mips64el_backdoor, mips64el_reverse_sl generation
+ 
+ 2022.5.21 0.0.9 version changed the generation method of armel V5 backdoor and added the specified generation of riscv-v64 backdoor
 
 ## One-click build environment
 
