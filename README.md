@@ -20,7 +20,7 @@ This tool is embedded in the security test of the device. There are two main fun
 ```
 apt search binutils | grep arm (The arm here can replace the corresponding architecture required)
 apt install binutils-arm-linux-gnueabi/hirsute
-pip install hackebds==0.0.9
+pip install hackebds==0.1.3
 ....
 ```
 #### Instructions for use
