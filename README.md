@@ -15,7 +15,7 @@ This tool is embedded in the security test of the device. There are two main fun
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
 **Since it has been updated to python3, please use it under python3**
 
-**pip install hackebds==0.0.9**
+**pip install hackebds==0.1.3**
 
 ```
 apt search binutils | grep arm (The arm here can replace the corresponding architecture required)
