@@ -13,7 +13,7 @@ This tool is embedded in the security test of the device. There are two main fun
 2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips are now supported, and they are still being updated**
 
 3.  Fixed some bugs that the reverse_shellcode and reverse_backdoor **ports were selected too big**, and **added the function of generating bindshell with specified ports and passwords under x86 and x64**，**and beautified the generation process****（This feature will be updated to various architectures）**
-Add support armv7el_bind_shell(2022.10.27)
+Add support armvelv7_bind_shell(2022.10.27)
 
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
 
