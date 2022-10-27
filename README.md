@@ -13,6 +13,7 @@ This tool is embedded in the security test of the device. There are two main fun
 2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips are now supported, and they are still being updated**
 
 3.  Fixed some bugs that the reverse_shellcode and reverse_backdoor **ports were selected too big**, and **added the function of generating bindshell with specified ports and passwords under x86 and x64**，**and beautified the generation process****（This feature will be updated to various architectures）**
+Add support armv7el_bind_shell(2022.10.27)
 
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
 
@@ -49,6 +50,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
 >>> mips64el_backdoor(reverse_ip,reverse_port)
 >>> x86_bind_shell(listen_port, passwd)
 >>> x64_bind_shell(listen_port, passwd)
+>>> armelv7_bind_shell(listen_port, passwd)
 ```
 
 （Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
@@ -126,6 +128,8 @@ Qualcomm Snapdragon 660
  2022.6.27 0.1.0 Added Android backdoor generation
 
  2022.10.26 0.1.5 Fixed some problems and added some automatic generation functions of bindshell specified port passwords
+ 
+ 2022.10.27 0.1.6 Add support armv7el_bind_shell(2022.10.27)
  
 
 ## One-click build environment
