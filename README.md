@@ -17,14 +17,10 @@ Add support armvelv7_bind_shell(2022.10.27)
 
 ## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
 
-**pip install hackebds==0.1.5**
-
-**pip3 install -U hackebds**
-
 ```
-pip install hackebds==0.1.5
+pip install hackebds
+pip3 install -U hackebds
 ```
-
 #### Instructions for use
 
 When importing this module will import the pwn module
