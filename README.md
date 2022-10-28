@@ -71,6 +71,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
 ```
 
 ![image-20221026182024685](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20221026182024685.png)
+![image-20221028143802937](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028143802937.png)
 
 2. Generates the use-back shellcode (no free) null bytes corresponding to various architectures
 
