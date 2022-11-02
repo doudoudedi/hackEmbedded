@@ -165,6 +165,7 @@ Qualcomm Snapdragon 660
  2022.11.1 Removed the generation sleep time of shellcode, and added mips_ bind_ Shell, reverse of x86 and x64 small end_ shell_ Backdoor, the mips that are expected to be interrupted by mips_ bind_ Shell, which solves the error of password logic processing in the bindshell in mips
 
  2022.11.2 Joined aarch64_ bind_ shell
+ 2022.11.2 Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
 
 
 ## One-click build environment
