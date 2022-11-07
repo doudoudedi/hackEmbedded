@@ -31,6 +31,7 @@ loaclfile down
 ```
 git clone https://github.com/doudoudedi/hackEmbedded
 cd hackEmbedded
+python3 setup.py sdist bdist_wheel
 python3 setup.py install
 ```
 pip download
@@ -39,7 +40,7 @@ pip install hackebds
 pip install -U hackebds
 ```
 
-![image-20221107230404739](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107230404739.png)
+![image-20221107231221043](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107231221043.png)
 
 #### Instructions for use
 
