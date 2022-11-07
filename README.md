@@ -27,16 +27,8 @@ This tool is embedded in the security test of the device. There are two main fun
 
 ## install
 
-loaclfile down
-```
-git clone https://github.com/doudoudedi/hackEmbedded
-cd hackEmbedded
-python3 setup.py sdist bdist_wheel
-python3 setup.py install
-```
 pip download
 ```
-pip install hackebds
 pip install -U hackebds
 ```
 
