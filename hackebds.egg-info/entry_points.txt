@@ -1,0 +1,3 @@
+[console_scripts]
+hackebds = hackebds:main
+
