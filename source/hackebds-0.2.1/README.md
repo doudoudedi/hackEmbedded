@@ -15,11 +15,21 @@ This tool is embedded in the security test of the device. There are two main fun
 3.  Fixed some bugs that the reverse_shellcode and reverse_backdoor **ports were selected too big**, and **added the function of generating bindshell with specified ports and passwords under x86 and x64**，**and beautified the generation process****（This feature will be updated to various architectures）**
     Add support armvelv7_bind_shell(2022.10.27)，
 
-4.  删除了Shell代码的生成睡眠时间，并添加了mips_bind_Shell，与x86和x64小端Shell_Backdoor相反，这些mips预计会被mips_bid_Shelll中断，这解决了mips中bindshell中密码逻辑处理的错误，加入了aarch64_bind_Shell
+4.  Fixed some errors
 
 5.  Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
 
+6.  The function of self-learning is added to simplify the generation of goals
+
 ## install
+
+local download
+
+```
+git clone https://github.com/doudoudedi/hackEmbedded
+python3 setup.py install
+```
+
 
 ```
 pip install hackebds
