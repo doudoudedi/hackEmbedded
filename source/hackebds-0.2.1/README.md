@@ -22,15 +22,6 @@ This tool is embedded in the security test of the device. There are two main fun
 6.  The function of self-learning is added to simplify the generation of goals
 
 ## install
-
-local download
-
-```
-git clone https://github.com/doudoudedi/hackEmbedded
-python3 setup.py install
-```
-
-
 ```
 pip install hackebds
 pip install -U hackebds
