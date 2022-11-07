@@ -19,14 +19,27 @@ This tool is embedded in the security test of the device. There are two main fun
 
 5.  Support command line generation backdoor and shell code, Strong anti hunting ability,characterized by light, small, efficient and fast
 
+6.  The learning function of the device model is added. After establishing the relationship between the model and arch, the target content is generated again. You only need to specify the model
+
+7.  CVE retrieval function is added and CVE retrieval is backed up
+
+8.  Improved x86, x64, armebv5, reverse_ shellcode and reverse_ shell_ file
+
 ## install
 
+loaclfile down
+```
+git clone https://github.com/doudoudedi/hackEmbedded
+cd hackEmbedded
+python3 setup.py install
+```
+pip download
 ```
 pip install hackebds
 pip install -U hackebds
 ```
 
-![image-20221102181217933](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png)
+![image-20221107230404739](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107230404739.png)
 
 #### Instructions for use
 
@@ -55,7 +68,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
    ![image-20221102183017775](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png)
    
    ```
-   hackebds -reverse_ip 0.0.0.0 -reverse_port 8081 -arch armelv7 -res bind_shell -passwd 1231
+   hackebds -bind_port 8080 -passwd 1234 -arch mips -model DIR-823 -res bind_shell
    ```
    ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
    
