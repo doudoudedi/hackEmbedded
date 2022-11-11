@@ -109,11 +109,17 @@ mipsel_backdoor is ok in current path ./
 > 	2022.4.29 在hackebds-0.0.5中加入了对aarch64无空字节reverse_shellcode的支持
 >
 > 	2022.5.1  更新在引入模块后可以直接调用，减少代码量,更改对python3的支持
+> 	
 > 	2022.5.5  0.0.8版本解决了mips_reverse_sl与mipsel_reverse_sl反弹不了shell的bug加入了mips64大小端的后门与reverse_shell功能
+> 	
 > 	2022.5.21 0.0.9版本更改了armelv5后门生成的方式，加入了riscv-v64的后门指定生成
+> 	
 > 	2022.6.27 0.1.0 加入了安卓手机后门的生成
+> 	
 > 	2022.10.26 0.1.5修复了一些问题，并添加了一些bindshell指定端口密码的自动生成功能
+> 	
 > 	2022.11.2 0.2.0 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速
+> 	
 > 	2022.11.2 0.20 删除了shellcode的生成睡眠时间，并添加了mips_bind_Shell，与x86和x64小端Shell_Backdoor相反，这些mips预计会被mips_biind_Shelll中断，这解决了mips中bindshell中密码逻辑处理的错误问题
 >
 > 	2022.11.8 0.2.2 完善了后门，shellcode，bin_shell的生成修复了一些小错误，增加了学习模块指定型号即可生成对应内容。
