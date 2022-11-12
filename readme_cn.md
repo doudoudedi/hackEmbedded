@@ -124,4 +124,5 @@ mipsel_backdoor is ok in current path ./
 >
 > 	2022.11.8 0.2.2 完善了后门，shellcode，bin_shell的生成修复了一些小错误，增加了学习模块指定型号即可生成对应内容。
 >
-> 	
+
+## ​:beer:​ 享受hacking
