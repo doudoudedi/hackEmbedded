@@ -1,5 +1,5 @@
 # introduction
-[中文readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
+​:link:​[中文readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
 ## foreword
 
 >In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
@@ -179,6 +179,5 @@ Qualcomm Snapdragon 660
  2022.11.2 Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
 
 
-## One-click build environment
+## :beer:enjoy hacking
 
-To be added
