@@ -157,6 +157,9 @@ Allwinner(全志)V3s
 Armv8:
 Qualcomm Snapdragon 660
 
+## :beer:enjoy hacking
+
+
 ## updating
 
  2022.4.19 Added support for aarch64 null-byte reverse_shellcode
@@ -179,5 +182,5 @@ Qualcomm Snapdragon 660
  2022.11.2 Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
 
 
-## :beer:enjoy hacking
+
 
