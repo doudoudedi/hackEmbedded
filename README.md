@@ -150,12 +150,14 @@ Tests can leverage chips and architectures
 Mips:
 MIPS 74kc V4.12 big endian
 MIPS 24kc V5.0  little endian
+Ingenic Xburst V0.0  FPU V0.0  little endian
 
 Armv7:
 Allwinner(全志)V3s
 
 Armv8:
 Qualcomm Snapdragon 660
+
 
 ## :beer:enjoy hacking
 
