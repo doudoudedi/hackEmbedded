@@ -1,0 +1,1 @@
+# mipsel_tool(static)
