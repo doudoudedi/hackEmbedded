@@ -36,6 +36,12 @@ pip install -U hackebds
 出现python如下图问题请安装对应的binutils环境
 ![image-20221107231221043](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107231221043.png)
 #### 第一步
+
+如果出现如下的错误
+
+![image-20221118202002242](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221118202002242.png)
+
+请使用如下命令解决
 ```
 apt search binutils | grep arm(这里的arm可以更换需要的对应架构)
 apt install binutils-arm-linux-gnueabi/hirsute
