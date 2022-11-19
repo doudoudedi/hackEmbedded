@@ -213,6 +213,11 @@ Qualcomm Snapdragon 660
  2022.11.2 Joined aarch64_ bind_ shell
  2022.11.2 Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
 
+## vul fix
+CVE-2021-29921 The tool is a complete client program. This vulnerability will not affect the use of the tool. If you want to fix it, please run the tool in python 3.9 and above
 
+CVE-2022-40023 pip install -U  mako
+
+CVE-2021-20270 pip install -U  pygments
 
 
