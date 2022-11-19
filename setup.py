@@ -1,7 +1,13 @@
+'''
+fix CVE-2022-40023,CVE-2021-20270,Path Crossing
+'''
+
 from setuptools import setup
 
 with open("./README.rst",'r') as f:
 	data= f.read()
+
+	
 
 
 setup(name='hackebds',
