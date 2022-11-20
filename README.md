@@ -1,4 +1,6 @@
-# introduction
+# hackebds
+![PyPI - Downloads](https://img.shields.io/pypi/dm/hackebds)
+
 ​:link:​[中文readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
 ## foreword
 
