@@ -1,5 +1,5 @@
 # hackebds
-![PyPI - Downloads](https://img.shields.io/pypi/dm/hackebds)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/hackebds)![PyPI - Wheel](https://img.shields.io/pypi/wheel/hackebds)![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pwntools)
 
 ​:link:​[中文readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
 ## foreword
