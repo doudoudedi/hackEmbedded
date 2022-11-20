@@ -216,8 +216,8 @@ Qualcomm Snapdragon 660
 ## vul fix
 CVE-2021-29921 The tool is a complete client program. This vulnerability will not affect the use of the tool. If you want to fix it, please run the tool in python 3.9 and above
 
-CVE-2022-40023 pip install -U  mako
+CVE-2022-40023 DOS_attack pip install -U  mako
 
-CVE-2021-20270 pip install -U  pygments
+CVE-2021-20270 DOS_attack pip install -U  pygments
 
 
