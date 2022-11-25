@@ -69,7 +69,7 @@ Ubuntu:
  	 brew install https://raw.githubusercontent.com/Gallopsled/pwntools-binutils/master/osx/binutils-$ARCH.rb
 ```
 
-1. Use the command line to generate the backdoor file name, shellcode, binshell, etc
+1. Use the command line to generate the backdoor file name, shellcode, bindshell, etc
 
    ![image-20221102192550052](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102192550052.png)
 
