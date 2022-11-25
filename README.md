@@ -32,6 +32,7 @@ This tool is embedded in the security test of the device. There are two main fun
 
 10.  Improved support for MacOS systems
 
+
 ## install
 
 pip download
@@ -39,6 +40,12 @@ pip download
 ```
 pip install -U hackebds
 ```
+（If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
+```
+echo 'export PATH="/Users/mac/Library/Python/{your installed python}/bin:$PATH"'> ~/.bashrc
+```
+![image-20221125095653018](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221125095653018.png)
+
 
 ![image-20221121142622451](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221121142622451.png)
 
