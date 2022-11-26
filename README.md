@@ -42,7 +42,7 @@ pip install -U hackebds
 ```
 （If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
 ```
-echo 'export PATH="/Users/mac/Library/Python/{your installed python}/bin:$PATH"'> ~/.bashrc
+echo 'export PATH="/Users/{you id}/Library/Python/{your installed python}/bin:$PATH"'> ~/.bashrc
 ```
 ![image-20221125095653018](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221125095653018.png)
 
