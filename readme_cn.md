@@ -7,8 +7,8 @@
 ### 功能
 
 该工具嵌入到设备的安全测试中。有两个主要功能：
-1. 生成各种架构的**后门程序**。后门程序是用反向shell汇编代码打包的，大小很小，且纯静态封，装**现在支持Armv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc仍在更新中，powerpc64**
-2. 在攻击过程中生成各种架构的**反向shell代码**，且无空字节，这有助于攻击嵌入式设备上的内存损坏漏洞**现在支持Armv5、Armv7、Armv8、mipsel和mips，mipsel64，aarch64，riscv64，仍在更新中**
+1. 生成各种架构的**后门程序**。后门程序是用反向shell汇编代码打包的，大小很小，且纯静态封，装**现在支持Armv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc仍在更新中，powerpc64，sparc，riscv64**
+2. 在攻击过程中生成各种架构的**反向shell代码**，且无空字节，这有助于攻击嵌入式设备上的内存损坏漏洞**现在支持Armv5、Armv7、Armv8、mipsel和mips，mipsel64，aarch64，sparc，仍在更新中**
 3. 修复了reverse_shellcode和reverse_backdoor**端口选择过大**的一些错误，**在x86和x64**、**下增加了使用指定端口和密码生成bindshell的功能，并美化了生成过程****（此功能将更新到各种架构）**
 4. 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速
 5. 在利用过程中生成各种架构的reverse_shell shellcode，并且没有空字节，这有助于利用嵌入式设备上的内存损坏漏洞。Armv5、Armv7、Armv8、mipsel、mips、mips64、mips64el、powerpc、powerpc64现在支持，它们仍在更新中
