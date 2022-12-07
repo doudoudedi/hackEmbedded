@@ -36,7 +36,7 @@ sudo pip(3) install -U hackebds
 如果想在macos下使用此工具不需要使用sudo，但由于MAC的SIP保护，需要将安装python版本的bin目录写入到bashrc(或者其他shell)环境变量下，然后source ~/.bashrc
 
 ```
-echo 'export PATH="/Users/{you id}/Library/Python/{your installed python}/bin:$PATH"'> ~/.bashrc
+echo 'export PATH="/Users/{you id}/Library/Python/{your installed python}/bin:$PATH"'>> ~/.bashrc
 ```
 
 ![image-20221125095653018](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221125095653018.png)
