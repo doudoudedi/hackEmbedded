@@ -210,7 +210,7 @@ Allwinner(全志)V3s
 Armv8:
 Qualcomm Snapdragon 660
 
-Powerpc, sparc: emu
+Powerpc, sparc: qemu
 
 
 ## :beer:enjoy hacking
