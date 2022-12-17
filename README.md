@@ -202,7 +202,7 @@ Tests can leverage chips and architectures
 
 Mips:
 MIPS 74kc V4.12 big endian,
-MIPS 24kc V5.0  little endian,
+MIPS 24kc V5.0  little endian (Ralink SoC)
 Ingenic Xburst V0.0  FPU V0.0  little endian
 
 Armv7:
