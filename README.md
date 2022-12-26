@@ -88,6 +88,19 @@ Ubuntu（debian）:
    ```
    ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
    
+   ```
+   execve("/bin/busybox",["ls","-al"],0) == hackebds -cmd_path "/bin/busybox" -cmd "ls -al" -arch mips -res cmd_file
+   execve("/usr/bin/curl",["curl","http://127.0.0.1"],0) == hackebds -cmd_path "/usr/bin/curl" -cmd "curl http://127.0.0.1" -arch mips -res cmd_file
+   ```
+   
+   CMD_FILE(Generate a file that executes the specified command)
+   
+   Execute commands using the execve system call
+   
+   PS：What needs to be noted here is that the completed command path must be specified during use.
+   
+   ![image-20221226114125342](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221226114125342.png)
+   
 2. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 
 ```
@@ -239,6 +252,8 @@ Powerpc, sparc: qemu
  2022.11.2 Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
 
  2022.12.6 0.2.8 Add sparc_bind_shell && powerpc_bind_shell ，fix some bug
+
+ 2022.12.26 0.2.9 Added the program function of generating specified commands, and added executable permissions after generating files
 
 ## vul fix
 
