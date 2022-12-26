@@ -89,9 +89,12 @@ Ubuntu（debian）:
    ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
    
    ```
-   execve("/bin/busybox",["ls","-al"],0) == hackebds -cmd_path "/bin/busybox" -cmd "ls -al" -arch mips -res cmd_file
-   execve("/usr/bin/curl",["curl","http://127.0.0.1"],0) == hackebds -cmd_path "/usr/bin/curl" -cmd "curl http://127.0.0.1" -arch mips -res cmd_file
+   hackebds -cmd_path "/bin/busybox" -cmd "ls -al" -arch mips -res cmd_file
+   hackebds -cmd_path "/usr/bin/curl" -cmd "curl http://127.0.0.1" -arch mips -res cmd_file
    ```
+   
+   execve("/bin/busybox",["ls","-al"],0)
+   execve("/usr/bin/curl",["curl","http://127.0.0.1"],0)
    
    CMD_FILE(Generate a file that executes the specified command)
    
