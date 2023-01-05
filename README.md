@@ -38,7 +38,7 @@ This tool is embedded in the security test of the device. There are two main fun
 pip download（Use the command line need sudo）
 
 ```
-sudo pip(3) install -U hackebds
+pip(3) install -U hackebds
 ```
 （If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
 ```
