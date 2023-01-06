@@ -64,7 +64,7 @@ expample:
 
 ```
 Ubuntu（debian）:
-  apt search binutils | grep arm（You can replace it here）
+  apt search binutils | grep arm（You can replace it here， if not please execute "apt update" first）
   apt install binutils-arm-linux-gnueabi/hirsute
  MacOS:
  	 https://github.com/Gallopsled/pwntools-binutils
