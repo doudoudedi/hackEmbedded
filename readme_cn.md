@@ -96,7 +96,7 @@ hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
 
 ![image-20230106153459125](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png)
 
-在指定型号生成后门的功能中加入了输出型号与架构对应的列表关系，方便使用这观察修改
+在指定型号生成后门的功能中加入了输出型号与架构对应的列表关系，方便使用者观察修改
 
 ![image-20230106153942787](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153942787.png)
 
