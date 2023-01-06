@@ -57,7 +57,7 @@ echo 'export PATH="/Users/{you id}/Library/Python/{your installed python}/bin:$P
 请使用如下命令解决
 ```
 ubuntu（debian）
-	apt search binutils | grep arm(这里的arm可以更换需要的对应架构)
+	apt search binutils | grep arm(这里的arm可以更换需要的对应架构如果搜索不到可以先执行apt update)
 	apt install binutils-arm-linux-gnueabi/hirsute
  MacOS:
  	 https://github.com/Gallopsled/pwntools-binutils
