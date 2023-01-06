@@ -66,7 +66,7 @@ ubuntu（debian）
 这里的ip地址与端口都是shell弹回的地址与port，导入此模块后pwn模块也会直接导入，无需再次导入
 #### 1. 生成对应各种架构的后门程序，纯shellcode封装，回连shell成功概率大
 32为程序bind_shell中密码最多4个字符，64位程序最多8个字符
-使用命令行生成后门文件名、shell代码、binshell等
+使用命令行生成后门文件名、shellcode、binshell，cmd_file等
  ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
 
    ```
@@ -83,6 +83,22 @@ ubuntu（debian）
    hackebds -bind_port 8081 -arch armelv7 -res bind_shell -passwd 1231
    ```
    ![image-20221102182939434](https://img-blog.csdnimg.cn/img_convert/05ebc0b42efcb42f58eef4815b3b08dc.png)
+
+
+
+ ~~生成执行指定命令的程序文件，需要注意的由于执行的是execve系统调用需要指定执行文件的完整路径才能正常执行~~
+
+生成cmd_file功能被更新，只需要指定-cmd参数即可生成各种架构执行对应命令的程序（不需要指定-cmd_path如果需要指定执行的文件可以指定cmd_path执行），同样-envp可以在执行的命令中添加环境变量(riscv，powerpc，armv5，mips64暂时不支持添加环境变量)
+
+```
+hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
+```
+
+![image-20230106153459125](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png)
+
+在指定型号生成后门的功能中加入了输出型号与架构对应的列表关系，方便使用这观察修改
+
+![image-20230106153942787](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153942787.png)
 
 
 ```
@@ -174,25 +190,27 @@ Powerpc, sparc: qemu
 
 ## 更新 
 
-> 		2022.4.29 在hackebds-0.0.5中加入了对aarch64无空字节reverse_shellcode的支持
-> 		
-> 		2022.5.1  更新在引入模块后可以直接调用，减少代码量,更改对python3的支持
-> 		
-> 		2022.5.5  0.0.8版本解决了mips_reverse_sl与mipsel_reverse_sl反弹不了shell的bug加入了mips64大小端的后门与reverse_shell功能
-> 		
-> 		2022.5.21 0.0.9版本更改了armelv5后门生成的方式，加入了riscv-v64的后门指定生成
-> 		
-> 		2022.6.27 0.1.0 加入了安卓手机后门的生成
-> 		
-> 		2022.10.26 0.1.5修复了一些问题，并添加了一些bindshell指定端口密码的自动生成功能
-> 		
-> 		2022.11.2 0.2.0 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速
-> 		
-> 		2022.11.2 0.20 删除了shellcode的生成睡眠时间，并添加了mips_bind_Shell，与x86和x64小端Shell_Backdoor相反，这些mips预计会被mips_biind_Shelll中断，这解决了mips中bindshell中密码逻辑处理的错误问题
-> 		
-> 		2022.11.8 0.2.2 完善了后门，shellcode，bin_shell的生成修复了一些小错误，增加了学习模块指定型号即可生成对应内容。
-> 		
-> 		2022.11.6 0.2.8 加入了sparc_bind_shell与powerpc_bind_shell文件生成功能，修复了一些bug
+> 				2022.4.29 在hackebds-0.0.5中加入了对aarch64无空字节reverse_shellcode的支持
+> 			
+> 				2022.5.1  更新在引入模块后可以直接调用，减少代码量,更改对python3的支持
+> 			
+> 				2022.5.5  0.0.8版本解决了mips_reverse_sl与mipsel_reverse_sl反弹不了shell的bug加入了mips64大小端的后门与reverse_shell功能
+> 			
+> 				2022.5.21 0.0.9版本更改了armelv5后门生成的方式，加入了riscv-v64的后门指定生成
+> 			
+> 				2022.6.27 0.1.0 加入了安卓手机后门的生成
+> 			
+> 				2022.10.26 0.1.5修复了一些问题，并添加了一些bindshell指定端口密码的自动生成功能
+> 			
+> 				2022.11.2 0.2.0 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速
+> 			
+> 				2022.11.2 0.20 删除了shellcode的生成睡眠时间，并添加了mips_bind_Shell，与x86和x64小端Shell_Backdoor相反，这些mips预计会被mips_biind_Shelll中断，这解决了mips中bindshell中密码逻辑处理的错误问题
+> 			
+> 				2022.11.8 0.2.2 完善了后门，shellcode，bin_shell的生成修复了一些小错误，增加了学习模块指定型号即可生成对应内容。
+> 			
+> 				2022.11.6 0.2.8 加入了sparc_bind_shell与powerpc_bind_shell文件生成功能，修复了一些bug
+> 				
+> 				2023.1.6  0.3.0 修复了cmd_file中生成执行指定命令程序的功能bug，加入了model->arch 的列表，安卓的bind_shell文件
 >
 
 ## :beer: 享受hacking

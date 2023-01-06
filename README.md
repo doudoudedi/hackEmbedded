@@ -38,7 +38,7 @@ This tool is embedded in the security test of the device. There are two main fun
 pip download（Use the command line need sudo）
 
 ```
-pip(3) install -U hackebds
+sudo pip(3) install -U hackebds
 ```
 （If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
 ```
@@ -88,21 +88,17 @@ Ubuntu（debian）:
    ```
    ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
    
+   Generate cmd_file function is updated. Only need to specify the - cmd parameter to generate programs for various architectures to execute corresponding commands (you do not need to specify - cmd_path if you need to specify the file to execute, you can specify cmd_path to execute). Similarly, - envp can add environment variables to the executed commands (riscv64, powerpc, armv5, mips64 do not support adding environment variables temporarily)
+   
    ```
-   hackebds -cmd_path "/bin/busybox" -cmd "ls -al" -arch mips -res cmd_file
-   hackebds -cmd_path "/usr/bin/curl" -cmd "curl http://127.0.0.1" -arch mips -res cmd_file
+   hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
    ```
    
-   execve("/bin/busybox",["ls","-al"],0)
-   execve("/usr/bin/curl",["curl","http://127.0.0.1"],0)
+   ![image-20230106153510332](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153510332.png)
    
-   CMD_FILE(Generate a file that executes the specified command)
+   The list relationship between the output model and the architecture is added to the function of generating the backdoor for the specified model, which is convenient for observation and modification
    
-   Execute commands using the execve system call
-   
-   PS：What needs to be noted here is that the completed command path must be specified during use.
-   
-   ![image-20221226114125342](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221226114125342.png)
+   ![image-20230106153942787](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153942787.png)
    
 2. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 
@@ -257,6 +253,8 @@ Powerpc, sparc: qemu
  2022.12.6 0.2.8 Add sparc_bind_shell && powerpc_bind_shell ，fix some bug
 
  2022.12.26 0.2.9 Added the program function of generating specified commands, and added executable permissions after generating files
+
+ 2023.1.6 0.3.0 repaired cmd_ The file generates the function bug of executing the specified command program, and adds the model ->arch list, Android bind_ Shell file
 
 ## vul fix
 
