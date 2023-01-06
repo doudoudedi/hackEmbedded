@@ -43,17 +43,17 @@ def save_file(model,data):
 
 def get_local_file(model):
 	with open("/tmp/hackebds/%s/CVElist"%(model),'r') as f:
-	    data= f.read()
-	    if data == None:
-	    	log.error("localfile is NuLL")
-	    	return
+		data= f.read()
+		if data == None:
+			log.error("localfile is NuLL")
+			return
 	data = data.split("\n\n")
 	for i in range(len(data)):
-	    try:
-	        data[i] = data[i].split(": ")
-	        print(Fore.RED+data[i][0]+": "+Fore.GREEN+data[i][1]+"\n")
-	    except:
-	        pass
+		try:
+			data[i] = data[i].split(": ")
+			print(Fore.RED+data[i][0]+": "+Fore.GREEN+data[i][1]+"\n"+Fore.RESET)
+		except:
+			pass
 
 
 

