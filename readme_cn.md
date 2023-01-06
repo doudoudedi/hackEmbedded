@@ -65,7 +65,7 @@ ubuntu（debian）
 ```
 ### 怎么使用
 这里的ip地址与端口都是shell弹回的地址与port，导入此模块后pwn模块也会直接导入，无需再次导入
-#### 1. 生成对应各种架构的后门程序，纯shellcode封装，回连shell成功概率大
+#### 1. 生成对应各种架构的后门程序，纯shellcode封装（无需编译器的加入），回连shell成功概率大
 32为程序bind_shell中密码最多4个字符，64位程序最多8个字符
 使用命令行生成后门文件名、shellcode、binshell，cmd_file等
  ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
@@ -97,7 +97,7 @@ hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
 
 ![image-20230106153459125](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png)
 
-在指定型号生成后门的功能中加入了输出型号与架构对应的列表关系，方便使用这观察修改
+在指定型号生成后门的功能中加入了输出型号与架构对应的列表关系，方便使用者观察修改
 
 ![image-20230106153942787](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153942787.png)
 
