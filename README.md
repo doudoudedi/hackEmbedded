@@ -90,7 +90,7 @@ Ubuntu（debian）:
    ```
    ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
    
-   Generate cmd_file function is updated. Only need to specify the - cmd parameter to generate programs for various architectures to execute corresponding commands (you do not need to specify - cmd_path if you need to specify the file to execute, you can specify cmd_path to execute). Similarly, - envp can add environment variables to the executed commands (riscv64, powerpc, armv5, mips64 do not support adding environment variables temporarily)
+   Generate cmd_file function is updated. Only need to specify the - cmd parameter to generate programs for various architectures to execute corresponding commands (you do not need to specify - cmd_path if you need to specify the file to execute, you can specify cmd_path to execute). Similarly, -envp function has a bug. Please do not specify envp in the 0.3.0 version. The environment variable function will be fixed in the 0.3.1 version，but this does not affect the use of the generated cmd file
    
    ```
    hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
