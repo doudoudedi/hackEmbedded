@@ -89,7 +89,7 @@ ubuntu（debian）
 
  ~~生成执行指定命令的程序文件，需要注意的由于执行的是execve系统调用需要指定执行文件的完整路径才能正常执行~~
 
-生成cmd_file功能被更新，只需要指定-cmd参数即可生成各种架构执行对应命令的程序（不需要指定-cmd_path如果需要指定执行的文件可以指定cmd_path执行），同样-envp可以在执行的命令中添加环境变量(riscv，powerpc，armv5，mips64暂时不支持添加环境变量)
+生成cmd_file功能被更新，只需要指定-cmd参数即可生成各种架构执行对应命令的程序（不需要指定-cmd_path如果需要指定执行的文件可以指定cmd_path执行），-envp功能出现了bug请在0.3.0版本中不指定-envp, 环境变量功能将在0.3.1版本中修复，但这并不影响生产cmd文件功能的使用
 
 ```
 hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
