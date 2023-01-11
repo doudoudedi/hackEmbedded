@@ -1,5 +1,6 @@
 # hackebds
-![PyPI - Wheel](https://img.shields.io/pypi/wheel/hackebds)![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pwntools)[![Downloads](https://pepy.tech/badge/hackebds)](https://pepy.tech/project/hackebds)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/hackebds)![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pwntools)
+[![Downloads](https://static.pepy.tech/badge/hackebds)](https://pepy.tech/project/hackebds)
 
 :link:[中文readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
 
