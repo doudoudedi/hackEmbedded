@@ -268,7 +268,7 @@ Powerpc, sparc: qemu
 
 powerpc_reverse_shell stdeer bug (Completed to be released)
 
-Under various architectures dd interactive reverse_shell linking bash and sh (Completed to be released)
+Under various architectures  interactive reverse_shell linking bash and sh add bash-reverse_shell (Completed to be released)
 
 powerfull-reverse_shell， Realize the non-stop creation of reverse-shells on the premise of minimizing CPU consumption （To be completed）
 
