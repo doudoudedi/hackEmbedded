@@ -264,11 +264,13 @@ Powerpc, sparc: qemu
 0.3.1 version add
 
 
+-l args List all data related to model and arch (Completed to be released)
+
 powerpc_reverse_shell stdeer bug (Completed to be released)
 
 Under various architectures dd interactive reverse_shell linking bash and sh (Completed to be released)
 
-powerfull-sehll， Realize the non-stop creation of reverse-shells on the premise of minimizing CPU consumption （To be completed）
+powerfull-reverse_shell， Realize the non-stop creation of reverse-shells on the premise of minimizing CPU consumption （To be completed）
 
 
 
