@@ -194,7 +194,7 @@ Powerpc, sparc: qemu
 
 hackebds 0.3.1版本预计会添加
 
--l args列出与模型和拱门相关的所有数据（已完成，待发布）
+-l args列出与型号和架构相关的所有数据（已完成，待发布）
 
 powerpc_reverse_shell stdeer错误（已完成，待发布）
 
