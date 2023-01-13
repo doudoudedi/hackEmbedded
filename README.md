@@ -259,6 +259,19 @@ Powerpc, sparc: qemu
 
  2023.1.6 0.3.0 repaired cmd_ The file generates the function bug of executing the specified command program, and adds the model ->arch list, Android bind_ Shell file
 
+## Problems to be solved
+
+0.3.1 version add
+
+
+powerpc_reverse_shell stdeer bug (Completed to be released)
+
+Under various architectures dd interactive reverse_shell linking bash and sh (Completed to be released)
+
+powerfull-sehll， Realize the non-stop creation of reverse-shells on the premise of minimizing CPU consumption （To be completed）
+
+
+
 ## vul fix
 
 
