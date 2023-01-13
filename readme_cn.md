@@ -190,6 +190,20 @@ Qualcomm Snapdragon 660
 
 Powerpc, sparc: qemu
 
+## 问题待解决
+
+hackebds 0.3.1版本预计会添加
+
+-l args列出与模型和拱门相关的所有数据（已完成，待发布）
+
+powerpc_reverse_shell stdeer错误（已完成，待发布）
+
+在各种架构下，生成交互式reverse_shell的bash和sh，加入bash的reverse-shell（已完成，待发布）
+
+powerfull-reverse_shell，在最小化CPU消耗的前提下不断地创建反向的shell（待完成）
+
+
+
 ## 更新 
 
 > 				2022.4.29 在hackebds-0.0.5中加入了对aarch64无空字节reverse_shellcode的支持
