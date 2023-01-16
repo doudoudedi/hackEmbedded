@@ -2,7 +2,7 @@ import os
 from pwn import log,shellcraft
 import platform
 from colorama import Fore,Back,Style
-
+from multidict import CIMultiDict
 '''
 Equipment model -> backdoor model
 This is a learning module. After the generation, add the device model. The tool will remember it after the next use, accelerating the generation of the backdoor and shell code next time
@@ -12,14 +12,18 @@ This is a learning module. After the generation, add the device model. The tool 
 '''
 
 
+model_tree=CIMultiDict()
+model_tree["RV340"] = "armelv7"
+model_tree["RV160"] = "armelv7"
+model_tree["DCS-5010L"] = "mipsel"
+model_tree["RV340"] = "armelv7"
+
+
+
 def get_system_version():
 	return platform.system()
 
 
-
-model_tree = {
-	
-}
 
 def touchfile():
 	try:
@@ -29,11 +33,11 @@ def touchfile():
 		if system_version=="Linux":
 			log.success("Creating contact file")
 			os.mknod("/tmp/hackebds_model_table")
-		if system_version == "Darwin" or "Mac":
+		elif system_version == "Darwin" or  system_version =="Mac":
 			log.success("Creating contact file")
 			f=open("/tmp/hackebds_model_table",'w+')
 			f.close()
-		else:
+		elif system_version == "Windows":
 			log.info("This function is not applicable to this system")
 	except Exception as e:
 		log.error("error "+e)
@@ -73,16 +77,15 @@ def model_to_arch(model):
 
 def print_mmodel_dic():
 	try:
-
 		dict_2 = dict(sorted(model_tree.items(), key=lambda i:i[0]))
-
+		#print(dict_2)
 		log.success("model ----> arch:")
 
 		for key,value in dict_2.items():
 			print("-"*0x29)
 			print("|"+Fore.GREEN+key.ljust(15)+Fore.RESET+"----->    "+Fore.GREEN+value.ljust(14)+Fore.RESET+"|")
 
-		print("-"*0x29)
+		print("-"*0x29)	
 
 	except Exception as e:
 		print(e)

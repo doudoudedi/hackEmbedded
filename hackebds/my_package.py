@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 from pwn import context,log,sleep,pwnlib
 from pwnlib import atexit
-
+import re
 
 chars = string.ascii_letters
 
@@ -22,6 +22,19 @@ print(child1.stdout.read())
 update 2022.12.25 
 '''
 
+remove_null = lambda x:[i for i in x if i != '']
+
+
+def spaceReplace(i):
+    i = re.sub(' +', ' ', i).split(' ')
+    return i
+
+
+def get_envir_args(envp):
+	return remove_null(spaceReplace(envp))
+
+
+
 def my_make_elf(code , filename=None,vma= None,shared=False, strip=None,extract=None):
 	assembler = pwnlib.asm._assembler()
 	linker    = pwnlib.asm._linker()
@@ -31,6 +44,7 @@ def my_make_elf(code , filename=None,vma= None,shared=False, strip=None,extract=
 	step2 = path.join(tmpdir, 'step2-obj')
 	step3 = path.join(tmpdir, 'step3-elf')
 	try:
+		code = pwnlib.asm.cpp(code)
 		with open(step1, 'w') as f:
 			f.write(code)
 
@@ -54,7 +68,7 @@ def my_make_elf(code , filename=None,vma= None,shared=False, strip=None,extract=
 		if not extract:
 			os.chmod(step3, 0o755)
 			if(filename == None):
-				basename = context.arch + "-cmd-" + random_string_generator(4,chars)
+				basename = context.arch + '-noknow-' + random_string_generator(4,chars)
 				shutil.copyfile(step3,basename)
 				os.chmod(basename, 0o755)
 				retval = basename

