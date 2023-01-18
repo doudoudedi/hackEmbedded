@@ -12,7 +12,7 @@
 
 ## fuction
 
-**In 0.3.1 version ,bind_shell generate fuction has big bug, This will cause the file generation to fail，This version has been unpatched, please use version 0.3.2**
+**In 0.3.1 version ,bind_shell generate fuction has big bug, This will cause the file generation to fail，This version has been unpatched, please use version 0.3.2 and latest**
 
 This tool is embedded in the security test of the device. There are two main functions:
 
