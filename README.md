@@ -14,6 +14,8 @@
 
 **In 0.3.1 version ,bind_shell generate fuction has big bug, This will cause the file generation to fail，This version has been unpatched, please use version 0.3.2 and latest**
 
+**On Android reverse_ shell_ File and bin_ There are some bugs in the shell function. Please replace it with aarch64**
+
 This tool is embedded in the security test of the device. There are two main functions:
 
 1.  Generate **backdoor programs** of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be generated on the target machine)
