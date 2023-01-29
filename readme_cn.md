@@ -221,38 +221,40 @@ Powerpc, sparc: qemu
 
 ## 更新 
 
-> 						2022.4.29 在hackebds-0.0.5中加入了对aarch64无空字节reverse_shellcode的支持
-> 						
-> 						2022.5.1  更新在引入模块后可以直接调用，减少代码量,更改对python3的支持
-> 						
-> 						2022.5.5  0.0.8版本解决了mips_reverse_sl与mipsel_reverse_sl反弹不了shell的bug加入了mips64大小端的后门与reverse_shell功能
-> 						
-> 						2022.5.21 0.0.9版本更改了armelv5后门生成的方式，加入了riscv-v64的后门指定生成
-> 						
-> 						2022.6.27 0.1.0 加入了安卓手机后门的生成
-> 						
-> 						2022.10.26 0.1.5修复了一些问题，并添加了一些bindshell指定端口密码的自动生成功能
-> 						
-> 						2022.11.2 0.2.0 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速,在利用过程中生成各种架构的reverse_shell shellcode，并且没有空字节，这有助于利用嵌入式设备上的内存损坏漏洞。Armv5、Armv7、Armv8、mipsel、mips、mips64、mips64el、powerpc、powerpc64现在支持，它们仍在更新中
-> 						修复了reverse_shellcode和reverse_backdoor端口选择太大的一些错误，并在x86和x64下添加了生成具有指定端口和密码的绑定壳的功能，并美化了生成过程**（此功能将更新到各种架构）**添加支持armvelv7_bind_shell（2022.10.27），
-> 						删除了shellcode的生成睡眠时间，并添加了mips_ bind_ Shell，x86和x64 small end_ shell_ Backdoor的反向，预计将被mips_ bind_ Shell中断的mips，解决了mips中绑定shell中的密码逻辑处理错误，加入aarch64_ bind_shell
-> 						支持命令行生成后门和外壳代码，具有很强的反狩猎能力，以轻巧、小、高效和快速为特征
-> 						添加了设备模型的学习功能。建立模型和拱门之间的关系后，再次生成目标内容。您只需要指定模型
-> 						添加CVE检索功能，并备份CVE检索
-> 						改进了x86、x64、armebv5、reverse_ shellcode和reverse_ shell_文件
-> 						
-> 						2022.11.2 0.20 删除了shellcode的生成睡眠时间，并添加了mips_bind_Shell，与x86和x64小端Shell_Backdoor相反，这些mips预计会被mips_biind_Shelll中断，这解决了mips中bindshell中密码逻辑处理的错误问题
-> 						
-> 						2022.11.8 0.2.2 完善了后门，shellcode，bin_shell的生成修复了一些小错误，增加了学习模块指定型号即可生成对应内容。
-> 						
-> 						2022.11.6 0.2.8 加入了sparc_bind_shell与powerpc_bind_shell文件生成功能，修复了一些bug
-> 						
-> 						2023.1.6  0.3.0 修复了cmd_file中生成执行指定命令程序的功能bug，加入了model->arch 的列表，安卓的bind_shell文件
-> 						
-> 						2023.1.16 0.3.1 加入了bash的reverse_shell,目前此工具只支持到sh与bash，加入了-l功能列出设备型号与架构的关系，加入了-power功能生成更加强大的reverse_shell_file,实现了在程序不被杀死的情况下不断的创建反向的shell链接,目前-power功能只支持到reverse_shell_file
-> 						2023.1.29 0.3.3 -power功能加入了对bind_shell的支持，bind_shell更加稳定，修复了对aarch64架构的bind_shell与cmd_file文件执行的一些bug
->
-> 					
+
+
+2022.4.29 在hackebds-0.0.5中加入了对aarch64无空字节reverse_shellcode的支持
+
+2022.5.1  更新在引入模块后可以直接调用，减少代码量,更改对python3的支持
+
+2022.5.5  0.0.8版本解决了mips_reverse_sl与mipsel_reverse_sl反弹不了shell的bug加入了mips64大小端的后门与reverse_shell功能
+
+2022.5.21 0.0.9版本更改了armelv5后门生成的方式，加入了riscv-v64的后门指定生成
+
+2022.6.27 0.1.0 加入了安卓手机后门的生成
+
+2022.10.26 0.1.5修复了一些问题，并添加了一些bindshell指定端口密码的自动生成功能
+
+2022.11.2 0.2.0 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速,在利用过程中生成各种架构的reverse_shell shellcode，并且没有空字节，这有助于利用嵌入式设备上的内存损坏漏洞。Armv5、Armv7、Armv8、mipsel、mips、mips64、mips64el、powerpc、powerpc64现在支持，它们仍在更新中
+修复了reverse_shellcode和reverse_backdoor端口选择太大的一些错误，并在x86和x64下添加了生成具有指定端口和密码的绑定壳的功能，并美化了生成过程**（此功能将更新到各种架构）**添加支持armvelv7_bind_shell（2022.10.27），
+删除了shellcode的生成睡眠时间，并添加了mips_ bind_ Shell，x86和x64 small end_ shell_ Backdoor的反向，预计将被mips_ bind_ Shell中断的mips，解决了mips中绑定shell中的密码逻辑处理错误，加入aarch64_ bind_shell
+支持命令行生成后门和外壳代码，具有很强的反狩猎能力，以轻巧、小、高效和快速为特征
+添加了设备模型的学习功能。建立模型和拱门之间的关系后，再次生成目标内容。您只需要指定模型
+添加CVE检索功能，并备份CVE检索
+改进了x86、x64、armebv5、reverse_ shellcode和reverse_ shell_文件
+
+2022.11.2 0.20 删除了shellcode的生成睡眠时间，并添加了mips_bind_Shell，与x86和x64小端Shell_Backdoor相反，这些mips预计会被mips_biind_Shelll中断，这解决了mips中bindshell中密码逻辑处理的错误问题
+
+2022.11.8 0.2.2 完善了后门，shellcode，bin_shell的生成修复了一些小错误，增加了学习模块指定型号即可生成对应内容。
+
+2022.11.6 0.2.8 加入了sparc_bind_shell与powerpc_bind_shell文件生成功能，修复了一些bug
+
+2023.1.6  0.3.0 修复了cmd_file中生成执行指定命令程序的功能bug，加入了model->arch 的列表，安卓的bind_shell文件
+
+2023.1.16 0.3.1 加入了bash的reverse_shell,目前此工具只支持到sh与bash，加入了-l功能列出设备型号与架构的关系，加入了-power功能生成更加强大的reverse_shell_file,实现了在程序不被杀死的情况下不断的创建反向的shell链接,目前-power功能只支持到reverse_shell_file
+2023.1.29 0.3.3 -power功能加入了对bind_shell的支持，bind_shell更加稳定，修复了对aarch64架构的bind_shell与cmd_file文件执行的一些bug
+
+
 
 ## :beer: 享受hacking
 
