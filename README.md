@@ -87,7 +87,17 @@ Ubuntu（debian）:
    ```
    hackebds -bind_port 8080 -passwd 1234 -arch mips -model DIR-823 -res bind_shell
    ```
+   Create bind_shell to monitor the shell as sh, -power fuction can give -shell bash	
+   
+   ```
+   hackebds -bind_port 8081 -arch armelv7 -res bind_shell -passwd 1231 -power
+   ```
+   
+   The bind_shell process will not stop after being disconnected, and supports repeated connections (currently this function is not supported by powerpc and sparc series)
+   
    ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
+   
+   
    
    Generate cmd_file function is updated. Only need to specify the - cmd parameter to generate programs for various architectures to execute corresponding commands , -envp Environment variables are separated by commas
    
@@ -266,18 +276,15 @@ Powerpc, sparc: qemu
 
  2023.1.16 0.3.1 Added bash reverse_ Shell. At present, this tool only supports sh and bash. The - l function is added to list the relationship between device model and architecture, and the - power function is added to generate a more powerful reverse_ shell_ File, which realizes the continuous creation of reverse shell links without killing the program. Currently, the - power function only supports reverse_ shell_ file
 
+ 2023.1.29 0.3.3 -The power function adds support for bind_shell, bind_shell is more stable, and fixes some bugs in the execution of bind_shell and cmd_file files of the aarch64 architecture
+
 ## Problems to be solved
 
-0.3.1 version add
+Support the backend of the loongarch64 architecture and the generation of the bind_shell program (binutils has been integrated into the mainline, but cannot be installed directly through apt)
 
+Improve the generation of power_bind_shell backdoors of powerpc and sparc series
 
--l args List all data related to model and arch (Completed to be released)
-
-powerpc_reverse_shell stdeer bug (Completed to be released)
-
-Under various architectures  interactive reverse_shell linking bash and sh add bash-reverse_shell (Completed to be released)
-
-powerfull-reverse_shell， Realize the non-stop creation of reverse-shells on the premise of minimizing CPU consumption （To be completed）
+Add anti-kill function for backdoor programs
 
 
 
@@ -296,6 +303,8 @@ CVE-2021-20270 DOS_attack pip install -U  pygments (The vulnerability does not a
 
 | VERSION                                                      | PUBLISHED    | DIRECT VULNERABILITIES |
 | ------------------------------------------------------------ | ------------ | ---------------------- |
+| [0.3.2](https://security.snyk.io/package/pip/hackebds/0.3.2) | 18 Jan, 2023 | 0C0H0M0L               |
+| [0.3.1](https://security.snyk.io/package/pip/hackebds/0.3.1) | 16 Jan, 2023 | 0C0H0M0L               |
 | [0.3.0](https://security.snyk.io/package/pip/hackebds/0.3.0) | 6 Jan, 2023  | 0C0H0M0L               |
 | [0.2.9](https://security.snyk.io/package/pip/hackebds/0.2.9) | 26 Dec, 2022 | 0C0H0M0L               |
 | [0.2.8](https://security.snyk.io/package/pip/hackebds/0.2.8) | 6 Dec, 2022  | 0C0H0M0L               |
@@ -319,4 +328,3 @@ CVE-2021-20270 DOS_attack pip install -U  pygments (The vulnerability does not a
 | [0.0.3](https://security.snyk.io/package/pip/hackebds/0.0.3) | 29 Apr, 2022 | 0C0H0M0L               |
 | [0.0.2](https://security.snyk.io/package/pip/hackebds/0.0.2) | 29 Apr, 2022 | 0C0H0M0L               |
 | [0.0.1](https://security.snyk.io/package/pip/hackebds/0.0.1) | 29 Apr, 2022 | 0C0H0M0L               |
-
