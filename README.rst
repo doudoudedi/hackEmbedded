@@ -24,13 +24,6 @@ foreword
 fuction
 -------
 
-**In 0.3.1 version ,bind_shell generate fuction has big bug, This will
-cause the file generation to fail，This version has been unpatched,
-please use version 0.3.2 and latest**
-
-**On Android reverse\_ shell\_ File and bin\_ There are some bugs in the
-shell function. Please replace it with aarch64**
-
 This tool is embedded in the security test of the device. There are two
 main functions:
 
@@ -197,7 +190,7 @@ the interpretation of uppercase and lowercase letters
 
       hackebds -l
 
-   .. figure:: https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105027599.png
+   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213151548871.png
       :alt: 
 
    Add the retrieval of device information. Use - s to search for the -
@@ -226,7 +219,7 @@ the interpretation of uppercase and lowercase letters
 
       pip install python-levenshtein
 
-   .. figure:: https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105520663.png
+   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105520663-20230213151846373.png
       :alt: 
 
    The POC corresponding to the generated device can use - p or -- poc,
@@ -237,22 +230,28 @@ the interpretation of uppercase and lowercase letters
 
       hackebds -model ex200 -p
 
-   .. figure:: https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105925356.png
+   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356.png
       :alt: 
 
    If a vulnerability is found in the test and you want to add the basic
    information of a new device to this tool, you can use the - add
-   function for POC files or/tmp/model\_ tree\_ The format of the
+   function for POC files or "/tmp/model_tree_info/" The format of the
    directory directory of the new device under the info/directory can
    refer to the standard generated format. After the insertion, you can
-   use the tool search and POC generation functions
+   use the tool search and POC generation functions，Finally, if you
+   need to fill in the POC file information, you can put it in
+   "/tmp/model_tree_info/" directory will be read if retrieved again
 
    .. code:: 
 
       hackebds -add
 
-   .. figure:: https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213111024854.png
+   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213111024854.png
       :alt: 
+
+   If there are device information errors, POC errors, or you want to
+   integrate your collected device information with vulnerabilities,
+   please contact me doudoudedi233@gmail.com
 
 2. Generate backdoor programs of various architectures, encapsulate pure
    shellcode, and successfully connect to the shell

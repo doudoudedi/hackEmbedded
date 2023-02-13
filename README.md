@@ -169,7 +169,7 @@ Please set all parameters to lowercase or lowercase mixed with uppercase. I gues
 
    ![image-20230213105925356](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356.png)
 
-   If a vulnerability is found in the test and you want to add the basic information of a new device to this tool, you can use the - add function for POC files or "/tmp/model_tree_info/" The format of the directory directory of the new device under the info/directory can refer to the standard generated format. After the insertion, you can use the tool search and POC generation functions，Finally, if you need to fill in the POC file information, you can put it in "/tmp/model_tree_info/" directory will be read if retrieved again
+   If a vulnerability is found in the test and you want to add the basic information of a new device to this tool, you can use the - add function for POC files or "/tmp/model_tree_info/" The format of the directory directory of the new device under the info/directory can refer to the standard generated format. After the insertion, you can use the tool search and POC generation functions，Finally, if you need to fill in the POC file information, you can put it in "/tmp/model_tree_info/xxx/POC" directory will be read if retrieved again
 
    ```
    hackebds -add
