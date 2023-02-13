@@ -195,7 +195,7 @@ hackebds -model ex200 -p
 
 ![image-20230213105925356](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356-20230213152202001.png)
 
-如果在测试中发现了漏洞想在这款工具中加入新的设备的基本信息，POC文件等可以使用-add功能或者在/tmp/model_tree_info/目录下新建设备的目录目录的格式可以参考标准生成的格式，插入完成后便可以使用工具的搜索以及POC生成功能
+如果在测试中发现了漏洞想在这款工具中加入新的设备的基本信息，POC文件等可以使用-add功能或者在/tmp/model_tree_info/目录下新建设备的目录目录的格式可以参考标准生成的格式，插入完成后便可以使用工具的搜索以及POC生成功能, 最后如果需要将POC文件信息填入可以将其放入/tmp/model_info/xxx/POC/目录下再次检索会读取此目录
 
 ```
 hackebds -add
@@ -203,7 +203,7 @@ hackebds -add
 
 ![image-20230213111024854](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213111024854-20230213152205217.png)
 
-
+如果有设备信息错误、POC错误，或者想将自己收集的设备信息与漏洞集成与大家一起分享请联系我doudoudedi233@gmail.com
 
 
 
