@@ -365,7 +365,7 @@ def dic_model_tree():
 				with open( model_tree_info_dicname+i+"/info" , "r") as f:
 					for line in f.readlines():
 						line=line.strip()
-						model_info.append(line.split(':')[1])
+						model_info.append(line.split(':',2)[1])
 			else:
 				for k in range(10):
 					model_info.append('')
@@ -639,7 +639,7 @@ def add_model_info():
 	model_info_list.append(model_vuln)
 
 	for i in range(len(model_info_list)):
-		model_info_list[i] = model_info_list[i].strip().replace(":", " ")
+		model_info_list[i] = model_info_list[i].strip()
 
 	if (model_vuln == "True\n"):
 		model_add_exp = CIMultiDict()

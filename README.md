@@ -140,7 +140,7 @@ Please set all parameters to lowercase or lowercase mixed with uppercase. I gues
    hackebds -l
    ```
 
-   ![image-20230213105027599](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105027599.png)
+   ![image-20230213151548871](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213151548871.png)
 
    Add the retrieval of device information. Use - s to search for the - model parameter. This search is fuzzy and insensitive to case. Try to use the device information with the highest matching degree between lowercase output and input when inputting
 
@@ -159,7 +159,7 @@ Please set all parameters to lowercase or lowercase mixed with uppercase. I gues
    pip install python-levenshtein
    ```
 
-   ![image-20230213105520663](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105520663.png)
+   ![image-20230213105520663](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105520663-20230213151846373.png)
 
    The POC corresponding to the generated device can use - p or -- poc, which may be python scripts, commands, etc., and may need to be modified by yourself
 
@@ -167,7 +167,7 @@ Please set all parameters to lowercase or lowercase mixed with uppercase. I gues
    hackebds -model ex200 -p
    ```
 
-   ![image-20230213105925356](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105925356.png)
+   ![image-20230213105925356](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356.png)
 
    If a vulnerability is found in the test and you want to add the basic information of a new device to this tool, you can use the - add function for POC files or/tmp/model_ tree_ The format of the directory directory of the new device under the info/directory can refer to the standard generated format. After the insertion, you can use the tool search and POC generation functions
 
@@ -175,7 +175,7 @@ Please set all parameters to lowercase or lowercase mixed with uppercase. I gues
    hackebds -add
    ```
 
-   ![image-20230213111024854](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213111024854.png)
+   ![image-20230213111024854](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213111024854.png)
 
 2. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 

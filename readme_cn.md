@@ -164,7 +164,7 @@ POC输出
 hackebds -l
 ```
 
-![image-20230213105027599](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105027599.png)
+![image-20230213105027599](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105027599-20230213152149471.png)
 
 加入了对设备信息的检索，使用-s可以针对-model参数进行搜索此搜索是模糊搜索且大小写不敏感，在输入时尽量使用小写输出与输入匹配度最高的设备信息.
 
@@ -185,7 +185,7 @@ pip3 install python-levenshtein
 
 
 
-![image-20230213105520663](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105520663.png)
+![image-20230213105520663](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105520663-20230213152158504.png)
 
 ​	生成设备对应的POC可以使用-p或者--poc，此可能为python脚本、命令等等可能需要自行修改
 
@@ -193,7 +193,7 @@ pip3 install python-levenshtein
 hackebds -model ex200 -p
 ```
 
-![image-20230213105925356](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105925356.png)
+![image-20230213105925356](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356-20230213152202001.png)
 
 如果在测试中发现了漏洞想在这款工具中加入新的设备的基本信息，POC文件等可以使用-add功能或者在/tmp/model_tree_info/目录下新建设备的目录目录的格式可以参考标准生成的格式，插入完成后便可以使用工具的搜索以及POC生成功能
 
@@ -201,7 +201,7 @@ hackebds -model ex200 -p
 hackebds -add
 ```
 
-![image-20230213111024854](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213111024854.png)
+![image-20230213111024854](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213111024854-20230213152205217.png)
 
 
 
