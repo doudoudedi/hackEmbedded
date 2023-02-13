@@ -1,0 +1,91 @@
+####TOTOLINK
+model_tree["TOTOLINK_A850R"] = ["mips", "linux" , "Realtek" ,"RTL8192ER", "https://github.com/doudoudedi","False", "Ture", poc]
+
+model_tree["TOTOLINK_EX200"] = ['mips', "linux" , "Realtek", "RTL8196E", "https://github.com/doudoudedi", "False", "True", poc ]
+
+model_tree["TOTOLINK_N600R"] = ["mips", "linux", "Realtek" ,"RTL8197D", "https://github.com/doudoudedi", "False", "True", poc]
+
+model_tree["TOTOLINK_X5000R"] = ['mipsel', "linux", "MediaTek", "MT7621AT", "https://github.com/doudoudedi", "True", "True" ,poc]
+
+model_tree["TOTOLINK_A8000RU"] = ['aarch64', "linux", "MediaTek", "MT7622", "https://github.com/doudoudedi", "True", "True", poc]
+model_tree["TOTOLINK_X18"] = "mipsel"
+model_tree["TOTOLINK_T6v2"] = 'mipsel'
+model_tree["TOTOLINK_T6"] = 'mipsel'
+model_tree["TOTOLINK_A7000R"] = ['mipsel', "linux", "MediaTek","MT7621AT", "True", "True" ,exp_database.model_exp_dic["TOTOLINK_A7000R"]]
+model_tree["TOTOLINK_A7100RU"] = 'mipsel'
+model_tree["TOTOLINK_Q7"] = 'mipsel'
+model_tree["TOTOLINK-A6000R"] = 'mipsel'
+model_tree["TOTOLINK_A800R"] = 'mipsel'
+model_tree[""]
+####
+
+####Cisco
+model_tree["Cisco_RV340"] = "armelv7"
+model_tree["Cisco_RV160"] = "armelv7"
+model_tree["Cisco_RV215W"] = "mipsel"
+####
+
+
+
+####D-link
+'''camera'''
+model_tree["DCS-5010L"] = "mipsel"
+model_tree["DCS-5020L"] = ""
+
+'''router'''
+model_tree["DIR-816"] = "mipsel"
+model_tree["DIR-846"] = "mipsel"
+model_tree["DIR-823"] = ""
+model_tree["DIR-505L"] = 'mips'
+model_tree["DIR-505"] = "mips"
+model_tree["DIR-508L"] = "mipsel"
+#####
+
+
+####NETGEAR
+model_tree["Nethear_EX6100v1"] = 'mipsel'
+model_tree["Netgear_DGN1000v1"] = 'mips'
+model_tree["Netgear_R8300"] = 'armelv7'
+model_tree["Netgear_R7000"] = 'armelv7'
+model_tree["Netgear_D6220"] = 'mips'
+model_tree["Netgear_WDNR3400v2"] = 'mipsel'
+model_tree["Netgear_D6000"] = 'mips'
+model_tree["Netgear_D6220"] = 'mips'
+model_tree["Netgear_D6200"] = 'mips'
+####
+
+
+####tenda
+####
+
+####TP-LINK
+model_tree["TL-WR940N"] = 'mips'
+####
+
+
+####others
+model_tree["HATLab GateBoard-One"] = "mipsel"
+model_tree["WL-WN575A2"] = 'mipsel'
+model_tree["WL-WN575A3"] = 'mipsel'
+model_tree["WL-WN530HG4"] = 'mipsel'
+####
+
+
+
+
+
+
+'''model and cpu dic'''
+
+model_cpu_tree["A7000RU"] = "MT7621A"
+model_cpu_tree["A8000RU"] = "MT7622"
+model_cpu_tree["HATLab GateBoard-One"] = "MT7621AT"
+
+
+'''cpu and arch dic '''
+
+cpu_arch_tree["MT7621A"] = "mipsel"
+
+cpu_arch_tree["MT7622"] = 'aarch64'
+
+cpu_arch_tree["MT7621AT"] = "mipsel"

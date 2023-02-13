@@ -166,7 +166,6 @@ def my_linker():
 def my_make_loongarch64_elf(code , filename=None,vma= None,shared=False, strip=None,extract=None):
 	assembler = pwnlib.asm._assembler()
 	linker    = my_linker()
-	print(assembler,linker)
 	log.debug("Building ELF:\n")
 	tmpdir= tempfile.mkdtemp(prefix = 'pwn-asm-')
 	step1 = path.join(tmpdir, 'step1-asm')
