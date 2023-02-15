@@ -138,9 +138,23 @@ model_tree["TOTOLINK_A860R"] = ["mipsel", "router", "linux", "Realtek", "RTL8195
 
 model_tree["Linsys_RE6500"] = ["mipsel", "router", "linux", "MediaTek","MT7621AT" , "lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True", {}]
 
-model_tree["TP_Archer_AX50"] = ["mips", "router", "linux", "intel", "AnyWAN_GRX350", "uhttpd", "True", "False", "root", "NULL", "False", "True", exp_database.model_exp_dic["TP_Archer_AX50"]]
+model_tree["TP_Archer_AX50"] = ["mips", "router", "linux", "intel", "AnyWAN_GRX350", "uhttpd", "True", "False", "root", "NULL", "unknow","False", "True", exp_database.model_exp_dic["TP_Archer_AX50"]]
 
+model_tree["RT-AC68U"] = ["armelv7" ,"router", "linux", "Broadcom", "BCM4708A0", "lighttpd", "True", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["RT-AC68U"]]
 
+model_tree["R7000"] = ["armelv7", "router", "linux","Broadcom", "BCM4709A0", "httpd", "True", "False", "root", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["R7000"]]
+
+#model_tree["R6250"] = ["armelv7", "router", "linux", "Broadcom", "BCM4708A0", ""]
+
+model_tree["TL-MR6400"] = ["mips", "router", "linux", "Qualcomm", "Atheros QCA9531", "httpd(like goahead)","False","False", "root", "unknow", "unknow", "Ture","True", {}]
+
+model_tree["Netgear_R6900v2"] = ["mipsel", "router","linux","MediaTek", "MT7621AT", "new: mini_httpd, old:lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True",{}]
+
+model_tree["Netgear_R6220"] = [ "mipsel", "router", "linux","MediaTek","MT7621ST", "new: mini_httpd, old:lighttpd", "True", "False", "root", "NULL", "unknow", "True", "True", {}]
+
+model_tree["DIR-885L"] = ["armelv7", "router","linux", "Broadcom","BCM4709C0", "httpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-885L"]]
+
+model_tree["huawei_HG532"] = ["mips", "router", "linux", "Ralink", "RT3052", "unknow", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["huawei_HG532"]]
 '''
 Modem
 '''

