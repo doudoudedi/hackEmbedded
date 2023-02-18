@@ -136,7 +136,7 @@ model_tree["TOTOLINK_T10"] = ["mipsel", "router", "linux", "Realtek", "RTL8197F"
 
 model_tree["TOTOLINK_A860R"] = ["mipsel", "router", "linux", "Realtek", "RTL8195AM","lighttpd","False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A860R"]]
 
-model_tree["Linsys_RE6500"] = ["mipsel", "router", "linux", "MediaTek","MT7621AT" , "lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True", {}]
+model_tree["Linsys_RE6500"] = ["mipsel", "router", "linux", "MediaTek","MT7621AT" , "lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["Linsys_RE6500"]]
 
 model_tree["TP_Archer_AX50"] = ["mips", "router", "linux", "intel", "AnyWAN_GRX350", "uhttpd", "True", "False", "root", "NULL", "unknow","False", "True", exp_database.model_exp_dic["TP_Archer_AX50"]]
 
@@ -155,6 +155,14 @@ model_tree["Netgear_R6220"] = [ "mipsel", "router", "linux","MediaTek","MT7621ST
 model_tree["DIR-885L"] = ["armelv7", "router","linux", "Broadcom","BCM4709C0", "httpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-885L"]]
 
 model_tree["huawei_HG532"] = ["mips", "router", "linux", "Ralink", "RT3052", "unknow", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["huawei_HG532"]]
+
+model_tree["Cisco_RV110W"] = ["mipsel", "vpn firewall router", "linux", "Broadcom", "BRCM5357", "httpd", "False", "False", "admin", "Admin123", "unknow", "False",exp_database.model_exp_dic["Cisco_RV110W"]]
+
+model_tree["Cisco_RV130"] = ["armelv7", "vpn firewall router", "linux", "Broadcom", "BCM58522", "httpd", "False", "False", "admin", "Admin123", "unknow", "False", exp_database.model_exp_dic["Cisco_RV130"]]
+
+model_tree["Cisco_RV130W"] = ["armelv7", "vpn firewall router", "linux", "Broadcom", "BCM58522", "httpd", "False", "False", "admin", "Admin123", "unknow", "False", exp_database.model_exp_dic["Cisco_RV130"]]
+
+model_tree["ASUS_RT-AC56U"] = ["armelv7", "router", "linux", "Broadcom", "BCM4352", "lighttpd", "True", "False", "root", "NULL", "unknow", "True", "False", {}]
 '''
 Modem
 '''
@@ -170,8 +178,7 @@ Firewall
 '''
 model_tree["F5_BIG-IP"] = ["x64", "Firewall","linux", "intel", "X3220  @ 2.40GHzstepping 4core","Apache and Tomcat" ,"True", "True", "not support", "not support", "no have", "False", "True" , exp_database.model_exp_dic["F5_BIG-IP"]]
 
-
-
+model_tree["Zyxel_USG_FLEX_500"] = ["mips32n", "Firewall", "linux", "unknow", "unknow", "Apache", "True", "False", "no", "no", "unknow", "False", "True", exp_database.model_exp_dic["F5_BIG-IP"]]
 
 
 '''
