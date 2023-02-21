@@ -5077,13 +5077,19 @@ def main():
 	log.info("Initialize data file")
 	try:
 		if (os.path.exists(model_choise.model_tree_info_dicname) == True):
+			model_choise.data_base_init()
 			model_choise.dic_model_tree()
 			model_choise.model_tree_dic()
 		else:
 			model_choise.make_dic()
+			model_choise.data_base_init()
 			model_choise.model_tree_dic()
-	except:
+	except Exception as e:
+		print(e)
 		log.info("Initialization fail")
+	#except:
+	#	print(e)
+	#	log.info("Initialization fail")
 	log.success("Initialization completed")
 	if (os.access("/tmp/hackebds_model_table", os.F_OK | os.R_OK | os.W_OK)):
 		pass

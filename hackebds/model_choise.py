@@ -34,175 +34,195 @@ model_arch_tree["RV_340"] = "armelv7"
 wifi_extender
 '''
 
-model_tree["TOTOLINK_EX200"] = ['mips', "wifi_extender","linux" , "Realtek", "RTL8196E", "lighttpd", "False","False", 'root', 'cs2012',"https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_EX200"] ]
+def data_base_init():
 
+	model_tree["TOTOLINK_EX200"] = ['mips', "wifi_extender","linux" , "Realtek", "RTL8196E", "lighttpd", "False","False", 'root', 'cs2012',"https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_EX200"] ]
 
-model_tree["Netgear_EX6100v1"] = ['mipsel', "wifi_extender", "linux", "MediaTek","MT7620A", "httpd(like:goahead)", "False", "False", "The latest version of the telnetd service is not started by default", "The latest version of the telnetd service is not started by default","https://github.com/houzhenggang/mt7620_sdk","False","True", exp_database.model_exp_dic["Netgear_EX6100v1"]]
-#model_tree["TOTOLINK_N600R"] = ["mips", "linux", "Realtek" ,"RTL8197D", "https://github.com/doudoudedi", "False", "True", poc]
 
-model_tree["Xiaomi_wifi_amplifier"] = ["mipsel", "wifi_extender", "ecos", "MediaTek", "MT7628KN", "ecos", "False", "False", "no", "no", "unknow", "False", "False", {}]
-'''
-Router
-'''
+	model_tree["Netgear_EX6100v1"] = ['mipsel', "wifi_extender", "linux", "MediaTek","MT7620A", "httpd(like:goahead)", "False", "False", "The latest version of the telnetd service is not started by default", "The latest version of the telnetd service is not started by default","https://github.com/houzhenggang/mt7620_sdk","False","True", exp_database.model_exp_dic["Netgear_EX6100v1"]]
+	#model_tree["TOTOLINK_N600R"] = ["mips", "linux", "Realtek" ,"RTL8197D", "https://github.com/doudoudedi", "False", "True", poc]
 
-model_tree["TOTOLINK_X5000R"] = ['mipsel', "router", "linux","MediaTek", "MT7621AT", "lighttpd","False","False", 'root', 'cs2012',"unknow", "True", "True" ,{}]
+	model_tree["Xiaomi_wifi_amplifier"] = ["mipsel", "wifi_extender", "ecos", "MediaTek", "MT7628KN", "ecos", "False", "False", "no", "no", "unknow", "False", "False", {}]
 
-model_tree["TOTOLINK_A8000RU"] = ['aarch64', "router","linux", "MediaTek", "MT7622","lighttpd","False","False", 'root', 'cs2012', "unknow", "True", "True", {}]
+	model_tree["tenda_A18"] = ["mipsel", "wifi_extender", "linux", "unknow", "unknow", "False", "False", "root", "unknow","unknow", "False", "True", {}]
 
-model_tree["TOTOLINK_A7000R"] = ['mipsel', 'router' ,"linux", "MediaTek","MT7621AT",'lighttpd',"False","False", 'root', 'cs2012',"unknow" ,"True", 'True' ,exp_database.model_exp_dic["TOTOLINK_A7000R"]]
+	'''
+	Router
+	'''
 
-model_tree["TOTOLINK_A850R"] = ["mips", "router" ,"linux" , "Realtek" ,"RTL8192ER", 'boa', "False","False", 'root', '',"https://sourceforge.net/projects/rtl819x/","False", "True", {}]
+	model_tree["TOTOLINK_X5000R"] = ['mipsel', "router", "linux","MediaTek", "MT7621AT", "lighttpd","False","False", 'root', 'cs2012',"unknow", "True", "True" , exp_database.model_exp_dic["TOTOLINK_X5000R"]]
 
-model_tree["TOTOLINK_N600R"] = ["mips", "router" ,"linux", "Realtek" ,"RTL8196D", "lighttpd", "False","False", 'root', 'cs2012',"https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_N600R"]]
+	model_tree["TOTOLINK_A8000RU"] = ['aarch64', "router","linux", "MediaTek", "MT7622","lighttpd","False","False", 'root', 'cs2012', "unknow", "True", "True", {}]
 
-model_tree["TOTOLINK_A800R"] = ["mips", "router" ,"linux", "Realtek" ,"RTL8197DL", "lighttpd","False","False", 'root', 'cs2012', "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A800R"]]
+	model_tree["TOTOLINK_A7000R"] = ['mipsel', 'router' ,"linux", "MediaTek","MT7621AT",'lighttpd',"False","False", 'root', 'cs2012',"unknow" ,"True", 'True' ,exp_database.model_exp_dic["TOTOLINK_A7000R"]]
 
-model_tree["TOTOLINK_T6"] = ['mipsel', "router", "linux", "Realtek", "RTL8197F", "lighttpd","False","False", 'root', 'cs2012',"https://sourceforge.net/projects/rtl819x/", "Not_supported_temporarily", "True", {}]
+	model_tree["TOTOLINK_A850R"] = ["mips", "router" ,"linux" , "Realtek" ,"RTL8192ER", 'boa', "False","False", 'root', '',"https://sourceforge.net/projects/rtl819x/","False", "True", {}]
 
-model_tree["TOTOLINK_X18"] = ['mipsel', "router", "linux", "MediaTek", "MT7621+MT7905", "lighttpd", "False","False", 'root', 'cs2012',"unkonw", "Not_supported_temporarily", "True", {}]
+	model_tree["TOTOLINK_N600R"] = ["mips", "router" ,"linux", "Realtek" ,"RTL8196D", "lighttpd", "False","False", 'root', 'cs2012',"https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_N600R"]]
 
-model_tree["TOTOLINK_A7100RU"] = ['mipsel', "router", "linux", "MediaTek","MT7621A+MT7615Ex2", "lighttpd","False","False", 'root', 'cs2012',"unkonw", "True", "True", {}]
+	model_tree["TOTOLINK_A800R"] = ["mips", "router" ,"linux", "Realtek" ,"RTL8197DL", "lighttpd","False","False", 'root', 'cs2012', "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A800R"]]
 
-model_tree["Cisco_RV340"] = ["armelv7", "router", "linux", "Cisco", "unknow", "nginx", "True" ,"False", "unknow", "unknow", "unknodw","False", "True", {}]
+	model_tree["TOTOLINK_T6"] = ['mipsel', "router", "linux", "Realtek", "RTL8197F", "lighttpd","False","False", 'root', 'cs2012',"https://sourceforge.net/projects/rtl819x/", "Not_supported_temporarily", "True", {}]
 
-model_tree["Cisco_RV16x"] = ["armelv7", "router", "linux", "Cisco", "unknow", "mini_httpd", "True", "False", "unkow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["Cisco_RV16x"]]
+	model_tree["TOTOLINK_X18"] = ['mipsel', "router", "linux", "MediaTek", "MT7621+MT7905", "lighttpd", "False","False", 'root', 'cs2012',"unkonw", "Not_supported_temporarily", "True", {}]
 
-model_tree["wavlink_WL-WN535K3"] = ["mipsel", "router", "linux", "Mediatek", "MT7620A", "lighttpd", "False", "False", "unknow", "unknow", "https://github.com/houzhenggang/mt7620_sdk", "True", "True", exp_database.model_exp_dic["wavlink_WL-WN535K3"]]
+	model_tree["TOTOLINK_A7100RU"] = ['mipsel', "router", "linux", "MediaTek","MT7621A+MT7615Ex2", "lighttpd","False","False", 'root', 'cs2012',"unkonw", "True", "True", {}]
 
-model_tree["TOTOLINK_A810R"] = ["mipsel", "router", "linux", "Realtek", "RTL8197F", "lighttpd", "False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A810R"]]
+	model_tree["Cisco_RV340"] = ["armelv7", "router", "linux", "Cisco", "unknow", "nginx", "True" ,"False", "unknow", "unknow", "unknodw","False", "True", {}]
 
-model_tree["BR-6428nS_v3"] = ["mipsel", "router", "linux", "Realtek", "RTL8196E", "axhttpd", "False", "False", "NULL", "NULL","https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["BR-6428nS_v3"]]
+	model_tree["Cisco_RV16x"] = ["armelv7", "router", "linux", "Cisco", "unknow", "mini_httpd", "True", "False", "unkow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["Cisco_RV16x"]]
 
-model_tree["DIR-816"] = ["mipsel", "router", "linux", "Realtek", "RTL8881AQ", "goahead", "False", "False", "admin", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-816"]]
+	model_tree["wavlink_WL-WN535K3"] = ["mipsel", "router", "linux", "Mediatek", "MT7620A", "lighttpd", "False", "False", "unknow", "unknow", "https://github.com/houzhenggang/mt7620_sdk", "True", "True", exp_database.model_exp_dic["wavlink_WL-WN535K3"]]
 
-model_tree["DIR_810L"] = ["mipsel", "router", "linux", "MediaTek", "MT7620A", "mini_httpd", "False", "False", "admin", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DIR-810L"]]
+	model_tree["TOTOLINK_A810R"] = ["mipsel", "router", "linux", "Realtek", "RTL8197F", "lighttpd", "False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A810R"]]
 
-model_tree["DIR-820L"] = ["mips", "router", "linux", "Realtek", "RTL8197D", "jjhttpd", "False", "False","root", "root", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-810L"]]
+	model_tree["BR-6428nS_v3"] = ["mipsel", "router", "linux", "Realtek", "RTL8196E", "axhttpd", "False", "False", "NULL", "NULL","https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["BR-6428nS_v3"]]
 
-model_tree["DIR-820LW"] =["mips", "router", "linux", "Realtek", "RTL8197D", "jjhttpd", "False", "False","root", "root", "https://sourceforge.net/projects/rtl819x/", "False", "True",exp_database.model_exp_dic["DIR-810L"]]
+	model_tree["DIR-816"] = ["mipsel", "router", "linux", "Realtek", "RTL8881AQ", "goahead", "False", "False", "admin", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-816"]]
 
-model_tree["DIR-605"] = ["mipsel", "router", "linux2.4.18", "Realtek" ,"RTL8196C" ,"boa", "False", "False", "admin", "NULL", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-605"]]
+	model_tree["DIR_810L"] = ["mipsel", "router", "linux", "MediaTek", "MT7620A", "mini_httpd", "False", "False", "admin", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DIR-810L"]]
 
-model_tree["DIR-860L"] = ["A1: Armelv7 && B1: mipsel,", "router", "linux", "A1:Broadcom && B1:Mediatek", "A1:BCM47081A0 && B1:MT7621AT", "httpd(D-link_self)","False", "False", "root", "NULL","unknow", "B1version True","True", exp_database.model_exp_dic["DIR-860L"]]
+	model_tree["DIR-820L"] = ["mips", "router", "linux", "Realtek", "RTL8197D", "jjhttpd", "False", "False","root", "root", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-810L"]]
 
-model_tree["TEW-651BR"] = ["mips", "router", "linux", "Realtek","RTL8196B", "mini_httpd", "False", "False", "root", "NULL", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TEW-651BR"]]
+	model_tree["DIR-820LW"] =["mips", "router", "linux", "Realtek", "RTL8197D", "jjhttpd", "False", "False","root", "root", "https://sourceforge.net/projects/rtl819x/", "False", "True",exp_database.model_exp_dic["DIR-810L"]]
 
-model_tree["DIR-818LW"] = ["mips", "router", "linux", "MediaTek", "MT6592", "httpd(D-link_self)", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-818LW"]]
+	model_tree["DIR-605"] = ["mipsel", "router", "linux2.4.18", "Realtek" ,"RTL8196C" ,"boa", "False", "False", "admin", "NULL", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-605"]]
 
-model_tree["DIR-822"] = ["mips", "router", "linux", "Realtek", "RTL8197FN", "httpd(D-link_self)", "False", "False", "root", "NULL",  "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-822"]]
+	model_tree["DIR-860L"] = ["A1: Armelv7 && B1: mipsel,", "router", "linux", "A1:Broadcom && B1:Mediatek", "A1:BCM47081A0 && B1:MT7621AT", "httpd(D-link_self)","False", "False", "root", "NULL","unknow", "B1version True","True", exp_database.model_exp_dic["DIR-860L"]]
 
-model_tree["DIR-846"] = ["mipsel", "router", "linux", "Realtek", "RTL8197F", "lighttpd", "False", "False", "admin/root", "unknow", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-846"]]
+	model_tree["TEW-651BR"] = ["mips", "router", "linux", "Realtek","RTL8196B", "mini_httpd", "False", "False", "root", "NULL", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TEW-651BR"]]
 
-model_tree["RT-N53"] = ["mipsel", "router", "linux", "Broadcom", "BCM5358", "httpd(link goahead)", "False", "False" ,"root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["RT-N53"]]
+	model_tree["DIR-818LW"] = ["mips", "router", "linux", "MediaTek", "MT6592", "httpd(D-link_self)", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-818LW"]]
 
-model_tree["tenda_MW6"] = ["mipsel", "router", "linux", "Realtek","RTL8197F", "app(unknow)", "False", "False", "root", "unknow", "https://sourceforge.net/projects/rtl819x/", "False", "False", {}]
+	model_tree["DIR-822"] = ["mips", "router", "linux", "Realtek", "RTL8197FN", "httpd(D-link_self)", "False", "False", "root", "NULL",  "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-822"]]
 
-model_tree["Netgear_R6200v1"] = ["mipsel", "router", "linux", "Broadcom", "BCM4718", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", {}]
+	model_tree["DIR-846"] = ["mipsel", "router", "linux", "Realtek", "RTL8197F", "lighttpd", "False", "False", "admin/root", "unknow", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-846"]]
 
-model_tree["Netgear_EX6300v2"] = ["armelv7", "router", "linux", "Broadcom", "BCM4708A0", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", {}]
+	model_tree["RT-N53"] = ["mipsel", "router", "linux", "Broadcom", "BCM5358", "httpd(link goahead)", "False", "False" ,"root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["RT-N53"]]
 
-#model_tree["Netgear_R8000P"] = []
+	model_tree["tenda_MW6"] = ["mipsel", "router", "linux", "Realtek","RTL8197F", "app(unknow)", "False", "False", "root", "unknow", "https://sourceforge.net/projects/rtl819x/", "False", "False", {}]
 
-model_tree["H3C_magic_R100"] = ["mips", "router", "linux", "RealTek", "RTL8196E", "boa", "False", "False", "root", "root", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["H3C_magic_R100"]]
+	model_tree["Netgear_R6200v1"] = ["mipsel", "router", "linux", "Broadcom", "BCM4718", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", {}]
 
-#model_tree["H3C_TX1801_Plus"] = ["", "", "", "MediaTek", "MT7621AT"]
+	model_tree["Netgear_EX6300v2"] = ["armelv7", "router", "linux", "Broadcom", "BCM4708A0", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", {}]
 
-model_tree["DSL-AC3100"] = ["armelv7","router", "linux", "Broadcom", "BCM63138", "httpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DSL-AC3100"]]
+	#model_tree["Netgear_R8000P"] = []
 
-model_tree["Buffalo_WSR-2533DHP2"] = ["aarch64" ,"router", "linux", "MediaTek", "MT7622B", "unknow", "False", "False", "unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["DSL-AC3100"]]
+	model_tree["H3C_magic_R100"] = ["mips", "router", "linux", "RealTek", "RTL8196E", "boa", "False", "False", "root", "root", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["H3C_magic_R100"]]
 
+	#model_tree["H3C_TX1801_Plus"] = ["", "", "", "MediaTek", "MT7621AT"]
 
-model_tree["Tenda_AC6v2"] = ["mipsel", "router", "linux", "Realtek", "RTL8197FN", "httpd(linke goahead)", "False", "False", "root", "unknow", "https://sourceforge.net/projects/rtl819x/","False", "True", exp_database.model_exp_dic["Tenda_AC6v2"]]
+	model_tree["DSL-AC3100"] = ["armelv7","router", "linux", "Broadcom", "BCM63138", "httpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DSL-AC3100"]]
 
-model_tree["Tenda_AC6v5"] = ["mips", "router", "RTOS", "Realtek", "RTL8197FH", "no", "False", "False", "not support", "not support", "https://sourceforge.net/projects/rtl819x/","False", "unknow", {}]
+	model_tree["Buffalo_WSR-2533DHP2"] = ["aarch64" ,"router", "linux", "MediaTek", "MT7622B", "unknow", "False", "False", "unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["DSL-AC3100"]]
 
-model_tree["xiaomi_wifi_R3"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "sysapihttpd(niginx)", "True", "False", "root", "unknow", "unknow","True", "True", exp_database.model_exp_dic["mi_wifi_R3"]]
 
-model_tree["Netgear_R6300v1"] = ["mipsel", "router", "linux", "Broadcom", "BCM4706", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", {}]
+	model_tree["Tenda_AC6v2"] = ["mipsel", "router", "linux", "Realtek", "RTL8197FN", "httpd(linke goahead)", "False", "False", "root", "unknow", "https://sourceforge.net/projects/rtl819x/","False", "True", exp_database.model_exp_dic["Tenda_AC6v2"]]
 
-model_tree["Netgear_R8300"] = ["armelv7", "router", "linux", "Broadcom","BCM47094", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_R8300"]]
+	model_tree["Tenda_AC6v5"] = ["mips", "router", "RTOS", "Realtek", "RTL8197FH", "no", "False", "False", "not support", "not support", "https://sourceforge.net/projects/rtl819x/","False", "unknow", {}]
 
-model_tree["Tenda_FH330"] = ["arm?", "router", "ecos", "Broadcom", "BCM5357C0", "no", "False", "False", "not support", "not support", "unknow", "False", "unknow", {}]
+	model_tree["xiaomi_wifi_R3"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "sysapihttpd(niginx)", "True", "False", "root", "unknow", "unknow","True", "True", exp_database.model_exp_dic["mi_wifi_R3"]]
 
-model_tree["TL-WR841Nv12_us"] = ["mips", "router", "linux", "Atheros", "QCA9533 @ 560 MHz,", "httpd", "False", "False", "root", "shoadmin", "unknow", "True", "True", exp_database.model_exp_dic["TL-WR841Nv12_us"]]
+	model_tree["Netgear_R6300v1"] = ["mipsel", "router", "linux", "Broadcom", "BCM4706", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", {}]
 
-model_tree["TL-WDR5620v1"] = ["mipsel", "router", "linux", "MediaTek", "MT7628A", "uhttpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["TL-WDR5620v1"]]
+	model_tree["Netgear_R8300"] = ["armelv7", "router", "linux", "Broadcom","BCM47094", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_R8300"]]
 
-model_tree["TOTOLINK_A950RG"] = ["mipsel", "router", "linux", "MediaTek", "MT7621A", "lighttpd", "False", "False", "root", "cs2012", "unknow", "False", "True", exp_database.model_exp_dic["TOTOLINK_A950RG"]]
+	model_tree["Tenda_FH330"] = ["arm?", "router", "ecos", "Broadcom", "BCM5357C0", "no", "False", "False", "not support", "not support", "unknow", "False", "unknow", {}]
 
-model_tree["TOTOLINK_T10"] = ["mipsel", "router", "linux", "Realtek", "RTL8197F", "lighttpd","False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_T10"]]
+	model_tree["TL-WR841Nv12_us"] = ["mips", "router", "linux", "Atheros", "QCA9533 @ 560 MHz,", "httpd", "False", "False", "root", "shoadmin", "unknow", "True", "True", exp_database.model_exp_dic["TL-WR841Nv12_us"]]
 
-#model_tree["TL-WA830RE"] = [""]
+	model_tree["TL-WDR5620v1"] = ["mipsel", "router", "linux", "MediaTek", "MT7628A", "uhttpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["TL-WDR5620v1"]]
 
-model_tree["TOTOLINK_A860R"] = ["mipsel", "router", "linux", "Realtek", "RTL8195AM","lighttpd","False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A860R"]]
+	model_tree["TOTOLINK_A950RG"] = ["mipsel", "router", "linux", "MediaTek", "MT7621A", "lighttpd", "False", "False", "root", "cs2012", "unknow", "False", "True", exp_database.model_exp_dic["TOTOLINK_A950RG"]]
 
-model_tree["Linsys_RE6500"] = ["mipsel", "router", "linux", "MediaTek","MT7621AT" , "lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["Linsys_RE6500"]]
+	model_tree["TOTOLINK_T10"] = ["mipsel", "router", "linux", "Realtek", "RTL8197F", "lighttpd","False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_T10"]]
 
-model_tree["TP_Archer_AX50"] = ["mips", "router", "linux", "intel", "AnyWAN_GRX350", "uhttpd", "True", "False", "root", "NULL", "unknow","False", "True", exp_database.model_exp_dic["TP_Archer_AX50"]]
+	#model_tree["TL-WA830RE"] = [""]
 
-model_tree["RT-AC68U"] = ["armelv7" ,"router", "linux", "Broadcom", "BCM4708A0", "lighttpd", "True", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["RT-AC68U"]]
+	model_tree["TOTOLINK_A860R"] = ["mipsel", "router", "linux", "Realtek", "RTL8195AM","lighttpd","False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A860R"]]
 
-model_tree["R7000"] = ["armelv7", "router", "linux","Broadcom", "BCM4709A0", "httpd", "True", "False", "root", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["R7000"]]
+	model_tree["Linsys_RE6500"] = ["mipsel", "router", "linux", "MediaTek","MT7621AT" , "lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["Linsys_RE6500"]]
 
-#model_tree["R6250"] = ["armelv7", "router", "linux", "Broadcom", "BCM4708A0", ""]
+	model_tree["TP_Archer_AX50"] = ["mips", "router", "linux", "intel", "AnyWAN_GRX350", "uhttpd", "True", "False", "root", "NULL", "unknow","False", "True", exp_database.model_exp_dic["TP_Archer_AX50"]]
 
-model_tree["TL-MR6400"] = ["mips", "router", "linux", "Qualcomm", "Atheros QCA9531", "httpd(like goahead)","False","False", "root", "unknow", "unknow", "Ture","True", {}]
+	model_tree["RT-AC68U"] = ["armelv7" ,"router", "linux", "Broadcom", "BCM4708A0", "lighttpd", "True", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["RT-AC68U"]]
 
-model_tree["Netgear_R6900v2"] = ["mipsel", "router","linux","MediaTek", "MT7621AT", "new: mini_httpd, old:lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True",{}]
+	model_tree["R7000"] = ["armelv7", "router", "linux","Broadcom", "BCM4709A0", "httpd", "True", "False", "root", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["R7000"]]
 
-model_tree["Netgear_R6220"] = [ "mipsel", "router", "linux","MediaTek","MT7621ST", "new: mini_httpd, old:lighttpd", "True", "False", "root", "NULL", "unknow", "True", "True", {}]
+	#model_tree["R6250"] = ["armelv7", "router", "linux", "Broadcom", "BCM4708A0", ""]
 
-model_tree["DIR-885L"] = ["armelv7", "router","linux", "Broadcom","BCM4709C0", "httpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-885L"]]
+	model_tree["TL-MR6400"] = ["mips", "router", "linux", "Qualcomm", "Atheros QCA9531", "httpd(like goahead)","False","False", "root", "unknow", "unknow", "Ture","True", {}]
 
-model_tree["huawei_HG532"] = ["mips", "router", "linux", "Ralink", "RT3052", "unknow", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["huawei_HG532"]]
+	model_tree["Netgear_R6900v2"] = ["mipsel", "router","linux","MediaTek", "MT7621AT", "new: mini_httpd, old:lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True",{}]
 
-model_tree["Cisco_RV110W"] = ["mipsel", "vpn firewall router", "linux", "Broadcom", "BRCM5357", "httpd", "False", "False", "admin", "Admin123", "unknow", "False",exp_database.model_exp_dic["Cisco_RV110W"]]
+	model_tree["Netgear_R6220"] = [ "mipsel", "router", "linux","MediaTek","MT7621ST", "new: mini_httpd, old:lighttpd", "True", "False", "root", "NULL", "unknow", "True", "True", {}]
 
-model_tree["Cisco_RV130"] = ["armelv7", "vpn firewall router", "linux", "Broadcom", "BCM58522", "httpd", "False", "False", "admin", "Admin123", "unknow", "False", exp_database.model_exp_dic["Cisco_RV130"]]
+	model_tree["DIR-885L"] = ["armelv7", "router","linux", "Broadcom","BCM4709C0", "httpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-885L"]]
 
-model_tree["Cisco_RV130W"] = ["armelv7", "vpn firewall router", "linux", "Broadcom", "BCM58522", "httpd", "False", "False", "admin", "Admin123", "unknow", "False", exp_database.model_exp_dic["Cisco_RV130"]]
+	model_tree["huawei_HG532"] = ["mips", "router", "linux", "Ralink", "RT3052", "unknow", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["huawei_HG532"]]
 
-model_tree["ASUS_RT-AC56U"] = ["armelv7", "router", "linux", "Broadcom", "BCM4352", "lighttpd", "True", "False", "root", "NULL", "unknow", "True", "False", {}]
-'''
-Modem
-'''
-model_tree["fenghuo_MR820"] = ["mips(router)&&arm(android)", "Modem", "linux&&android", "MediaTek && ??","RTL-8676S&&??", "boa", "False", "False", "unknow", "unknow", "unknow", "False", "True", {}]
+	model_tree["Cisco_RV110W"] = ["mipsel", "vpn firewall router", "linux", "Broadcom", "BRCM5357", "httpd", "False", "False", "admin", "Admin123", "unknow", "False",{}]
 
-model_tree["Netgear_DGN1000v1"] = ['mips', "Modem", "linux", "Infineon/Lantiq","Lantiq PSB 50601 HL v1.2", "mini_httpd", "False", "False", "NULL", "NULL", "unknow", "False", "True", {}]
+	model_tree["Cisco_RV130"] = ["armelv7", "vpn firewall router", "linux", "Broadcom", "BCM58522", "httpd", "False", "False", "admin", "Admin123", "unknow", "False", "True",exp_database.model_exp_dic["Cisco_RV130"]]
 
+	model_tree["Cisco_RV130W"] = ["armelv7", "vpn firewall router", "linux", "Broadcom", "BCM58522", "httpd", "False", "False", "admin", "Admin123", "unknow", "False", "True",exp_database.model_exp_dic["Cisco_RV130"]]
 
+	model_tree["ASUS_RT-AC56U"] = ["armelv7", "router", "linux", "Broadcom", "BCM4352", "lighttpd", "True", "False", "root", "NULL", "unknow", "True", "False", {}]
 
+	model_tree["Asus_DSL-AC87VG"] = ["armelv7", "router", "linux", "Broadcom", "BCM63138", "httpd(self)", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
 
-'''
-Firewall
-'''
-model_tree["F5_BIG-IP"] = ["x64", "Firewall","linux", "intel", "X3220  @ 2.40GHzstepping 4core","Apache and Tomcat" ,"True", "True", "not support", "not support", "no have", "False", "True" , exp_database.model_exp_dic["F5_BIG-IP"]]
+	model_tree["InRouter615-S"] = ["mipsel", "Industrial_routier", "linux", "unknow", "unknow", "httpd(self)","False", "False", "root","NULL", "unknow", "False", "True", exp_database.model_exp_dic["InRouter615-S"]]
 
-model_tree["Zyxel_USG_FLEX_500"] = ["mips32n", "Firewall", "linux", "unknow", "unknow", "Apache", "True", "False", "no", "no", "unknow", "False", "True", exp_database.model_exp_dic["F5_BIG-IP"]]
+	model_tree["Netgear_R6900"] = ["armelv7", "router", "linux", "Broadcom", "BCM4709A0", "httpd", "False", "False", "root","NULL", "unknow", "unknow", "True", {}]
+	# model_tree["Netgear_R6950"] = ["mipsel", "router", "linux", ""]
 
+	model_tree["DrayTek_Vigor2960"] = ["armelv5", "router", "linux", "intel(not sure)", "unknow", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DrayTek_Vigor2960"]]
 
-'''
-camera
-'''
-model_tree["dh_ipc-kw12_chn"] = ['armelv5', "IP camera", "linux", "HuaWei", "hi3518", "sonia", "False",'True','admin' ,'7ujMko0admin' ,"unkonw", "unkonw", "False", {}]
+	model_tree["DIR-878"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DIR-878"]]
 
-model_tree["DCS-5010L"] = ['mipsel', "IP camera and wireless repeater", "linux", "unknow(Ralink)", "unknow", "alphapd", "False", "True", "root", "NULL", "unknow", "False", "True", {}]
+	model_tree["TPLINK_Archer_A7_V5"] = ["mips","router", "linux-3.38", "Snapdragon","QCA9563", "uhttpd", "True", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["TPLINK_Archer_A7_V5"]]
 
-model_tree["DCS-5020L"] = ['mipsel', "IP camera and wireless repeater", "linux", "Mediatek" ,"RT3352F", "alphapd","False", "True", "root", "NULL",  "unknow", "False but have Beta", "True", {}]
+	'''
+	Modem
+	'''
+	model_tree["fenghuo_MR820"] = ["mips(router)&&arm(android)", "Modem", "linux&&android", "MediaTek && ??","RTL-8676S&&??", "boa", "False", "False", "unknow", "unknow", "unknow", "False", "True", {}]
 
-model_tree["Hikvision_DS-2CD2xx0F-ISeries"] = ["armelv5", "IP camera and wireless repeater", "linux", "HUAWEI", "hixxx", "unknow", "True", "unknow", "unknow", "unknow", "unknow" ,"False", "True", exp_database.model_exp_dic["DS-2CD2xx0F-ISeries"]]
+	model_tree["Netgear_DGN1000v1"] = ['mips', "Modem", "linux", "Infineon/Lantiq","Lantiq PSB 50601 HL v1.2", "mini_httpd", "False", "False", "NULL", "NULL", "unknow", "False", "True", {}]
 
+	model_tree["Buffalo_WSR-2533DHPL"] = ["mipsel", "Modem&&router", "linux", "MediaTek", "MT7621A", "httpd", "False","unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
 
+	model_tree["Buffalo_WSR-3200AX4S"] = ["aarch64", "router&&router", "linux", "MediaTek", "MT7622", "httpd", "False", "False", "root", "NULL", "unknow","True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
 
-model_tree["DCS-93xL"] = ["mipsel", "IP camera", "linux","Ralink","RT3050F && RT5350F", "alphapd","False", "True","admin", "NULL", "unknow" ,"True", "True", exp_database.model_exp_dic["DCS-93xL"]]
+	'''
+	Firewall
+	'''
+	model_tree["F5_BIG-IP"] = ["x64", "Firewall","linux", "intel", "X3220  @ 2.40GHzstepping 4core","Apache and Tomcat" ,"True", "True", "not support", "not support", "no have", "False", "True" , exp_database.model_exp_dic["F5_BIG-IP"]]
 
-model_tree["DCS-2530L"] = ["unknow", "IP camera", "unknow", "unknow","unknow","unknow","False","True", "unknow", "unknow", "unknow" ,"False", "True", exp_database.model_exp_dic["DCS-2530L"]]
+	model_tree["Zyxel_USG_FLEX_500"] = ["mips32n", "Firewall", "linux", "unknow", "unknow", "Apache", "True", "False", "no", "no", "unknow", "False", "True", exp_database.model_exp_dic["Zyxel_USG_FLEX_500"]]
 
-model_tree["DCS-1130"] = ["armelv5", "IP camera", "linux", "unknow", "unknow", "False", "True", "lighttpd", "root", "NULL", "unknow", "False", "True", {}]
-'''
-information for model
-[arch, function ,os ,cpu_vender ,cpu , web_server, SSH_support,Eavesdropping, default_telnet_username, default_telnet_passwd ,sdk_link,support_for_openwrt, is_vulnerable]
-'''
+
+	'''
+	camera
+	'''
+	model_tree["dh_ipc-kw12_chn"] = ['armelv5', "IP camera", "linux", "HuaWei", "hi3518", "sonia", "False",'True','admin' ,'7ujMko0admin' ,"unkonw", "unkonw", "False", {}]
+
+	model_tree["DCS-5010L"] = ['mipsel', "IP camera and wireless repeater", "linux", "unknow(Ralink)", "unknow", "alphapd", "False", "True", "root", "NULL", "unknow", "False", "True", {}]
+
+	model_tree["DCS-5020L"] = ['mipsel', "IP camera and wireless repeater", "linux", "Mediatek" ,"RT3352F", "alphapd","False", "True", "root", "NULL",  "unknow", "False but have Beta", "True", {}]
+
+	model_tree["Hikvision_DS-2CD2xx0F-ISeries"] = ["armelv5", "IP camera and wireless repeater", "linux", "HUAWEI", "hixxx", "unknow", "True", "unknow", "unknow", "unknow", "unknow" ,"False", "True", exp_database.model_exp_dic["DS-2CD2xx0F-ISeries"]]
+
+
+
+	model_tree["DCS-93xL"] = ["mipsel", "IP camera", "linux","Ralink","RT3050F && RT5350F", "alphapd","False", "True","admin", "NULL", "unknow" ,"True", "True", exp_database.model_exp_dic["DCS-93xL"]]
+
+	model_tree["DCS-2530L"] = ["unknow", "IP camera", "unknow", "unknow","unknow","unknow","False","True", "unknow", "unknow", "unknow" ,"False", "True", exp_database.model_exp_dic["DCS-2530L"]]
+
+	model_tree["DCS-1130"] = ["armelv5", "IP camera", "linux", "unknow", "unknow", "False", "True", "lighttpd", "root", "NULL", "unknow", "False", "True", {}]
+	'''
+	information for model
+	[arch, function ,os ,cpu_vender ,cpu , web_server, SSH_support,Eavesdropping, default_telnet_username, default_telnet_passwd ,sdk_link,support_for_openwrt, is_vulnerable]
+	'''
 
 
 def get_system_version():
@@ -304,11 +324,16 @@ def model_tree_dic():
 			model_info_file = model_info_dic + "/info"
 
 			model_poc_dic = model_info_dic + "/POC/"
+   
+			model_poc_info_dic = model_info_dic + "/POC/CVE_INFO/"
 
 			if (os.path.exists(model_info_dic) == False):
 				os.makedirs(model_info_dic)
 			if (os.path.exists(model_poc_dic) == False):
 				os.makedirs(model_poc_dic)
+    
+			if (os.path.exists(model_poc_info_dic) == False):
+				os.makedirs(model_poc_info_dic)
 
 			if (os.path.exists(model_info_file) == False):
 				f=open(model_info_file,'w+')
@@ -316,7 +341,6 @@ def model_tree_dic():
 
 
 			info_len = len(v)
-
 
 			with open(model_info_file, "w+") as f:
 
@@ -365,7 +389,13 @@ def model_tree_dic():
 
 					with open(model_poc_dic+k1 , "w") as f:
 
-						f.write(v1)
+						f.write(v1[1])
+      
+      
+					with open(model_poc_info_dic+k1 , "w") as f1:
+         
+						f1.write(v1[0])
+         
 			else:
 				pass
 				#log.info("{} the POC of this device has not been included yet, or the availability of this device is not large".format(k) )
@@ -386,22 +416,29 @@ def dic_model_tree():
 				with open( model_tree_info_dicname+i+"/info" , "r") as f:
 					for line in f.readlines():
 						line=line.strip()
-						model_info.append(line.split(':',2)[1])
+						model_info.append(line.split(':',1)[1])
 			else:
 				for k in range(10):
 					model_info.append('')
 			if (os.path.exists(model_tree_info_dicname + i + "/POC")):
 				poc_dir_file_list = os.listdir(model_tree_info_dicname + i + "/POC" )
+				#cve_info_dir_file_list = os.listdir(model_tree_info_dicname + i + "/POC/CVE_INFO")
 
 				for j in poc_dir_file_list :
+        
+					if(os.path.isdir(model_tree_info_dicname + i + "/POC/"+ j)==False):
+					
+						with open(model_tree_info_dicname + i + "/POC/"+ j , "r") as f1:
 
-					with open(model_tree_info_dicname + i + "/POC/"+ j , "r") as f1:
+							poc_data = f1.read()
+		
+						with open(model_tree_info_dicname + i + "/POC/CVE_INFO/"+ j , "r") as f2:
+							
+							info_data = f2.read()
 
-						poc_data = f1.read()
-
-					poc_dic [j] = poc_data
+						poc_dic [j] = [info_data, poc_data]
 			else:
-					model_info.append({})
+				model_info.append({})
 
 			model_info.append(poc_dic)
 			model_tree[i] = model_info
@@ -455,8 +492,13 @@ def list_model_tree():
 		log.success("Sdk exist {}".format(value[10]))
 
 		log.success("Openwrt support {}".format(value[11]))
+  
+		if (value[12] == "True"):
+			
+			log.success("Vulnable {}".format(value[12]))
 
-		log.success("Vulnable {}".format(value[12]))
+		else:
+			log.info("Vulnable {}".format(value[12]))
 
 	print("-" * 0x42)
 	log.success("The total number of storage devices in the data is {}".format(str(len(model_tree.keys()))))
@@ -500,6 +542,17 @@ def print_model_information(model):
 
 		if(model_tree[model][12] == "True"):
 			log.success("Vulnable {}".format(model_tree[model][12]))
+			log.success("Vulnerability information is as follows:")
+			print("-"*0x40)
+			if (model_tree[model][13] != {}):
+				#print(model_tree[model][13].items())
+				for k,v in model_tree[model][13].items():
+					print(Fore.GREEN + k + Fore.RESET+ "  :  " +  v[0])
+					print("-"*0x40)
+					#print(k+": "+v[0])
+			else:
+				print("Maybe this POC is not included in the script")
+
 		else:
 			log.info("Vulnable {}".format(model_tree[model][12]))
 		'''
@@ -556,13 +609,13 @@ def get_poc(model):
 		log.success("{} ----> {}".format(model, key))
 		if(os.path.exists(key) !=True):
 			with open(key, "w") as f:
-				f.write(value)
+				f.write(value[1])
 		else:
 			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
 			choise = input()
 			if choise == "y\n" or choise == "\n":
 				with open(key, "w") as f:
-					f.write(value)
+					f.write(value[1])
 			else:
 				return
 
