@@ -32,7 +32,12 @@ This tool is embedded in the security test of the device. There are two main fun
 Just use pip to install, if the installation fails, try to use sudo to install
 
 ```
+Use pip install:
 pip(3) install -U hackebds
+
+local install:
+git clone https://github.com/doudoudedi/hackEmbedded
+sudo ./start.sh
 ```
 
 （If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
