@@ -1,33 +1,28 @@
-'''
-fix CVE-2022-40023,CVE-2021-20270,Path Crossing
-'''
-
 from setuptools import setup
 
 with open("./README.rst",'r') as f:
 	data= f.read()
 
-	
-
 
 setup(name='hackebds',
-      version='0.2.3',
-      description='This tool is used for backdoor and shellcode generation for various architecture devices',
-      long_description_content_type="text/markdown",
+      version='0.3.5',
+      description='This tool is used for backdoor,shellcode generation,Information retrieval and POC generation for various architecture devices',
       long_description=data,
       url='https://github.com/doudoudedi/hackEmbedded',
       author='doudoudedi',
       author_email='doudoudedi233@gmail.com',
-      license='MIT',
+      license='GPL-3.0',
       install_requires=[
       'pwn',
       'requests',
       'colorama',
-      'mako == 1.2.2',
-      'pygments == 2.7.4',
+      'mako',
+      'pygments',
+      'multidict',
+      'fuzzywuzzy',
       ],
-      python_requires='>=3.6',
-      py_modules=['hackebds.arm','hackebds.mips',"hackebds.aarch64","hackebds.extract_shellcode",'hackebds.model_choise','hackebds.cve_info','hackebds.powerpc_info','hackebds.ESH'],
+      python_requires='>=3',
+      py_modules=['hackebds.arm','hackebds.mips',"hackebds.aarch64","hackebds.extract_shellcode",'hackebds.model_choise','hackebds.cve_info','hackebds.powerpc_info','hackebds.ESH','hackebds.sparc32','hackebds.sparc64','hackebds.my_package','hackebds.backdoor_encode','hackebds.hackebds_cmd','hackebds.power_reverse_shell','hackebds.power_bind_shell','hackebds.exp_database'],
       data_files=["README.md"],
       entry_points={
       'console_scripts': [
@@ -35,4 +30,3 @@ setup(name='hackebds',
     ]
   },
 )
-
