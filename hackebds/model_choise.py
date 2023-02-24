@@ -206,6 +206,15 @@ def data_base_init():
  
 	model_tree["Netgear_D7000v1"] = [ "armelv7" ,"Modem&&router" ,"linux", "Broadcom", "BCM63138", "mini_httpd", "False", "False", "root", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_D7000v1"]]
 
+	model_tree["Netgear_MBR1515"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4717A1", "httpd(self)", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic['Netgear_MBR1515']]
+ 
+	model_tree["Netgear_MBR1516"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4717A1", "httpd(self)", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic['Netgear_MBR1515']]
+ 
+	model_tree["Netgear_DGN2200M"] = ["mips", "Modem&&router", "linux", "Broadcom","BCM6358", "httpd(self)", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic['Netgear_MBR1515']]
+ 
+	model_tree["Netgear_WNDR3400"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4718A1", "httpd(self)", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNDR3400"]]
+ 
+	model_tree["Netgear_WNR3500"] = ["armelv5", "Modem&&router", "linux", "Marvell", "Marvell_88F5180NB1", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNDR3400"]]
 	'''
 	Firewall
 	'''
