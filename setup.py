@@ -20,6 +20,7 @@ setup(name='hackebds',
       'pygments',
       'multidict',
       'fuzzywuzzy',
+      'pwntools==4.9.0'
       ],
       python_requires='>=3',
       py_modules=['hackebds.arm','hackebds.mips',"hackebds.aarch64","hackebds.extract_shellcode",'hackebds.model_choise','hackebds.cve_info','hackebds.powerpc_info','hackebds.ESH','hackebds.sparc32','hackebds.sparc64','hackebds.my_package','hackebds.backdoor_encode','hackebds.hackebds_cmd','hackebds.power_reverse_shell','hackebds.power_bind_shell','hackebds.exp_database'],

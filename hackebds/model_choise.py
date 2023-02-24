@@ -147,15 +147,15 @@ def data_base_init():
 
 	model_tree["RT-AC68U"] = ["armelv7" ,"router", "linux", "Broadcom", "BCM4708A0", "lighttpd", "True", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["RT-AC68U"]]
 
-	model_tree["R7000"] = ["armelv7", "router", "linux","Broadcom", "BCM4709A0", "httpd", "True", "False", "root", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["R7000"]]
+	model_tree["Netgear_R7000"] = ["armelv7", "router", "linux","Broadcom", "BCM4709A0", "httpd", "True", "False", "root", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["R7000"]]
 
 	#model_tree["R6250"] = ["armelv7", "router", "linux", "Broadcom", "BCM4708A0", ""]
 
 	model_tree["TL-MR6400"] = ["mips", "router", "linux", "Qualcomm", "Atheros QCA9531", "httpd(like goahead)","False","False", "root", "unknow", "unknow", "Ture","True", {}]
 
-	model_tree["Netgear_R6900v2"] = ["mipsel", "router","linux","MediaTek", "MT7621AT", "new: mini_httpd, old:lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True",{}]
+	model_tree["Netgear_R6900v2"] = ["mipsel", "router","linux","MediaTek", "MT7621AT", "new: mini_httpd, old:lighttpd", "False", "False", "root", "Default passwd", "unknow", "True", "True",{}]
 
-	model_tree["Netgear_R6220"] = [ "mipsel", "router", "linux","MediaTek","MT7621ST", "new: mini_httpd, old:lighttpd", "True", "False", "root", "NULL", "unknow", "True", "True", {}]
+	model_tree["Netgear_R6220"] = [ "mipsel", "router", "linux","MediaTek","MT7621ST", "new: mini_httpd, old:lighttpd", "True", "False", "admin", "Default passwd", "unknow", "True", "True", {}]
 
 	model_tree["DIR-885L"] = ["armelv7", "router","linux", "Broadcom","BCM4709C0", "httpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DIR-885L"]]
 
@@ -173,15 +173,26 @@ def data_base_init():
 
 	model_tree["InRouter615-S"] = ["mipsel", "Industrial_routier", "linux", "unknow", "unknow", "httpd(self)","False", "False", "root","NULL", "unknow", "False", "True", exp_database.model_exp_dic["InRouter615-S"]]
 
-	model_tree["Netgear_R6900"] = ["armelv7", "router", "linux", "Broadcom", "BCM4709A0", "httpd", "False", "False", "root","NULL", "unknow", "unknow", "True", {}]
+	model_tree["Netgear_R6900"] = ["armelv7", "router", "linux", "Broadcom", "BCM4709A0", "httpd", "False", "False", "admin","Default passwd", "unknow", "unknow", "True", {}]
 	# model_tree["Netgear_R6950"] = ["mipsel", "router", "linux", ""]
 
 	model_tree["DrayTek_Vigor2960"] = ["armelv5", "router", "linux", "intel(not sure)", "unknow", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DrayTek_Vigor2960"]]
 
 	model_tree["DIR-878"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DIR-878"]]
 
-	model_tree["TPLINK_Archer_A7_V5"] = ["mips","router", "linux-3.38", "Snapdragon","QCA9563", "uhttpd", "True", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["TPLINK_Archer_A7_V5"]]
+	model_tree["TPLINK_Archer_A7_V5"] = ["mips","router", "linux-3.38", "Snapdragon","QCA9563", "uhttpd", "True", "False", "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["TPLINK_Archer_A7_V5"]]
 
+	model_tree["Netgear_R6330"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
+
+	model_tree["Netgear_R6350"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
+ 
+	model_tree["Netgear_R6700"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
+ 
+	model_tree["Netgear_R6800"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
+
+	model_tree["Netgear_R7200"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
+
+	
 	'''
 	Modem
 	'''
@@ -191,7 +202,9 @@ def data_base_init():
 
 	model_tree["Buffalo_WSR-2533DHPL"] = ["mipsel", "Modem&&router", "linux", "MediaTek", "MT7621A", "httpd", "False","unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
 
-	model_tree["Buffalo_WSR-3200AX4S"] = ["aarch64", "router&&router", "linux", "MediaTek", "MT7622", "httpd", "False", "False", "root", "NULL", "unknow","True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
+	model_tree["Buffalo_WSR-3200AX4S"] = ["aarch64", "Modem&&router", "linux", "MediaTek", "MT7622", "httpd", "False", "False", "root", "unknow", "unknow","True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
+ 
+	model_tree["Netgear_D7000v1"] = [ "armelv7" ,"Modem&&router" ,"linux", "Broadcom", "BCM63138", "mini_httpd", "False", "False", "root", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_D7000v1"]]
 
 	'''
 	Firewall
