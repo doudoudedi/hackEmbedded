@@ -1,4 +1,5 @@
 import os
+from statistics import mode
 from pwn import log,shellcraft
 import platform
 from colorama import Fore,Back,Style
@@ -192,7 +193,13 @@ def data_base_init():
 
 	model_tree["Netgear_R7200"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
 
+	model_tree["DIR-882"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "lighttpd", "False", "False", "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["DIR-882"]]
+
+	model_tree["DIR-825vB"] = ["mips", "router", "linux", "Qualcomm Atheros", "AR7161 rev 2", "httpd(self)", "False","False","unknow","unknow","unknow", "True", "True", exp_database.model_exp_dic["DIR-825vB"]]
+
+	model_tree["DIR-619L"] =["mips", "router", "linux", "Realtek", "RTL8192CE", "boa", "False", "False", "root", "realtek", "unknow", "False", "True", exp_database.model_exp_dic["DIR-619L"]]
 	
+
 	'''
 	Modem
 	'''

