@@ -207,7 +207,7 @@ def data_base_init():
 
 	model_tree["Netgear_DGN1000v1"] = ['mips', "Modem", "linux", "Infineon/Lantiq","Lantiq PSB 50601 HL v1.2", "mini_httpd", "False", "False", "NULL", "NULL", "unknow", "False", "True", {}]
 
-	model_tree["Buffalo_WSR-2533DHPL"] = ["mipsel", "Modem&&router", "linux", "MediaTek", "MT7621A", "httpd", "False","unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
+	model_tree["Buffalo_WSR-2533DHPL"] = ["mipsel", "Modem&&router", "linux", "MediaTek", "MT7621A", "httpd", "False", "False", "unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
 
 	model_tree["Buffalo_WSR-3200AX4S"] = ["aarch64", "Modem&&router", "linux", "MediaTek", "MT7622", "httpd", "False", "False", "root", "unknow", "unknow","True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
  
@@ -221,11 +221,11 @@ def data_base_init():
  
 	model_tree["Netgear_WNDR3400"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4718A1", "httpd(self)", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNDR3400"]]
  
-	model_tree["Netgear_WNR3500"] = ["armelv5", "Modem&&router", "linux", "Marvell", "Marvell_88F5180NB1", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNR3500"]]
+	model_tree["Netgear_WNR3500"] = ["armelv5", "Modem&&router", "linux", "Marvell", "Marvell_88F5180NB1","httpd(self)" ,"False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNR3500"]]
 
-	model_tree["Netgear_WNR834Bv2"] = ["mipsel" , "Modem&&router", "linux-2.4.20", "Broadcom", "BCM4704", "False", "False", "admin", "Default passwd", "unknow","False", "True", exp_database.model_exp_dic["Netgear_WNR834Bv2"]]
+	model_tree["Netgear_WNR834Bv2"] = ["mipsel" , "Modem&&router", "linux-2.4.20", "Broadcom", "BCM4704", "httpd(self)","False", "False", "admin", "Default passwd", "unknow","False", "True", exp_database.model_exp_dic["Netgear_WNR834Bv2"]]
 
-	model_tree["Netgear_WNDR3300"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4704", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNDR3300"]]
+	model_tree["Netgear_WNDR3300"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4704", "httpd(self)","False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNDR3300"]]
 	'''
 	Firewall
 	'''

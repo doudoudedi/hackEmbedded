@@ -134,7 +134,8 @@ def my_bfdname():
         's390'    : 'elf%d-s390' % context.bits,
         'sparc'   : 'elf32-sparc',
         'sparc64' : 'elf64-sparc',
-        'loongarch64' : None
+        'loongarch64' : None ,
+        'mipsn32' : None
     }
 
     if arch in bfdnames:
@@ -163,7 +164,7 @@ def my_linker():
 
 
 
-def my_make_loongarch64_elf(code , filename=None,vma= None,shared=False, strip=None,extract=None):
+def my_make_add_arch_elf(code , filename=None,vma= None,shared=False, strip=None,extract=None):
 	assembler = pwnlib.asm._assembler()
 	linker    = my_linker()
 	log.debug("Building ELF:\n")
