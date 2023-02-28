@@ -16,6 +16,7 @@ import string
 from . import my_package
 from . import power_reverse_shell
 from . import power_bind_shell
+from . import mips32n
 
 chars = string.ascii_letters
 
@@ -4831,7 +4832,7 @@ def test1():
 '''
 
 def get_version():
-    return Fore.GREEN+"Version: 0.3.5"+Fore.RESET
+    return Fore.GREEN+"Version: 0.3.6"+Fore.RESET
 
 
 '''
@@ -4863,7 +4864,9 @@ reverse_backdoor_dic = {
 	17: powerpc_info.powerpc64le_backdoor,
 	18: sparc32.sparc_backdoor,
 	19: None,
-	20: sparc64.sparc64_backdoor
+	20: sparc64.sparc64_backdoor,
+	21: mips32n.mipsn32_backdoor,
+	22: mips32n.mipsn32el_backdoor
 }
 
 reverse_shellcode_dic = {
@@ -4955,7 +4958,9 @@ power_reverse_shell = {
 	17: None,
 	18: power_reverse_shell.sparc_power_reverse_shell,
 	19: None,
-	20: power_reverse_shell.sparc64_power_reverse_shell
+	20: power_reverse_shell.sparc64_power_reverse_shell,
+	21: power_reverse_shell.mipsn32_power_reverse_shell,
+	22: power_reverse_shell.mipsn32el_power_reverse_shell
 }
 
 
@@ -4998,7 +5003,9 @@ arch_2_num_dic ={
 	'powerpc64le': 17,
 	'sparc': 18,
 	'sparcel': 19,
-	'sparc64':20
+	'sparc64':20,
+	'mipsn32' :21,
+	'mipsn32el' :22
 
 }
 
@@ -5055,7 +5062,7 @@ def main():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-reverse_ip', required=False, type=str, default=None, help='reverse_ip set')
 	parser.add_argument('-reverse_port', required=False, type=int, default=None ,help='reverse_port set')
-	parser.add_argument('-arch', required=False, type=str, help='Target arch architecturet', choices=('aarch64', 'android', 'armebv5', 'armebv7', 'armelv5', 'armelv7', 'mips', 'mips64', 'mipsel', 'mips64el', 'powerpc', 'powerpc64', 'powerpc64le', 'powerpcle', 'riscv64', 'sparc', 'sparc64', 'x64', 'x86'))
+	parser.add_argument('-arch', required=False, type=str, help='Target arch architecturet', choices=('aarch64', 'android', 'armebv5', 'armebv7', 'armelv5', 'armelv7', 'mips', 'mips64', 'mipsel', 'mips64el', 'mipsn32','mipsn32el','powerpc', 'powerpc64', 'powerpc64le', 'powerpcle', 'riscv64', 'sparc', 'sparc64', 'x64', 'x86'))
 	parser.add_argument('-res', required=False,type=str,default=None, choices=('reverse_shell_file', 'reverse_shellcode', 'bind_shell','cmd_file','cveinfo'))
 	parser.add_argument('-passwd', required=False, type=str,default="1234", help='bind_shell set connect passwd')
 	parser.add_argument('-model', required=False, type=str ,default=None, help='device model,learn module')
@@ -5176,6 +5183,7 @@ def main():
 						return
 
 					except Exception as e:
+						print(e)
 						log.info("please check your IP format and PORT ,If it is correct then The function is still under development or environmental problems")
 						return
 			else:

