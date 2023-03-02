@@ -4936,6 +4936,8 @@ bind_shell_dic = {
 	18: sparc32.sparc_bind_shell,
 	19: None,
 	20: None,
+	21: mips32n.mipsn32_bind_shell,
+	22: mips32n.mipsn32el_bind_shell
 }
 
 power_reverse_shell = {
@@ -5227,6 +5229,7 @@ def main():
 				log.info("please set bind passwd or bind_port")
 				return
 		except Exception as e:
+			print(e)
 			log.info("please check your IP format and PORT ,If it is correct then function is still under development or environmental problems")
 			return
 			#pass
