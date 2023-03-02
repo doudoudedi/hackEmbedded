@@ -1,3 +1,4 @@
+from ast import expr
 import os
 from statistics import mode
 from pwn import log,shellcraft
@@ -45,7 +46,9 @@ def data_base_init():
 
 	model_tree["Xiaomi_wifi_amplifier"] = ["mipsel", "wifi_extender", "ecos", "MediaTek", "MT7628KN", "ecos", "False", "False", "no", "no", "unknow", "False", "False", {}]
 
-	model_tree["tenda_A18"] = ["mipsel", "wifi_extender", "linux", "unknow", "unknow", "False", "False", "root", "unknow","unknow", "False", "True", {}]
+	model_tree["tenda_A18"] = ["mipsel", "wifi_extender", "linux", "Realtek", "RTL8197fnt", "False", "False", "root", "unknow","https://sourceforge.net/projects/rtl819x/", "False", "True", {}]#update 2023.3.1
+
+	model_tree["KPN_Experia_Wifi(Arca_WE420223-99)"] = ['mipsel', "wifi_extender&&router", "linux","MediaTek", "MT7615DN", "unknow", "False", "False", "unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic['Arca_WE420223-99']]
 
 	'''
 	Router
@@ -187,8 +190,10 @@ def data_base_init():
 
 	model_tree["Netgear_R6350"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
  
-	model_tree["Netgear_R6700"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
+	model_tree["Netgear_R6700v2"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]# Fix errors in 2023.3.2
  
+	model_tree["Netgear_R6700"] = ["armelv7", "router", "linux", "Broadcom", "BCM4709A0", "http(self)", "False", "False", "admin", "Default passwd", "unknow", "unknow", "True", exp_database.model_exp_dic['Netgear_R6700']]
+
 	model_tree["Netgear_R6800"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
 
 	model_tree["Netgear_R7200"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
@@ -205,7 +210,17 @@ def data_base_init():
 
 	model_tree["GT-AC2900"] = ["aarch64(armv8)" ,"router","linux" ,"Broadcom", "BCM4906(Cortex-A53)", "httpd(self)", "True", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["GT-AC2900"]]
 
+	model_tree["Netgear_WNR1000v3"] = ["mipsel", "router", "linux", "Broadcom", "BCM5356", "httpd(self)", "False", "False",  "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic['Netgear_WNR1000v3']]
 	
+	model_tree["ASUS_RT_AC88U"] = ["armelv7", "router", "linux", "Broadcom","BCM4709C0KFEBG(Cortex-A9)", "httpd(self)","True", "False", "unknow", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["ASUS_RT_AC88U"]]
+
+	model_tree["Netgear_WNDR4500v2"] = ['mipsel', "router", "linux", "Broadcom", "BCM4706", "httpd(self)", "False", "False",  "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic['Netgear_WNDR4500v2']]
+
+	model_tree["Xiaomi_AX3600"] = ["aarch64", "router", "linux","Qualcomm", "IPQ8071A", "Nginx", "True", "False", "root", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["Xiaomi_AX3600"]]
+
+	model_tree["Netgear_WNR3500L"] = ["mipsel", "router", "linux","Broadcom", "BCM4718A", "httpd(self)", "False", "False",  "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic['Netgear_WNDR4500v2']]
+
+	#model_tree[""]
 	'''
 	Modem
 	'''
@@ -232,6 +247,10 @@ def data_base_init():
 	model_tree["Netgear_WNR834Bv2"] = ["mipsel" , "Modem&&router", "linux-2.4.20", "Broadcom", "BCM4704", "httpd(self)","False", "False", "admin", "Default passwd", "unknow","False", "True", exp_database.model_exp_dic["Netgear_WNR834Bv2"]]
 
 	model_tree["Netgear_WNDR3300"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4704", "httpd(self)","False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNDR3300"]]
+
+	model_tree["Netgear_WNDR3400v2"] = ["mipsel",  "Modem&&router", "linux", "Broadcom", "BCM5358UB0", "http(self)", "False", "False", "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_WNDR3400v2"]]
+	
+
 	'''
 	Firewall
 	'''
