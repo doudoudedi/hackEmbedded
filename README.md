@@ -16,11 +16,11 @@
 
 This tool is embedded in the security test of the device. There are two main functions:
 
-1. Generate **backdoor programs** of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be generated on the target machine)
+1. Generate **backdoor programs** (only ELF) of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64,mipsn32  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be generated on the target machine)
 
-2. Generate **reverse_shell shellcode** of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mipsel64, powerpc, powerpc64，sparc  are now supported, and they are still being updated**
+2. Generate **reverse_shell shellcode** (only linux) of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mipsel64, powerpc, powerpc64,sparc,mipsn32  are now supported, and they are still being updated**
 
-3. Generate bind of various architectures bind_Shell file.
+3. Generate bind of various architectures bind_Shell(only ELF) file, -power can persistent bind_shell
 
 4. Sort out the exploitable vulnerability POC or EXP of the embedded device, and search and output the basic information and POC of the device model in use: Function of equipment, Architecture of equipment,Device CPU manufacturer,Device CPU model,WEB service program of the device, and so on
 
@@ -66,12 +66,6 @@ Ubuntu（debian）:
  	 https://github.com/Gallopsled/pwntools-binutils
  	 brew install https://raw.githubusercontent.com/Gallopsled/pwntools-binutils/master/osx/binutils-$ARCH.rb
 ```
-
-If the following error occurs
-
-hackebds: error: argument -model: expected one argument
-
-Please set all parameters to lowercase or lowercase mixed with uppercase. I guess it is due to the conflict between python and bash in the interpretation of uppercase and lowercase letters
 
 1. Use the command line to generate the backdoor file name, shellcode, bindshell, etc
 
@@ -148,6 +142,12 @@ Please set all parameters to lowercase or lowercase mixed with uppercase. I gues
    ![image-20230213151548871](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213151548871.png)
 
    Add the retrieval of device information. Use - s to search for the - model parameter. This search is fuzzy and insensitive to case. Try to use the device information with the highest matching degree between lowercase output and input when inputting
+
+   If the following error occurs
+
+   hackebds: error: argument -model: expected one argument
+
+   Please set all parameters to lowercase or lowercase mixed with uppercase. I guess it is due to the conflict between python and bash in the interpretation of uppercase and lowercase letters
 
    ```
    hackebds -model ex200 -s
@@ -348,6 +348,8 @@ Powerpc, sparc: qemu
 
  2023.1.29 0.3.3 -The power function adds support for bind_shell, bind_shell is more stable, and fixes some bugs in the execution of bind_shell and cmd_file files of the aarch64 architecture
 
+2023.3.7 0.3.6 Added support for the mipsn32 architecture (this architecture may be encountered in devices such as zyxel firewalls)
+
 ## Problems to be solved
 
 Support the backend of the loongarch64 architecture and the generation of the bind_shell program (binutils has been integrated into the mainline, but cannot be installed directly through apt)
@@ -368,33 +370,3 @@ CVE-2022-40023 DOS_attack pip install -U  mako (The vulnerability does not apply
 CVE-2021-20270 DOS_attack pip install -U  pygments (The vulnerability does not apply to this tool)
 
  0.2.5 Version Repair directory traversal in the specified model
-
- ## Verion List
-
-| VERSION                                                      | PUBLISHED    | DIRECT VULNERABILITIES |
-| ------------------------------------------------------------ | ------------ | ---------------------- |
-| [0.3.2](https://security.snyk.io/package/pip/hackebds/0.3.2) | 18 Jan, 2023 | 0C0H0M0L               |
-| [0.3.1](https://security.snyk.io/package/pip/hackebds/0.3.1) | 16 Jan, 2023 | 0C0H0M0L               |
-| [0.3.0](https://security.snyk.io/package/pip/hackebds/0.3.0) | 6 Jan, 2023  | 0C0H0M0L               |
-| [0.2.9](https://security.snyk.io/package/pip/hackebds/0.2.9) | 26 Dec, 2022 | 0C0H0M0L               |
-| [0.2.8](https://security.snyk.io/package/pip/hackebds/0.2.8) | 6 Dec, 2022  | 0C0H0M0L               |
-| [0.2.7](https://security.snyk.io/package/pip/hackebds/0.2.7) | 22 Nov, 2022 | 0C0H0M0L               |
-| [0.2.3](https://security.snyk.io/package/pip/hackebds/0.2.3) | 15 Nov, 2022 | 0C0H0M0L               |
-| [0.2.2](https://security.snyk.io/package/pip/hackebds/0.2.2) | 8 Nov, 2022  | 0C0H0M0L               |
-| [0.2.1](https://security.snyk.io/package/pip/hackebds/0.2.1) | 7 Nov, 2022  | 0C0H0M0L               |
-| [0.2.0](https://security.snyk.io/package/pip/hackebds/0.2.0) | 2 Nov, 2022  | 0C0H0M0L               |
-| [0.1.9](https://security.snyk.io/package/pip/hackebds/0.1.9) | 2 Nov, 2022  | 0C0H0M0L               |
-| [0.1.6](https://security.snyk.io/package/pip/hackebds/0.1.6) | 27 Oct, 2022 | 0C0H0M0L               |
-| [0.1.5](https://security.snyk.io/package/pip/hackebds/0.1.5) | 26 Oct, 2022 | 0C0H0M0L               |
-| [0.1.3](https://security.snyk.io/package/pip/hackebds/0.1.3) | 27 Jun, 2022 | 0C0H0M0L               |
-| [0.1.2](https://security.snyk.io/package/pip/hackebds/0.1.2) | 27 Jun, 2022 | 0C0H0M0L               |
-| [0.1.1](https://security.snyk.io/package/pip/hackebds/0.1.1) | 27 Jun, 2022 | 0C0H0M0L               |
-| [0.0.9](https://security.snyk.io/package/pip/hackebds/0.0.9) | 21 May, 2022 | 0C0H0M0L               |
-| [0.0.8](https://security.snyk.io/package/pip/hackebds/0.0.8) | 5 May, 2022  | 0C0H0M0L               |
-| [0.0.7](https://security.snyk.io/package/pip/hackebds/0.0.7) | 30 Apr, 2022 | 0C0H0M0L               |
-| [0.0.6](https://security.snyk.io/package/pip/hackebds/0.0.6) | 30 Apr, 2022 | 0C0H0M0L               |
-| [0.0.5](https://security.snyk.io/package/pip/hackebds/0.0.5) | 29 Apr, 2022 | 0C0H0M0L               |
-| [0.0.4](https://security.snyk.io/package/pip/hackebds/0.0.4) | 29 Apr, 2022 | 0C0H0M0L               |
-| [0.0.3](https://security.snyk.io/package/pip/hackebds/0.0.3) | 29 Apr, 2022 | 0C0H0M0L               |
-| [0.0.2](https://security.snyk.io/package/pip/hackebds/0.0.2) | 29 Apr, 2022 | 0C0H0M0L               |
-| [0.0.1](https://security.snyk.io/package/pip/hackebds/0.0.1) | 29 Apr, 2022 | 0C0H0M0L               |

@@ -10,6 +10,7 @@ from pwn import context,log,sleep,pwnlib
 from pwnlib import atexit
 import re
 import platform
+from . import model_choise
 
 chars = string.ascii_letters
 
@@ -35,7 +36,7 @@ def spaceReplace(i):
 def get_envir_args(envp):
 	return remove_null(spaceReplace(envp))
 
-
+ 
 
 def my_make_elf(code , filename=None,vma= None,shared=False, strip=None,extract=None):
 	assembler = pwnlib.asm._assembler()
@@ -235,115 +236,128 @@ def check_mipsn32_envir():
 		return 2
 
 
-def get_mipsn32_binutils():
+def get_mipsn32_binutils(context_arch):
 	if(platform.system()== "Linux"):
 		log.success("checking and installing mipsn32 cross tool")
-		try:
-			if(os.path.exists("/usr/bin/mipsn32-linux-gnu-as") == True):
-				try:
-					cmd_out = subprocess.Popen(['readelf','-h', "/usr/bin/mipsn32-linux-gnu-as"], shell=False, stdout=PIPE, stderr = PIPE).stderr.read()
-					if cmd_out != b"":
-						if(check_root() == True):
-							subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32-linux-gnu-as", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-as"],shell=False)
-						else:
-							log.info("root user is required")
-							return 1
-						log.success("mipsn32-linux-gnu-as download success")
-				except:
-					log.info("please install readelf")
-					return 1
-			else:
-				if(check_root() == True):
-					subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32-linux-gnu-as", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-as"],shell=False)
+		if(context.arch == "mipsn32"):
+			try:
+				if(os.path.exists("/usr/bin/mipsn32-linux-gnu-as") == True):
+					try:
+						cmd_out = subprocess.Popen(['readelf','-h', "/usr/bin/mipsn32-linux-gnu-as"], shell=False, stdout=PIPE, stderr = PIPE).stderr.read()
+						if cmd_out != b"":
+							if(check_root() == True):
+								subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32-linux-gnu-as", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-as"],shell=False)
+								os.system("chmod 111 /usr/bin/mipsn32-linux-gnu-as")#;chmod +x /usr/bin/mipsn32-linux-gnu-ld;chmod +x /usr/bin/mipsn32el-linux-gnu-ld;chmod +x /usr/bin/mipsn32el-linux-gnu-as")
+
+							else:
+								log.info("root user is required")
+								return 1
+							log.success("mipsn32-linux-gnu-as download success")
+					except:
+						log.info("please install readelf")
+						return 1
 				else:
-					log.info("root user is required")
-					return 1
-				log.success("mipsn32-linux-gnu-as download success")
-		except:
-			log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
-			return 1
+					if(check_root() == True):
+						subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32-linux-gnu-as", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-as"],shell=False)
+						os.system("chmod 111 /usr/bin/mipsn32-linux-gnu-as")
+					else:
+						log.info("root user is required")
+						return 1
+					log.success("mipsn32-linux-gnu-as download success")
+			except:
+				log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
+				return 1
 		
 		#mipsn32_ld = subprocess.check_call
-		try:
-			if(os.path.exists("/usr/bin/mipsn32-linux-gnu-ld") == True):
-				try:
-					cmd_out = subprocess.Popen(['readelf','-h', "/usr/bin/mipsn32-linux-gnu-ld"], shell=False, stdout=PIPE, stderr = PIPE).stderr.read()
-					if cmd_out != b"":
-						if(check_root() == True):
-							subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32-linux-gnu-ld", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-ld"],shell=False)
-						else:
-							log.info("root user is required")
-							return 1	
-						log.success("mipsn32-linux-gnu-ld download success")
-				except:
-					log.info("please install readelf")
-					return 1
-			else:
-				if(check_root() == True):
-					subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32-linux-gnu-ld", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-ld"],shell=False)
+			try:
+				if(os.path.exists("/usr/bin/mipsn32-linux-gnu-ld") == True):
+					try:
+						cmd_out = subprocess.Popen(['readelf','-h', "/usr/bin/mipsn32-linux-gnu-ld"], shell=False, stdout=PIPE, stderr = PIPE).stderr.read()
+						if cmd_out != b"":
+							if(check_root() == True):
+								subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32-linux-gnu-ld", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-ld"],shell=False)
+								os.system("chmod 111 /usr/bin/mipsn32-linux-gnu-ld")#;chmod +x /usr/bin/mipsn32el-linux-gnu-ld;chmod +x /usr/bin/mipsn32el-linux-gnu-as")
+
+							else:
+								log.info("root user is required")
+								return 1	
+							log.success("mipsn32-linux-gnu-ld download success")
+					except:
+						log.info("please install readelf")
+						return 1
 				else:
-					log.info("root user is required")
-					return 1
-				log.success("mipsn32-linux-gnu-as download success")
-		except:
-			log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
-			return 1
+					if(check_root() == True):
+						subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32-linux-gnu-ld", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-ld"],shell=False)
+						os.system("chmod 111 /usr/bin/mipsn32-linux-gnu-ld")
+					else:
+						log.info("root user is required")
+						return 1
+					log.success("mipsn32-linux-gnu-as download success")
+			except:
+				log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
+				return 1
+
+			log.success("mipsn32 corss-tool is ready")
+		else:
 		
-		try:
-			if(os.path.exists("/usr/bin/mipsn32el-linux-gnu-ld") == True):
-				try:
-					cmd_out = subprocess.Popen(['readelf','-h', "/usr/bin/mipsn32el-linux-gnu-ld"], shell=False, stdout=PIPE, stderr = PIPE).stderr.read()
-					if cmd_out != b"":
-						if(check_root() == True):
-							subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32el-linux-gnu-ld", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-ldel"],shell=False)
-						else:
-							log.info("root user is required")
-							return 1	
-						log.success("mipsn32el-linux-gnu-ld download success")
-				except:
-					log.info("please install readelf")
-					return 1
-			else:
-				if(check_root() == True):
-					subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32el-linux-gnu-ld", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32el-linux-gnu-ld"],shell=False)
+			try:
+				if(os.path.exists("/usr/bin/mipsn32el-linux-gnu-ld") == True):
+					try:
+						cmd_out = subprocess.Popen(['readelf','-h', "/usr/bin/mipsn32el-linux-gnu-ld"], shell=False, stdout=PIPE, stderr = PIPE).stderr.read()
+						if cmd_out != b"":
+							if(check_root() == True):
+								subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32el-linux-gnu-ld", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32-linux-gnu-ldel"],shell=False)
+								os.system("chmod 111 /usr/bin/mipsn32el-linux-gnu-ld")#;chmod +x /usr/bin/mipsn32el-linux-gnu-as")
+							else:
+								log.info("root user is required")
+								return 1	
+							log.success("mipsn32el-linux-gnu-ld download success")
+					except:
+						log.info("please install readelf")
+						return 1
 				else:
-					log.info("root user is required")
-					return 1
-				log.success("mipsn32-linux-gnu-as download success")
-		except:
-			log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
-			return 1
-		try:
-			if(os.path.exists("/usr/bin/mipsn32el-linux-gnu-as") == True):
-				try:
-					cmd_out = subprocess.Popen(['readelf','-h', "/usr/bin/mipsn32el-linux-gnu-as"], shell=False, stdout=PIPE, stderr = PIPE).stderr.read()
-					if cmd_out != b"":
-						if(check_root() == True):
-							subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32el-linux-gnu-as", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32el-linux-gnu-as"],shell=False)
-						else:
-							log.info("root user is required")
-							return 1
-						log.success("mipsn32el-linux-gnu-as download success")
-				except:
-					log.info("please install readelf")
-					return 1
-			else:
-				if(check_root() == True):
-					subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32el-linux-gnu-as", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32el-linux-gnu-as"],shell=False)
+					if(check_root() == True):
+						subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32el-linux-gnu-ld", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32el-linux-gnu-ld"],shell=False)
+						os.system("chmod 111 /usr/bin/mipsn32el-linux-gnu-ld")
+					else:
+						log.info("root user is required")
+						return 1
+					log.success("mipsn32-linux-gnu-as download success")
+			except:
+				log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
+				return 1
+			try:
+				if(os.path.exists("/usr/bin/mipsn32el-linux-gnu-as") == True):
+					try:
+						cmd_out = subprocess.Popen(['readelf','-h', "/usr/bin/mipsn32el-linux-gnu-as"], shell=False, stdout=PIPE, stderr = PIPE).stderr.read()
+						if cmd_out != b"":
+							if(check_root() == True):
+								subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32el-linux-gnu-as", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32el-linux-gnu-as"],shell=False)
+								os.system("chmod 111 /usr/bin/mipsn32el-linux-gnu-as")
+							else:
+								log.info("root user is required")
+								return 1
+							log.success("mipsn32el-linux-gnu-as download success")
+					except:
+						log.info("please install readelf")
+						return 1
 				else:
-					log.info("root user is required")
-					return 1
-				log.success("mipsn32el-linux-gnu-as download success")
-		except:
-			log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
-			return 1
+					if(check_root() == True):
+						subprocess.check_output(["wget", "-O", "/usr/bin/mipsn32el-linux-gnu-as", "-T", "10", "-t", "3","https://github.com/doudoudedi/hackEmbedded/raw/main/cross-tools/mipsn32el-linux-gnu-as"],shell=False)
+						os.system("chmod 111 /usr/bin/mipsn32el-linux-gnu-as")
+					else:
+						log.info("root user is required")
+						return 1
+					log.success("mipsn32el-linux-gnu-as download success")
+			except:
+				log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
+				return 1
+			log.success("mipsn32el cross tool is ready")
 
 		#subprocess.Popen("mv","./mipsn32-linux-gnu-as","/usr/bin")
 		if(check_root() == True):
-			os.system("chmod +x /usr/bin/mipsn32-linux-gnu-as;chmod +x /usr/bin/mipsn32-linux-gnu-ld;chmod +x /usr/bin/mipsn32el-linux-gnu-ld;chmod +x /usr/bin/mipsn32el-linux-gnu-as")
 			if(os.path.exists("/tmp/mipsn32_binutils")==False and check_mipsn32_envir()==2):
 				try:
-					print("Debug")
 					os.system("mkdir -p /tmp/mipsn32_binutils;cp /usr/bin/mipsn32-linux-gnu-as /tmp/mipsn32_binutils;cp /usr/bin/mipsn32-linux-gnu-ld /tmp/mipsn32_binutils;cp /usr/bin/mipsn32el-linux-gnu-as /tmp/mipsn32_binutils;cp /usr/bin/mipsn32el-linux-gnu-ld /tmp/mipsn32_binutils")
 					os.system("echo \"export PATH=\$PATH:/tmp/mipsn32_binutils\" >> ~/.bashrc")
 					log.success("mipsn32_binutils write environment variable succeeded ")

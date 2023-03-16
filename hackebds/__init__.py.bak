@@ -1,8 +1,5 @@
 from . import extract_shellcode
-from pwn import *
-import argparse
 from . import model_choise
-from . import cve_info
 import os
 from hackebds.ESH import *
 from hackebds.powerpc_info import *
@@ -5068,47 +5065,43 @@ def check_port(intport):
 		log.error("port error")
 
 
-def main():
-	import argparse
-	parser = argparse.ArgumentParser(
-					usage= '',
-                    prog = 'hackebds',
-                    description = 'This tool is used for backdoor,shellcode generation,Information retrieval and POC arrangement for various architecture devices',
-                    )
-	parser.add_argument('-reverse_ip', required=False, type=str, default=None, help='reverse_ip set')
-	parser.add_argument('-reverse_port', required=False, type=int, default=None ,help='reverse_port set')
-	parser.add_argument('-arch', required=False, type=str, help='Target arch architecturet', choices=('aarch64', 'android', 'armebv5', 'armebv7', 'armelv5', 'armelv7', 'mips', 'mips64', 'mipsel', 'mips64el', 'mipsn32','mipsn32el','powerpc', 'powerpc64', 'powerpc64le', 'powerpcle', 'riscv64', 'sparc', 'sparc64', 'x64', 'x86'))
-	parser.add_argument('-res', required=False,type=str,default=None, choices=('reverse_shell_file', 'reverse_shellcode', 'bind_shell','cmd_file','cveinfo'))
-	parser.add_argument('-passwd', required=False, type=str,default="1234", help='bind_shell set connect passwd')
-	parser.add_argument('-model', required=False, type=str ,default=None, help='device model,learn module')
-	parser.add_argument('-bind_port', required=False, type=int,default=None, help='bind_shell port')
-	parser.add_argument('-filename', required=False, type=str,default=None, help='Generate file name')
-	parser.add_argument('-shell', required=False, type=str,default="/bin/sh", help='cmd shell or execute file path')
-	parser.add_argument('-cmd', required=False, type=str,default=None, help='Commands executed')
-	parser.add_argument('-envp', required=False, type=str,default=None, help='Commands envp')
-	parser.add_argument('-encode', '--encode' ,action='store_true', help='encode backdoor')
-	parser.add_argument('-power', '--power' ,action='store_true',help='powerful reverse shell_file or bind_shell file')
-	parser.add_argument('-s', '--search' ,action='store_true',help='Basic information and POC of search device')
-	parser.add_argument('-l', '--list' ,action='store_true',help='print model information list')
-	parser.add_argument('-p', '--poc' ,action='store_true',help='generated model\'s POC file')
-	parser.add_argument('-v', '--version' ,action='version', version=get_version(), help='Display version')
-	parser.add_argument('-add', '--add_model', action='store_true', help='Add model tree\'s node')
+
+import click
+
+@click.command()
+@click.option("-lhost", "--lh", type=str, required = False, default=None , help='reverse_ip set')
+@click.option("-lport", "--lp", type = int, required = False , default = None,help='reverse_port set')
+@click.option("-passwd", "--passwd", type=str, required = False, default="1234" , help='passwd set')
+@click.option("-arch", "--arch", required = False , type=click.Choice(['aarch64', 'android', 'armebv5', 'armebv7', 'armelv5', 'armelv7', 'mips', 'mips64', 'mipsel', 'mips64el', 'mipsn32','mipsn32el','powerpc', 'powerpc64', 'powerpc64le', 'powerpcle', 'riscv64', 'sparc', 'sparc64', 'x64', 'x86']), help='Target arch architecturet',)
+@click.option("-shell", "--shell", required = False , default= "sh",type=click.Choice(['sh', 'bash']),help='cmd shell or execute file path')
+@click.option("-envp", required=False, type=str,default=None, help='Commands envp')
+@click.option("-cmd", required=False, type=str,default=None, help='Commands executed')
+@click.option("-l", "--list", is_flag=True, required = False ,help='list model information')
+@click.option("-filename", "--filename", type=str, required = False, default=None , help='Generate file name')
+@click.option("-model", "--model" ,required = False , default = None,help='device model')
+@click.option("-p", "--poc", is_flag=True, required = False ,help='generated model\'s POC file')
+@click.option("-encode", "--encode", is_flag=True, required = False ,help='encode backdoor')
+@click.option("-s", "--search", is_flag=True, required = False ,help='Basic information and POC of search device')
+@click.option("-power", "--power", is_flag=True, required = False ,help='powerful reverse shell_file or bind_shell file')
+@click.option("-res", "--res", required = False, type=click.Choice(['reverse_shell_file', 'reverse_shellcode', 'bind_shell','cmd_file']),help='Specify generated content')
+def main(lh, lp, list, model, poc, res, search, arch, encode, shell, filename, power, envp, passwd, cmd):
+	print("hahah"+model)
+	print("doudoudedi")
 	flag_cve_info = 0
 	#@with_argparser(argparse)
-	args = parser.parse_args()
 	log.info("Initialize data file")
-#try:
-	if (os.path.exists(model_choise.model_tree_info_dicname) == True):
-		model_choise.data_base_init()
-		model_choise.dic_model_tree()
-		model_choise.model_tree_dic()
-	else:
-		model_choise.make_dic()
-		model_choise.data_base_init()
-		model_choise.model_tree_dic()
-#except Exception as e:
-#	print(e)
-#	log.info("Initialization fail")
+	try:
+		if (os.path.exists(model_choise.model_tree_info_dicname) == True):
+			model_choise.data_base_init()
+			model_choise.dic_model_tree()
+			model_choise.model_tree_dic()
+		else:
+			model_choise.make_dic()
+			model_choise.data_base_init()
+			model_choise.model_tree_dic()
+	except Exception as e:
+		print(e)
+		log.info("Initialization fail")
 	#except:
 	#	print(e)
 	#	log.info("Initialization fail")
@@ -5119,82 +5112,83 @@ def main():
 		try:
 			model_choise.touchfile()
 		except Exception as e:
-			args.model = None
+			model = None
 			log.info("Unable to create model architecture relationship due to permission or other problems")
 			pass
 
 	log.success("Data file detection")
-	if(args.list == True):
+	if(list == True):
 		model_choise.list_model_tree()
 		return
-	if(args.add_model == True):
-		model_choise.add_model_info()
-		return
-	if (args.model != None):
-		if (".." in args.model or "/" in args.model ):
+	
+	#if(args.add_model == True):
+	#	model_choise.add_model_info()
+	#	return
+	if (model != None):
+		if (".." in model or "/" in model ):
 			log.error("Illegal characters exist in")
 			return
-		if (args.poc == True and args.model != None):
-			model_search_res = model_choise.search_model(args.model)
+		if (poc == True and model != None):
+			model_search_res = model_choise.search_model(model)
 			model_choise.get_poc(model_search_res)
 			return
-		if (args.search == True):
-			model_choise.search_model(args.model)
+		if (search == True):
+			model_choise.search_model(model)
 			return
 
-	if (args.res == None ):
-		log.info("please use -h View Help")
+	if (res == None ):
+		log.info("please use --help View Help")
 		return
 
-	if(args.arch != None and args.model != None):
+	if(arch != None and model != None):
 		flag_cve_info = 1
 		try:
-			dic_arch = model_choise.model_to_arch(args.model)
-			if (dic_arch == args.arch):
-				args.arch = dic_arch
+			dic_arch = model_choise.model_to_arch(model)
+			if (dic_arch == arch):
+				arch = dic_arch
 			else:
-				model_choise.append_to_tree(args.model, args.arch)
+				model_choise.append_to_tree(model, arch)
 			#args.arch = model_choise.model_to_arch(args.model)
-			log.success("found relationship {} ------>{}".format(args.model, args.arch))
+			log.success("found relationship {} ------>{}".format(model, arch))
 			model_choise.print_mmodel_dic()
 			#print(args.arch)
 		except Exception as e:
-			model = args.model
-			args.model = None
+			model_build = model
+			model = None
 			log.info("There is no cross reference relationship locally, adding the corresponding relationship, can be edited manually /tmp/hackebds_model_table")
 			#print(e)
-			if (args.arch ==None):
+			if (arch ==None):
 				log.info("arch not set")
 				return
 			log.success("Establishing relationship")
 			log.info("Please make sure arch is set correctly, If necessary, you can modify /tmp/hackebds_model_table")
-			log.success("{} ---> {}, After that, you only need to specify {}, not the arch".format(model ,args.arch, model))
-			model_choise.append_to_tree(model, args.arch)
+			log.success("{} ---> {}, After that, you only need to specify {}, not the arch".format(model_build ,arch, model_build))
+			model_choise.append_to_tree(model_build, arch)
 			model_choise.print_mmodel_dic()
 
-	if (args.model != None and args.arch==None):
+	if (model != None and arch==None):
 		try:
 			flag_cve_info  = 1
-			args.arch = model_choise.model_to_arch(args.model)
-			log.success("found relationship {} ------>{}".format(args.model, args.arch))
+			arch = model_choise.model_to_arch(model)
+			log.success("found relationship {} ------>{}".format(model, arch))
 			model_choise.print_mmodel_dic()
 		except:
 			log.info("There is no cross reference relationship locally, please set -arch building relationships, can be edited manually /tmp/hackebds_model_table")
 			return
 
-	if(args.model == None and args.arch==None):
+	if(model == None and arch==None):
 		log.info("please set arch or model")
 		return
 
-	if (args.res == "reverse_shell_file" and args.arch != None and args.encode == False ):
-		if (args.reverse_ip!=None and args.reverse_port != None):
-			if (check_ip(args.reverse_ip)==True and check_port(args.reverse_port)==True):
-				if(args.power == True):
-					num_get_power_reverse_shell(arch_get_number(args.arch), args.shell,args.reverse_ip, args.reverse_port, args.envp ,args.filename)
+	if (res == "reverse_shell_file" and arch != None and encode == False ):
+		if (lh!=None and lp != None):
+			if (check_ip(lh)==True and check_port(lp)==True):
+				if(power == True):
+					num_get_power_reverse_shell(arch_get_number(arch), shell,lh, lp,envp ,filename)
 					return
 				else:
 					try:
-						num_getreverse_file(arch_get_number(args.arch), args.shell ,args.reverse_ip, args.reverse_port, args.envp ,args.filename)
+						num_getreverse_file(arch_get_number(arch), shell ,lh, lp, envp ,filename)
 						return
 
 					except Exception as e:
@@ -5208,14 +5202,15 @@ def main():
 			log.info("please set reverse_ip or reverse_port")
 			return
 
-	if (args.res == "reverse_shellcode" and args.arch != None and args.encode == False ):
-		if (args.reverse_ip!=None and args.reverse_port != None):
-			if (check_ip(args.reverse_ip)==True and check_port(args.reverse_port)==True):
+	if (res == "reverse_shellcode" and arch != None and encode == False ):
+		if (lh!=None and lp != None):
+			if (check_ip(lh)==True and check_port(lp)==True):
 				try:
-					num_getreverse_shellcode(arch_get_number(args.arch), args.reverse_ip, args.reverse_port)
+					num_getreverse_shellcode(arch_get_number(arch), lh, lp)
 					return
 
 				except Exception as e:
+					print(e)
 					log.info("please check your IP format and PORT ,If it is correct then function is still under development or environmental problems")
 					return
 			else:
@@ -5224,16 +5219,16 @@ def main():
 		else:
 			log.error("please set reverse_ip or reverse_port")
 
-	if (args.res == "bind_shell"):
+	if (res == "bind_shell"):
 		try:
-			if (args.passwd!=None and args.bind_port != None and args.arch!=None and args.encode == False ):
-				if (check_port(args.bind_port)==True):
-					if (args.power == True):
-						num_get_power_bind_shell(arch_get_number(args.arch), args.shell ,args.bind_port, args.passwd, args.envp ,args.filename)
+			if (passwd!=None and lp != None and arch!=None and encode == False ):
+				if (check_port(lp)==True):
+					if (power == True):
+						num_get_power_bind_shell(arch_get_number(arch), shell ,lp, passwd, envp ,filename)
 						return
 
 					else:
-						num_getbind_shell(arch_get_number(args.arch), args.bind_port, args.passwd, args.filename)
+						num_getbind_shell(arch_get_number(arch), lp, passwd, filename)
 						return
 				else:
 					log.info("PORT format error")
@@ -5247,14 +5242,11 @@ def main():
 			return
 			#pass
 
-	if (flag_cve_info == 1 and args.res=="cveinfo" ):
-		cve_info.main(args.model)
-		return
 
-	if (args.res == "cmd_file" and args.arch != None and args.encode == False ):
-		if(args.cmd != None):
+	if (res == "cmd_file" and arch != None and encode == False ):
+		if(cmd != None):
 			try:
-				num_get_file_cmd(arch_get_number(args.arch), args.shell, args.cmd, args.envp,args.filename)
+				num_get_file_cmd(arch_get_number(arch), shell, cmd, envp,filename)
 				return
 			except Exception as e:
 				log.info("function is still under development or environmental problems")
@@ -5265,3 +5257,4 @@ def main():
 	else:
 		log.info("function is still under development or environmental problems")
 		return
+		

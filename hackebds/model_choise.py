@@ -50,6 +50,16 @@ def data_base_init():
 
 	model_tree["KPN_Experia_Wifi(Arca_WE420223-99)"] = ['mipsel', "wifi_extender&&router", "linux","MediaTek", "MT7615DN", "unknow", "False", "False", "unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic['Arca_WE420223-99']]
 
+	model_tree["TP_TL-WPA8630"] = ["mips", "Powerline Access Point", "linux", "Qualcomm Atheros", "QCA9563",  "httpd(self)", "True", "False", "root", "sohoadmin", "unknow", "True", "True", exp_database.model_exp_dic["TP_WPA8630_v2"]]
+
+	model_tree["TP_WPA8630_v2"] = ["mips", "Powerline Access Point", "linux", "Qualcomm Atheros", "QCA9563",  "httpd(self)", "True", "False", "root", "sohoadmin", "unknow", "True", "True", exp_database.model_exp_dic["TP_WPA8630_v2"]]
+ 
+	model_tree["Netgear_WNDR3700v2"] = ['mips', "router", "linux", "Atheros", "AR7161", "uhttpd", "False", "False", "admin", "Default Password", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_WNDR3700v2"]]
+ 
+	model_tree["TL-WR802N(US)_V4"] = ['mipsel', "router", "linux", "Mediatek", "MT7628N", "httpd", "False", "False", "unknow", "unknow", "unknow", "True", "True", exp_database.model_exp_dic['TL-WR802N(US)_V4']]
+	
+	model_tree["Tenda_AX1806"] = ['armelv7', "router", "linux", "Broadcom", "BCM6755", "tdhttpd(like goahead)", "False", "False", "unknow", "unknow","unknow", "False", "True", exp_database.model_exp_dic["Tenda_AX1806"]]
+ 
 	'''
 	Router
 	'''
@@ -72,7 +82,7 @@ def data_base_init():
 
 	model_tree["TOTOLINK_A7100RU"] = ['mipsel', "router", "linux", "MediaTek","MT7621A+MT7615Ex2", "lighttpd","False","False", 'root', 'cs2012',"unkonw", "True", "True", {}]
 
-	model_tree["Cisco_RV340"] = ["armelv7", "router", "linux", "Cisco", "unknow", "nginx", "True" ,"False", "unknow", "unknow", "unknodw","False", "True", {}]
+	model_tree["Cisco_RV340"] = ["armelv7", "router", "linux", "Cisco", "unknow", "nginx", "True" ,"False", "unknow", "unknow", "unknodw","False", "True", exp_database.model_exp_dic["Cisco_RV340"]]
 
 	model_tree["Cisco_RV16x"] = ["armelv7", "router", "linux", "Cisco", "unknow", "mini_httpd", "True", "False", "unkow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["Cisco_RV16x"]]
 
@@ -125,7 +135,7 @@ def data_base_init():
 
 	model_tree["Tenda_AC6v5"] = ["mips", "router", "RTOS", "Realtek", "RTL8197FH", "no", "False", "False", "not support", "not support", "https://sourceforge.net/projects/rtl819x/","False", "unknow", {}]
 
-	model_tree["xiaomi_wifi_R3"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "sysapihttpd(niginx)", "True", "False", "root", "unknow", "unknow","True", "True", exp_database.model_exp_dic["mi_wifi_R3"]]
+	#model_tree["xiaomi_wifi_R3"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "sysapihttpd(niginx)", "True", "False", "root", "unknow", "unknow","True", "True", exp_database.model_exp_dic["mi_wifi_R3"]]
 
 	model_tree["Netgear_R6300v1"] = ["mipsel", "router", "linux", "Broadcom", "BCM4706(MIPS 74Kc)", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", {}]
 
@@ -192,7 +202,7 @@ def data_base_init():
  
 	model_tree["Netgear_R6700v2"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]# Fix errors in 2023.3.2
  
-	model_tree["Netgear_R6700"] = ["armelv7", "router", "linux", "Broadcom", "BCM4709A0", "http(self)", "False", "False", "admin", "Default passwd", "unknow", "unknow", "True", exp_database.model_exp_dic['Netgear_R6700']]
+	model_tree["Netgear_R6700"] = ["armelv7", "router", "linux", "Broadcom", "BCM4709A0", "http(self)", "False", "False", "admin", "Default passwd", "unknow", "unknow", "True", {}]
 
 	model_tree["Netgear_R6800"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "mini_httpd", "False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_R6330"]]
 
@@ -220,7 +230,29 @@ def data_base_init():
 
 	model_tree["Netgear_WNR3500L"] = ["mipsel", "router", "linux","Broadcom", "BCM4718A", "httpd(self)", "False", "False",  "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic['Netgear_WNDR4500v2']]
 
-	#model_tree[""]
+	model_tree["DIR-859"] = ["mips", "router", "linux", "Qualcomm", "Qualcomm_Atheros_QCA9563", "httpd(self)", "False", "False", "NULL", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DIR-859"]]
+ 
+	model_tree["TPLINK-TL-WR840N_V5"] = ["mipsel", "router", "linux", "MediaTek","MT7628NN", "httpd(self)","False", "False" ,"admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["TPLINK-TL-WR840N_V5"]]
+ 
+ 	#model_tree[""]
+	model_tree["Cisco_R0XX"]  = ["mips64", "vpnrouter", "linux", "unknow", "unknow", "unknow", "unknow", "unknow", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["Cisco_R0XX"]]
+ 
+	model_tree["Netcomm_NF20"] = ["armelv7", "router && Modem", "linux", "Broadcom", "BCM6328 and wifi BCM43225KMLG", "unknow","False", "False", "unknow", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["Netcomm_NF20"]]
+  
+	model_tree["Netgear_WNDR3700v4"] = ['mips', "router &&Modem", "linux", "Atheros", "AR9344", "uhtttpd", "False", "False",  "admin", "Default passwd", "unknow", "True", "True", {}] #exp_database.model_exp_dic["Netgear_WNDR3700v4"]]
+  
+	model_tree["Netgear_RAX30"] = ["armelv7 && aarch64", "router", "linux4.19.0", "Broadcom", "BCM4908(Cortex-A53和Cortex-A57)", "lighttpd", "False", "False","admin", "Default passwd", "unknow", "True", "True", {}]
+
+	model_tree["Netgear_RAX120"] = ["aarch64", "router", "linux", "Qualcomm", "IPQ8074(cortex-a53)", "lighttpd", "False", "False","admin", "Default passwd", "unknow", "True", "True", {}]
+
+	model_tree["DIR-867_A1"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT","lighttpd", "False", "False", "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["DIR-867"]]
+  
+	'''
+	AP wifi
+ 	'''
+	model_tree["H3C_A210-G"] = ["unknow", "AP_wifi", "linux", "Realtek(??)","unknow", "like goahead","False", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["H3C_A210-G"]]
+  
+  
 	'''
 	Modem
 	'''
@@ -249,14 +281,14 @@ def data_base_init():
 	model_tree["Netgear_WNDR3300"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4704", "httpd(self)","False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNDR3300"]]
 
 	model_tree["Netgear_WNDR3400v2"] = ["mipsel",  "Modem&&router", "linux", "Broadcom", "BCM5358UB0", "http(self)", "False", "False", "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_WNDR3400v2"]]
-	
+
 
 	'''
 	Firewall
 	'''
 	model_tree["F5_BIG-IP"] = ["x64", "Firewall","linux", "intel", "X3220  @ 2.40GHzstepping 4core","Apache and Tomcat" ,"True", "True", "not support", "not support", "no have", "False", "True" , exp_database.model_exp_dic["F5_BIG-IP"]]
 
-	model_tree["Zyxel_USG_FLEX_500"] = ["mips32n", "Firewall", "linux", "unknow", "unknow", "Apache", "True", "False", "no", "no", "unknow", "False", "True", exp_database.model_exp_dic["Zyxel_USG_FLEX_500"]]
+	model_tree["Zyxel_USG_FLEX_500"] = ["mips32n", "Firewall", "linux", "unknow", "unknow(Cortex A9)", "Apache", "True", "False", "no", "no", "unknow", "False", "True", exp_database.model_exp_dic["Zyxel_USG_FLEX_500"]]
 
 
 	'''
@@ -277,10 +309,25 @@ def data_base_init():
 	model_tree["DCS-2530L"] = ["unknow", "IP camera", "unknow", "unknow","unknow","unknow","False","True", "unknow", "unknow", "unknow" ,"False", "True", exp_database.model_exp_dic["DCS-2530L"]]
 
 	model_tree["DCS-1130"] = ["armelv5", "IP camera", "linux", "unknow", "unknow", "False", "True", "lighttpd", "root", "NULL", "unknow", "False", "True", {}]
+ 
+	'''
+	DVR
+ 	'''
+	model_tree["TBK_DVR"] = ["armelv7", "DVR", "linux", "unknow", "unknow", "False", "True", "unknow", "Not", "Not", "unknow", "False", "True", exp_database.model_exp_dic["TBK_serise_DVR"]]
+ 
+
+	'''
+	switch
+ 	'''
+	#model_tree["Netgear_GS110TPv3"] = ['armelv7', "switch", ""]
+ 
 	'''
 	information for model
 	[arch, function ,os ,cpu_vender ,cpu , web_server, SSH_support,Eavesdropping, default_telnet_username, default_telnet_passwd ,sdk_link,support_for_openwrt, is_vulnerable]
 	'''
+
+
+
 
 
 def get_system_version():
@@ -383,7 +430,7 @@ def model_tree_dic():
 
 			model_poc_dic = model_info_dic + "/POC/"
    
-			model_poc_info_dic = model_info_dic + "/POC/CVE_INFO/"
+			model_poc_info_dic = model_info_dic + "/CVE_INFO/"
 
 			if (os.path.exists(model_info_dic) == False):
 				os.makedirs(model_info_dic)
@@ -399,6 +446,8 @@ def model_tree_dic():
 
 
 			info_len = len(v)
+   
+			print(k)
 
 			with open(model_info_file, "w+") as f:
 
@@ -462,6 +511,16 @@ def model_tree_dic():
 		make_dic()
 
 
+def check_poc_info(path, model, vul):
+	if(os.path.exists(path) == True):
+		return 1
+	else:
+		try:
+			return model_tree[model][13][vul][0]
+		except:
+			return ''
+
+
 
 def dic_model_tree():
 	global model_tree
@@ -470,7 +529,7 @@ def dic_model_tree():
 		for i in dir_list:
 			model_info = []
 			poc_dic = {}
-			if (os.path.exists(model_tree_info_dicname+i+"/info") == True):
+			if (os.path.exists(model_tree_info_dicname + i +"/info") == True):
 				with open( model_tree_info_dicname+i+"/info" , "r") as f:
 					for line in f.readlines():
 						line=line.strip()
@@ -478,6 +537,9 @@ def dic_model_tree():
 			else:
 				for k in range(10):
 					model_info.append('')
+			if(os.path.exists(model_tree_info_dicname + i + "/CVE_INFO/") == False):
+				os.makedirs(model_tree_info_dicname + i + "/CVE_INFO/")
+    
 			if (os.path.exists(model_tree_info_dicname + i + "/POC")):
 				poc_dir_file_list = os.listdir(model_tree_info_dicname + i + "/POC" )
 				#cve_info_dir_file_list = os.listdir(model_tree_info_dicname + i + "/POC/CVE_INFO")
@@ -489,10 +551,15 @@ def dic_model_tree():
 						with open(model_tree_info_dicname + i + "/POC/"+ j , "r") as f1:
 
 							poc_data = f1.read()
-		
-						with open(model_tree_info_dicname + i + "/POC/CVE_INFO/"+ j , "r") as f2:
+
+						c_p_i = check_poc_info(model_tree_info_dicname + i + "/CVE_INFO/"+ j, i, j)
+						if(c_p_i == 1 ):
 							
-							info_data = f2.read()
+							with open(model_tree_info_dicname + i + "/CVE_INFO/"+ j , "r") as f2:
+								
+								info_data = f2.read()
+						else:
+							info_data = c_p_i
 
 						poc_dic [j] = [info_data, poc_data]
 			else:

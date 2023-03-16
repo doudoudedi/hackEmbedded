@@ -8,11 +8,11 @@
 ### 功能
 
 该工具嵌入到设备的安全测试中。主要有如下功能：
-1. 生成各种架构的**后门程序**。后门程序是用反向shell汇编代码打包的，大小很小，且纯静态封，装**现在支持Armv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc仍在更新中，powerpc64，sparc，riscv64**，（反向shell在0.3.1版本后加入bash的支持），反向shell后门如果加入-power参数生成，那么会在目标机器上不断产生反向shell
+1. 生成各种架构的**后门程序**（目前只支持生成ELF）。后门程序是用反向shell汇编代码打包的，大小很小，且纯静态封，装**现在支持Armv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc，powerpc64，sparc，riscv64，mipsn32**，（反向shell在0.3.1版本后加入bash的支持），反向shell后门如果加入-power参数生成，那么会在目标机器上不断产生反向shell
 
-2. 在攻击过程中生成各种架构的**反向shell代码**，且无空字节，这有助于攻击嵌入式设备上的内存损坏漏洞**现在支持Armv5、Armv7、Armv8、mipsel和mips，mipsel64，aarch64，sparc，仍在更新中**
+2. 在攻击过程中生成各种架构的**反向shell代码** (同样是针对linux)，且无空字节，这有助于攻击嵌入式设备上的内存损坏漏洞**现在支持Armv5、Armv7、Armv8、mipsel和mips，mipsel64，aarch64，sparc，mipsn32仍在更新中**
 
-3. 生成各种架构的bind_shell文件。
+3. 生成各种架构的bind_shell（目前只支持生成ELF）文件。
 
 4. 针对嵌入式设备存在可利用的漏洞POC或EXP进行整理，在使用中可以通过搜索输出设备型号输的基本信息与POC：
 
@@ -65,12 +65,6 @@ ubuntu（debian）
  	 https://github.com/Gallopsled/pwntools-binutils
  	 brew install https://raw.githubusercontent.com/Gallopsled/pwntools-binutils/master/osx/binutils-$ARCH.rb
 ```
-如果出现如下错误
-
-hackebds: error: argument -model: expected one argument
-
-请将各个参数都设置成小写或者小写与大写混合的形式，猜测是由于python与bash对于大小字母解释冲突的原因
-
 ### 怎么使用
 
 这里的ip地址与端口都是shell弹回的地址与port，导入此模块后pwn模块也会直接导入，无需再次导入
@@ -167,6 +161,12 @@ hackebds -l
 ![image-20230213105027599](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105027599-20230213152149471.png)
 
 加入了对设备信息的检索，使用-s可以针对-model参数进行搜索此搜索是模糊搜索且大小写不敏感，在输入时尽量使用小写输出与输入匹配度最高的设备信息.
+
+如果出现如下错误
+
+hackebds: error: argument -model: expected one argument
+
+请将各个参数都设置成小写或者小写与大写混合的形式，猜测是由于python与bash对于大小字母解释冲突的原因
 
 ```
 hackebds -model ex200 -s
@@ -341,33 +341,9 @@ Powerpc, sparc: qemu
 2023.1.16 0.3.1 加入了bash的reverse_shell,目前此工具只支持到sh与bash，加入了-l功能列出设备型号与架构的关系，加入了-power功能生成更加强大的reverse_shell_file,实现了在程序不被杀死的情况下不断的创建反向的shell链接,目前-power功能只支持到reverse_shell_file
 2023.1.29 0.3.3 -power功能加入了对bind_shell的支持，bind_shell更加稳定，修复了对aarch64架构的bind_shell与cmd_file文件执行的一些bug
 
+2023.3.7 0.3.6 加入了针对于mipsn32架构的支持（此架构在zyxel防火墙等设备中可能会遇到）
 
 
-## :beer: 享受hacking
 
-## 版本列表
-| VERSION                                                      | PUBLISHED    | DIRECT VULNERABILITIES |
-| ------------------------------------------------------------ | ------------ | ---------------------- |
-| [0.3.0](https://security.snyk.io/package/pip/hackebds/0.3.0) | 6 Jan, 2023  | 0C0H0M0L               |
-| [0.2.9](https://security.snyk.io/package/pip/hackebds/0.2.9) | 26 Dec, 2022 | 0C0H0M0L               |
-| [0.2.8](https://security.snyk.io/package/pip/hackebds/0.2.8) | 6 Dec, 2022  | 0C0H0M0L               |
-| [0.2.7](https://security.snyk.io/package/pip/hackebds/0.2.7) | 22 Nov, 2022 | 0C0H0M0L               |
-| [0.2.3](https://security.snyk.io/package/pip/hackebds/0.2.3) | 15 Nov, 2022 | 0C0H0M0L               |
-| [0.2.2](https://security.snyk.io/package/pip/hackebds/0.2.2) | 8 Nov, 2022  | 0C0H0M0L               |
-| [0.2.1](https://security.snyk.io/package/pip/hackebds/0.2.1) | 7 Nov, 2022  | 0C0H0M0L               |
-| [0.2.0](https://security.snyk.io/package/pip/hackebds/0.2.0) | 2 Nov, 2022  | 0C0H0M0L               |
-| [0.1.9](https://security.snyk.io/package/pip/hackebds/0.1.9) | 2 Nov, 2022  | 0C0H0M0L               |
-| [0.1.6](https://security.snyk.io/package/pip/hackebds/0.1.6) | 27 Oct, 2022 | 0C0H0M0L               |
-| [0.1.5](https://security.snyk.io/package/pip/hackebds/0.1.5) | 26 Oct, 2022 | 0C0H0M0L               |
-| [0.1.3](https://security.snyk.io/package/pip/hackebds/0.1.3) | 27 Jun, 2022 | 0C0H0M0L               |
-| [0.1.2](https://security.snyk.io/package/pip/hackebds/0.1.2) | 27 Jun, 2022 | 0C0H0M0L               |
-| [0.1.1](https://security.snyk.io/package/pip/hackebds/0.1.1) | 27 Jun, 2022 | 0C0H0M0L               |
-| [0.0.9](https://security.snyk.io/package/pip/hackebds/0.0.9) | 21 May, 2022 | 0C0H0M0L               |
-| [0.0.8](https://security.snyk.io/package/pip/hackebds/0.0.8) | 5 May, 2022  | 0C0H0M0L               |
-| [0.0.7](https://security.snyk.io/package/pip/hackebds/0.0.7) | 30 Apr, 2022 | 0C0H0M0L               |
-| [0.0.6](https://security.snyk.io/package/pip/hackebds/0.0.6) | 30 Apr, 2022 | 0C0H0M0L               |
-| [0.0.5](https://security.snyk.io/package/pip/hackebds/0.0.5) | 29 Apr, 2022 | 0C0H0M0L               |
-| [0.0.4](https://security.snyk.io/package/pip/hackebds/0.0.4) | 29 Apr, 2022 | 0C0H0M0L               |
-| [0.0.3](https://security.snyk.io/package/pip/hackebds/0.0.3) | 29 Apr, 2022 | 0C0H0M0L               |
-| [0.0.2](https://security.snyk.io/package/pip/hackebds/0.0.2) | 29 Apr, 2022 | 0C0H0M0L               |
-| [0.0.1](https://security.snyk.io/package/pip/hackebds/0.0.1) | 29 Apr, 2022 | 0C0H0M0L               |
+## :beer: enjoy it
+

