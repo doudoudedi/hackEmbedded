@@ -190,7 +190,7 @@ def data_base_init():
 	model_tree["Netgear_R6900"] = ["armelv7", "router", "linux", "Broadcom", "BCM4709A0(Cortex-A9)", "httpd", "False", "False", "admin","Default passwd", "unknow", "unknow", "True", {}]
 	# model_tree["Netgear_R6950"] = ["mipsel", "router", "linux", ""]
 
-	model_tree["DrayTek_Vigor2960"] = ["armelv5", "router", "linux", "intel(not sure)", "unknow", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DrayTek_Vigor2960"]]
+	model_tree["DrayTek_Vigor2960"] = ["armelv7", "router", "linux", "Mindspeed", "Mindspeed Comcerto 2000(Cortex-A9)", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["DrayTek_Vigor2960"]]
 
 	model_tree["DIR-878"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT", "lighttpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DIR-878"]]
 
@@ -241,17 +241,23 @@ def data_base_init():
   
 	model_tree["Netgear_WNDR3700v4"] = ['mips', "router &&Modem", "linux", "Atheros", "AR9344", "uhtttpd", "False", "False",  "admin", "Default passwd", "unknow", "True", "True", {}] #exp_database.model_exp_dic["Netgear_WNDR3700v4"]]
   
-	model_tree["Netgear_RAX30"] = ["armelv7 && aarch64", "router", "linux4.19.0", "Broadcom", "BCM4908(Cortex-A53和Cortex-A57)", "lighttpd", "False", "False","admin", "Default passwd", "unknow", "True", "True", {}]
+	model_tree["Netgear_RAX30"] = ["armelv7 && aarch64", "router", "linux4.19.0", "Broadcom", "BCM4908(Cortex-A53和Cortex-A57)", "lighttpd", "False", "False","admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic['Netgear_RAX30']]
 
 	model_tree["Netgear_RAX120"] = ["aarch64", "router", "linux", "Qualcomm", "IPQ8074(cortex-a53)", "lighttpd", "False", "False","admin", "Default passwd", "unknow", "True", "True", {}]
 
 	model_tree["DIR-867_A1"] = ["mipsel", "router", "linux", "MediaTek", "MT7621AT","lighttpd", "False", "False", "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["DIR-867"]]
   
+	model_tree["H3C_B5_Mini"]  = ['mipsel', "router", "linux", "Realtek", "RTL8197FS", "webs(like goahead)", "False", "False","root", "unknow", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic['H3C_B5_Mini']]
+ 
+	model_tree["Nighthawk_RAX43"] = ["armelv7",  "router", "linux", "Broadcom","BCM6750", "lighttpd", "True", "False", "admin", "Default Passwd", "unknow", "False", "True", exp_database.model_exp_dic['Nighthawk_RAX43']]
+ 
+	#model_tree["Netgear_R6200"] = ['']
+ 
+	model_tree["TL-MR3020_V1"] = ['mips', "router", "linux", "Qualcomm Atheros", "AR9331", "httpd(self)", "False", "False", "root(Admin)", "5up", "unknow", "True", "True", exp_database.model_exp_dic["TL-MR3020_V1"]]
 	'''
 	AP wifi
  	'''
 	model_tree["H3C_A210-G"] = ["unknow", "AP_wifi", "linux", "Realtek(??)","unknow", "like goahead","False", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["H3C_A210-G"]]
-  
   
 	'''
 	Modem
@@ -281,7 +287,6 @@ def data_base_init():
 	model_tree["Netgear_WNDR3300"] = ["mipsel", "Modem&&router", "linux", "Broadcom", "BCM4704", "httpd(self)","False", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_WNDR3300"]]
 
 	model_tree["Netgear_WNDR3400v2"] = ["mipsel",  "Modem&&router", "linux", "Broadcom", "BCM5358UB0", "http(self)", "False", "False", "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_WNDR3400v2"]]
-
 
 	'''
 	Firewall
@@ -319,13 +324,20 @@ def data_base_init():
 	'''
 	switch
  	'''
-	#model_tree["Netgear_GS110TPv3"] = ['armelv7', "switch", ""]
+	model_tree["Netgear_GS110TPv3"] = ['aarch64', "switch", "linux", "Marvell", "Marvell Armada 3720","unkonw", "True", "False", "admin", "default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_GS110TPv3"]]
  
+	model_tree["TL-SG105PE_V1"] = ["armel", "switch", "ROS(RTOS)", "Realtek", "RTL8367S","unknow", "False", "False", "no", "no", "unknow", "False", "True", {}]
+ 
+	'''
+	ap
+ 	'''
+	model_tree["DWL-2600AP"] = ["mipsel", "access point", "linux","Broadcom", "BCM5358B0", "unknow","True", "False", "admin", "Default passwd", "unknow", "False", "True", exp_database.model_exp_dic["DWL-2600AP"]]
 	'''
 	information for model
 	[arch, function ,os ,cpu_vender ,cpu , web_server, SSH_support,Eavesdropping, default_telnet_username, default_telnet_passwd ,sdk_link,support_for_openwrt, is_vulnerable]
 	'''
 
+	model_tree["DI-713P"] = ["mipsel", "D-link integrated Access Device4", "linux", "Ralink", "RT3050", "unknow", "unknow", "unknow", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["DI-713P"]]
 
 
 
@@ -446,8 +458,6 @@ def model_tree_dic():
 
 
 			info_len = len(v)
-   
-			print(k)
 
 			with open(model_info_file, "w+") as f:
 

