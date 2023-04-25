@@ -251,7 +251,21 @@ def data_base_init():
  
 	model_tree["Nighthawk_RAX43"] = ["armelv7",  "router", "linux", "Broadcom","BCM6750", "lighttpd", "True", "False", "admin", "Default Passwd", "unknow", "False", "True", exp_database.model_exp_dic['Nighthawk_RAX43']]
  
-	#model_tree["Netgear_R6200"] = ['']
+	model_tree["Hongdian_H8922"] = ['mipsel', "Industrial Router", "Broadcom", "BCM5357", "lighttpd", "False", "False", "root", "superzxmn", "unknow", "False", "True", exp_database.model_exp_dic["Hongdian_H8922"]]
+ 
+	model_tree["TOTOLINK_A3000RU"] = ["mipsel", "router" , "Realtek" , "RTL8197F", "lighttpd", "False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A3000RU"]]
+ 
+	model_tree
+  
+  	#model_tree["Netgear_R6200"] = ['']
+ 
+	#model_tree["Ruijie_RG-EW1200"] = []
+ 
+	model_tree["DIR-866L"] = ['mips', "router", "Qualcomm", "Qualcomm Atheros QCA9558", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic['DIR-866L']]
+ 
+	model_tree["DIR-862L"] = ['mips', "router", "Qualcomm", "Qualcomm Atheros QCA9558", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic['DIR-862L']]
+ 
+	model_tree["TP-Link_Archer_AX21"] = ["armelv7(or aarch64)", "router", "linux", "Broadcom", "BCM6755(Cortex-A7) ", "uhttpd", "True", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["TP-Link_Archer_AX21"]]
  
 	model_tree["TL-MR3020_V1"] = ['mips', "router", "linux", "Qualcomm Atheros", "AR9331", "httpd(self)", "False", "False", "root(Admin)", "5up", "unknow", "True", "True", exp_database.model_exp_dic["TL-MR3020_V1"]]
 	'''
@@ -259,6 +273,7 @@ def data_base_init():
  	'''
 	model_tree["H3C_A210-G"] = ["unknow", "AP_wifi", "linux", "Realtek(??)","unknow", "like goahead","False", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["H3C_A210-G"]]
   
+	model_tree['TRENDnet_TEW-755AP'] = ["mips", "AP_wifi", "linux",  "Qualcomm", "Atheros QCA9558",  "uhttpd", "True", "False", "root", "NULL", "unknow","True", "False", exp_database.model_exp_dic['TRENDnet_TEW-755AP']]
 	'''
 	Modem
 	'''
@@ -288,6 +303,9 @@ def data_base_init():
 
 	model_tree["Netgear_WNDR3400v2"] = ["mipsel",  "Modem&&router", "linux", "Broadcom", "BCM5358UB0", "http(self)", "False", "False", "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_WNDR3400v2"]]
 
+	model_tree["DSL-3782"] = ['mips', "Modem&router", "linux", "MediaTek","MT7511T", "boa", "True", "False", "admin", "admin", "unknow", "False", "True", exp_database.model_exp_dic["DSL-3782"]]
+
+
 	'''
 	Firewall
 	'''
@@ -299,7 +317,7 @@ def data_base_init():
 	'''
 	camera
 	'''
-	model_tree["dh_ipc-kw12_chn"] = ['armelv5', "IP camera", "linux", "HuaWei", "hi3518", "sonia", "False",'True','admin' ,'7ujMko0admin' ,"unkonw", "unkonw", "False", {}]
+	model_tree["dh_ipc-kw12_chn"] = ['armelv5', "IP camera", "linux", "HuaWei HiSilicon", "hi3518", "sonia", "False",'True','admin' ,'7ujMko0admin' ,"unkonw", "unkonw", "False", {}]
 
 	model_tree["DCS-5010L"] = ['mipsel', "IP camera and wireless repeater", "linux", "unknow(Ralink)", "unknow", "alphapd", "False", "True", "root", "NULL", "unknow", "False", "True", {}]
 
@@ -307,7 +325,7 @@ def data_base_init():
 
 	model_tree["Hikvision_DS-2CD2xx0F-ISeries"] = ["armelv5", "IP camera and wireless repeater", "linux", "HUAWEI", "hixxx", "unknow", "True", "unknow", "unknow", "unknow", "unknow" ,"False", "True", exp_database.model_exp_dic["DS-2CD2xx0F-ISeries"]]
 
-
+	model_tree["TP-Link_Tapo_c200"] = ['armelv7', "IP camera", "linux", "HuaWei HiSilicon", "Hi3516E", "False", "True", "unknow", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["TP-Link_Tapo_c200"]]
 
 	model_tree["DCS-93xL"] = ["mipsel", "IP camera", "linux","Ralink","RT3050F && RT5350F", "alphapd","False", "True","admin", "NULL", "unknow" ,"True", "True", exp_database.model_exp_dic["DCS-93xL"]]
 
