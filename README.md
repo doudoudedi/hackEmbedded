@@ -29,7 +29,7 @@ Just use pip to install, if the installation fails, try to use sudo to install
 
 ```
 Use pip install:
-pip(3) install -U hackebds
+sudo pip install -U hackebds
 
 local install:
 git clone https://github.com/doudoudedi/hackEmbedded
