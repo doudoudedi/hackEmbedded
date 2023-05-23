@@ -305,13 +305,17 @@ def data_base_init():
 
 	model_tree["DSL-3782"] = ['mips', "Modem&router", "linux", "MediaTek","MT7511T", "boa", "True", "False", "admin", "admin", "unknow", "False", "True", exp_database.model_exp_dic["DSL-3782"]]
 
+	model_tree["DIR-890L"] = ["armelv7", "router", "linux", "Broadcom", "BCM4709A", "httpd(self)", "False", "False", "NULL", "NULL", "unknow", "False", "True", exp_database.model_exp_dic['DIR-890L']]
 
+	model_tree["tenda_AC15"] = ["armelv7", "router", "linux", "Broadcom", "BCM4708A0", "httpd(like goahead)", "False", "False","root", "unknow", "unknow", "False", "True", exp_database.model_exp_dic['tenda_AC15']]
+	
+	
 	'''
 	Firewall
 	'''
 	model_tree["F5_BIG-IP"] = ["x64", "Firewall","linux", "intel", "X3220  @ 2.40GHzstepping 4core","Apache and Tomcat" ,"True", "True", "not support", "not support", "no have", "False", "True" , exp_database.model_exp_dic["F5_BIG-IP"]]
 
-	model_tree["Zyxel_USG_FLEX_500"] = ["mips32n", "Firewall", "linux", "unknow", "unknow(Cortex A9)", "Apache", "True", "False", "no", "no", "unknow", "False", "True", exp_database.model_exp_dic["Zyxel_USG_FLEX_500"]]
+	model_tree["Zyxel_USG_FLEX_500"] = ["mips32n", "Firewall", "linux", "Marvell", "CN7020p1.2-1200-AAP", "Apache", "True", "False", "no", "no", "unknow", "False", "True", exp_database.model_exp_dic["Zyxel_USG_FLEX_500"]]#Correct errors and update schema
 
 
 	'''
@@ -356,7 +360,6 @@ def data_base_init():
 	'''
 
 	model_tree["DI-713P"] = ["mipsel", "D-link integrated Access Device4", "linux", "Ralink", "RT3050", "unknow", "unknow", "unknow", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["DI-713P"]]
-
 
 
 
