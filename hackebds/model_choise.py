@@ -7,6 +7,7 @@ from colorama import Fore,Back,Style
 from multidict import CIMultiDict
 from . import exp_database
 from fuzzywuzzy import process
+import re
 '''
 Equipment model -> backdoor model
 This is a learning module. After the generation, add the device model. The tool will remember it after the next use, accelerating the generation of the backdoor and shell code next time
@@ -60,6 +61,8 @@ def data_base_init():
 	
 	model_tree["Tenda_AX1806"] = ['armelv7', "router", "linux", "Broadcom", "BCM6755", "tdhttpd(like goahead)", "False", "False", "unknow", "unknow","unknow", "False", "True", exp_database.model_exp_dic["Tenda_AX1806"]]
  
+	model_tree["TL-WPA4530_KIT_V2"] = ["mipsel", "wifi_extender", "linux", "unknow", "unknow", "httpd(self)","False", "False", "root", "sohoadmin", "unknow", "False", "True", exp_database.model_exp_dic["TL-WPA4530_KIT_V2"]]
+	
 	'''
 	Router
 	'''
@@ -141,7 +144,7 @@ def data_base_init():
 
 	model_tree["Netgear_R8300"] = ["armelv7", "router", "linux", "Broadcom","BCM47094(Cortex-A9)", "httpd(like goahead)", "False", "False", "NULL", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_R8300"]]
 
-	model_tree["Tenda_FH330"] = ["arm?", "router", "ecos", "Broadcom", "BCM5357C0", "no", "False", "False", "not support", "not support", "unknow", "False", "unknow", {}]
+	model_tree["Tenda_FH330"] = ["arm?", "router", "ecos", "Broadcom", "BCM5357C0", "ecos", "False", "False", "not support", "not support", "unknow", "False", "unknow", {}]
 
 	model_tree["TL-WR841Nv12_us"] = ["mips", "router", "linux", "Atheros", "QCA9533 @ 560 MHz,", "httpd", "False", "False", "root", "shoadmin", "unknow", "True", "True", exp_database.model_exp_dic["TL-WR841Nv12_us"]]
 
@@ -251,29 +254,33 @@ def data_base_init():
  
 	model_tree["Nighthawk_RAX43"] = ["armelv7",  "router", "linux", "Broadcom","BCM6750", "lighttpd", "True", "False", "admin", "Default Passwd", "unknow", "False", "True", exp_database.model_exp_dic['Nighthawk_RAX43']]
  
-	model_tree["Hongdian_H8922"] = ['mipsel', "Industrial Router", "Broadcom", "BCM5357", "lighttpd", "False", "False", "root", "superzxmn", "unknow", "False", "True", exp_database.model_exp_dic["Hongdian_H8922"]]
+	model_tree["Hongdian_H8922"] = ['mipsel', "Industrial Router", "linux","Broadcom", "BCM5357", "lighttpd", "False", "False", "root", "superzxmn", "unknow", "False", "True", exp_database.model_exp_dic["Hongdian_H8922"]]
  
-	model_tree["TOTOLINK_A3000RU"] = ["mipsel", "router" , "Realtek" , "RTL8197F", "lighttpd", "False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A3000RU"]]
+	model_tree["TOTOLINK_A3000RU"] = ["mipsel", "router" , "linux","Realtek" , "RTL8197F", "lighttpd", "False", "False", "root", "cs2012", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["TOTOLINK_A3000RU"]]
  
-	model_tree
+	model_tree["linksys_E2000v1"] = ['mipsel', "router", "linux","Broadcom", "BCM4717", "httpd(self)", "False", "False", "not support", "not support", "unknow", "True", "True", exp_database.model_exp_dic["linksys_E2000v1"]]
   
-  	#model_tree["Netgear_R6200"] = ['']
+	model_tree["GO-RT-AC750"] = ['mips', "router", "linux","unknow", "unknow", "httpd(self)", "False", "False", "NULL", "NULL", "unknow", "False", "True", exp_database.model_exp_dic["GO-RT-AC750"]]
+	#model_tree["Netgear_R6200"] = ['']
  
 	#model_tree["Ruijie_RG-EW1200"] = []
+	model_tree["TP-Link_Archer_VR1600V"] = ["unknow", "router", "linux", "unknow", "unknow", "unknow", "False", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["TP-Link_Archer_VR1600V"]]
  
-	model_tree["DIR-866L"] = ['mips', "router", "Qualcomm", "Qualcomm Atheros QCA9558", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic['DIR-866L']]
+	model_tree["DIR-866L"] = ['mips', "router", "linux","Qualcomm", "Qualcomm Atheros QCA9558", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic['DIR-866L']]
  
-	model_tree["DIR-862L"] = ['mips', "router", "Qualcomm", "Qualcomm Atheros QCA9558", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic['DIR-862L']]
+	model_tree["DIR-862L"] = ['mips', "router", "linux","Qualcomm", "Qualcomm Atheros QCA9558", "lighttpd", "False", "False", "root", "NULL", "unknow", "False", "True", exp_database.model_exp_dic['DIR-862L']]
  
 	model_tree["TP-Link_Archer_AX21"] = ["armelv7(or aarch64)", "router", "linux", "Broadcom", "BCM6755(Cortex-A7) ", "uhttpd", "True", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["TP-Link_Archer_AX21"]]
  
+	model_tree["Netgear_R9000"] = ["armelv7", "router", "linux", "Annapurna Labs", "Annapurna Labs AL314", "uhttpd", "False", "False", "not support", "not support", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_R9000"]]
+	
 	model_tree["TL-MR3020_V1"] = ['mips', "router", "linux", "Qualcomm Atheros", "AR9331", "httpd(self)", "False", "False", "root(Admin)", "5up", "unknow", "True", "True", exp_database.model_exp_dic["TL-MR3020_V1"]]
 	'''
 	AP wifi
  	'''
 	model_tree["H3C_A210-G"] = ["unknow", "AP_wifi", "linux", "Realtek(??)","unknow", "like goahead","False", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["H3C_A210-G"]]
   
-	model_tree['TRENDnet_TEW-755AP'] = ["mips", "AP_wifi", "linux",  "Qualcomm", "Atheros QCA9558",  "uhttpd", "True", "False", "root", "NULL", "unknow","True", "False", exp_database.model_exp_dic['TRENDnet_TEW-755AP']]
+	model_tree['TRENDnet_TEW-755AP'] = ["mips", "AP_wifi", "linux",  "Qualcomm", "Atheros QCA9558",  "uhttpd", "True", "False", "root", "NULL", "unknow","True", "True", exp_database.model_exp_dic['TRENDnet_TEW-755AP']]
 	'''
 	Modem
 	'''
@@ -329,14 +336,18 @@ def data_base_init():
 
 	model_tree["Hikvision_DS-2CD2xx0F-ISeries"] = ["armelv5", "IP camera and wireless repeater", "linux", "HUAWEI", "hixxx", "unknow", "True", "unknow", "unknow", "unknow", "unknow" ,"False", "True", exp_database.model_exp_dic["DS-2CD2xx0F-ISeries"]]
 
-	model_tree["TP-Link_Tapo_c200"] = ['armelv7', "IP camera", "linux", "HuaWei HiSilicon", "Hi3516E", "False", "True", "unknow", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["TP-Link_Tapo_c200"]]
+	model_tree["TP-Link_Tapo_c200"] = ['armelv7', "IP camera", "linux", "HuaWei HiSilicon", "Hi3516E", "unknow","False", "True", "unknow", "unknow", "unknow", "True", "True", exp_database.model_exp_dic["TP-Link_Tapo_c200"]]
 
 	model_tree["DCS-93xL"] = ["mipsel", "IP camera", "linux","Ralink","RT3050F && RT5350F", "alphapd","False", "True","admin", "NULL", "unknow" ,"True", "True", exp_database.model_exp_dic["DCS-93xL"]]
 
 	model_tree["DCS-2530L"] = ["unknow", "IP camera", "unknow", "unknow","unknow","unknow","False","True", "unknow", "unknow", "unknow" ,"False", "True", exp_database.model_exp_dic["DCS-2530L"]]
 
-	model_tree["DCS-1130"] = ["armelv5", "IP camera", "linux", "unknow", "unknow", "False", "True", "lighttpd", "root", "NULL", "unknow", "False", "True", {}]
+	model_tree["DCS-1130"] = ["armelv5", "IP camera", "linux", "unknow", "unknow","lighttpd",  "False", "True", "root", "NULL", "unknow", "False", "True", {}]
  
+	model_tree["iptime_c200"] = ['mipsel', "IP camera", "linux", "unknow", "unknow", "lighttpd", "False", "True", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["iptime_c200"]]
+
+	model_tree["tenda_cpx"] = ["armelv7", "IP camera", "linux", "unknow", "unknow", "unknow", "False", "True", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["tenda_cpx"]]
+
 	'''
 	DVR
  	'''
@@ -349,7 +360,6 @@ def data_base_init():
 	model_tree["Netgear_GS110TPv3"] = ['aarch64', "switch", "linux", "Marvell", "Marvell Armada 3720","unkonw", "True", "False", "admin", "default passwd", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_GS110TPv3"]]
  
 	model_tree["TL-SG105PE_V1"] = ["armel", "switch", "ROS(RTOS)", "Realtek", "RTL8367S","unknow", "False", "False", "no", "no", "unknow", "False", "True", {}]
- 
 	'''
 	ap
  	'''
@@ -704,7 +714,10 @@ def print_model_information(model):
 				#print(model_tree[model][13].items())
 				for k,v in model_tree[model][13].items():
 					print(Fore.GREEN + k + Fore.RESET+ "  :  " +  v[0])
-					print("-"*0x40)
+					if(v[1]!=None and len(v[1])!=0):
+						print("{}'s EXP or POC:".format(k))
+						print(v[1])
+						print("-"*0x40)
 					#print(k+": "+v[0])
 			else:
 				print("Maybe this POC is not included in the script")
@@ -753,7 +766,16 @@ def search_model(model):
 	if (top[0][1]!=0):
 		print_model_information(top[0][0]) # print most
 
+		
+
 	return top[0][0]
+
+def is_valid_python_code(code):
+	try:
+		compile(code, "<string>", "exec")
+		return True
+	except Exception as e:
+		return False
 
 
 def get_poc(model):
@@ -764,14 +786,22 @@ def get_poc(model):
 		log.success("POC generation information:")
 		log.success("{} ----> {}".format(model, key))
 		if(os.path.exists(key) !=True):
-			with open(key, "w") as f:
-				f.write(value[1])
+			if(is_valid_python_code(value[1])):
+				with open(key+".py", "w") as f:
+					f.write(value[1])
+			else:
+				with open(key, "w") as f:
+					f.write(value[1])
 		else:
 			print(Fore.RED+"[+]"+" be careful File existence may overwrite the file (y/n) "+Fore.RESET,end='')
 			choise = input()
 			if choise == "y\n" or choise == "\n":
-				with open(key, "w") as f:
-					f.write(value[1])
+				if(is_valid_python_code(value[1])):
+					with open(key+".py", "w") as f:
+						f.write(value[1])
+				else:
+					with open(key, "w") as f:
+						f.write(value[1])
 			else:
 				return
 
@@ -902,3 +932,30 @@ def add_model_info():
 #dic_model_tree()
 #search_model("N600R")
 #model_tree_dic()
+
+
+def search_CVE(CVE_ID):
+	flag=0
+	value_pattern = re.compile(CVE_ID, re.IGNORECASE)
+	for value in model_tree.values():
+			for key in value[13].keys():
+				if(value_pattern.match(key)):
+					CVE_ID = key
+					print(Fore.GREEN + CVE_ID + Fore.RESET+ "  :  " +  value[13][CVE_ID][0])
+					print("-"*0x40)
+					print("EXP or POC: ")
+					print( value[13][CVE_ID][1] +Fore.RESET)
+					print("-"*0x40)
+					flag = 1
+
+	if(flag!=1):
+		log.failure("not found")
+
+'''
+def demo_test():
+	for key,value in model_tree.items():
+		if value[13]!= {}:
+			for k,v in value[13].items():
+				print("-"*0x40)
+				print(k +": "+ str(is_valid_python_code(v[1])))
+'''

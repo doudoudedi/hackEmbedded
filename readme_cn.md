@@ -128,7 +128,7 @@ hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
 
 ![image-20230106153459125](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png)
 
-在指定型号生成后门的功能中加入了输出型号与架构对应的列表关系，方便使用者观察修改，在0.3.5版本之后输出信息将会的到加强如（目前总共收入了60设备信息，POC40+左右）：
+在指定型号生成后门的功能中加入了输出型号与架构对应的列表关系，方便使用者观察修改，在0.3.5版本之后输出信息将会的到加强如（目前总共收入了110设备信息，POC80+左右）：
 
 设备的作用
 
@@ -160,7 +160,7 @@ hackebds -l
 
 ![image-20230213105027599](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105027599-20230213152149471.png)
 
-加入了对设备信息的检索，使用-s可以针对-model参数进行搜索此搜索是模糊搜索且大小写不敏感，在输入时尽量使用小写输出与输入匹配度最高的设备信息.
+加入了对设备信息的检索，使用-s可以针对-model参数进行搜索此搜索是模糊搜索且大小写不敏感，在输入时尽量使用小写，最后输出与输入匹配度最高的设备信息.(0.3.7版本中有引入EXP与POC的内容)
 
 如果出现如下错误
 
@@ -187,13 +187,23 @@ pip3 install python-levenshtein
 
 ![image-20230213105520663](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105520663-20230213152158504.png)
 
-​	生成设备对应的POC可以使用-p或者--poc，此可能为python脚本、命令等等可能需要自行修改
+​	生成设备对应的POC可以使用-p或者--poc，如果POC与EXP是python脚本那么会生成脚本文件(.py)
 
 ```
 hackebds -model ex200 -p
 ```
 
 ![image-20230213105925356](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356-20230213152202001.png)
+
+加入了对CVE的检索
+
+```
+hackebds -CVE CVE-2019-17621
+```
+
+![image-20230530172408297](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/img/image-20230530172408297.png)
+
+
 
 如果在测试中发现了漏洞想在这款工具中加入新的设备的基本信息，POC文件等可以使用-add功能或者在/tmp/model_tree_info/目录下新建设备的目录目录的格式可以参考标准生成的格式，插入完成后便可以使用工具的搜索以及POC生成功能, 最后如果需要将POC文件信息填入可以将其放入/tmp/model_info/xxx/POC/目录下再次检索会读取此目录
 
@@ -342,6 +352,8 @@ Powerpc, sparc: qemu
 2023.1.29 0.3.3 -power功能加入了对bind_shell的支持，bind_shell更加稳定，修复了对aarch64架构的bind_shell与cmd_file文件执行的一些bug
 
 2023.3.7 0.3.6 加入了针对于mipsn32架构的支持（此架构在zyxel防火墙等设备中可能会遇到）
+
+2023.5.30 0.3.7 加入对CVE的检索，添加设备信息中的EXP，POC文件内容输出
 
 
 

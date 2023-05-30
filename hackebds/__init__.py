@@ -4832,7 +4832,7 @@ def test1():
 '''
 
 def get_version():
-    return Fore.GREEN+"Version: 0.3.6"+Fore.RESET
+    return Fore.GREEN+"Version: 0.3.7"+Fore.RESET
 
 
 '''
@@ -5092,6 +5092,7 @@ def main():
 	parser.add_argument('-l', '--list' ,action='store_true',help='print model information list')
 	parser.add_argument('-p', '--poc' ,action='store_true',help='generated model\'s POC file')
 	parser.add_argument('-v', '--version' ,action='version', version=get_version(), help='Display version')
+	parser.add_argument('-CVE', '--CVE', required=False, type=str, default=None, help='CVE ID')
 	parser.add_argument('-add', '--add_model', action='store_true', help='Add model tree\'s node')
 	flag_cve_info = 0
 	#@with_argparser(argparse)
@@ -5113,6 +5114,7 @@ def main():
 	#	print(e)
 	#	log.info("Initialization fail")
 	log.success("Initialization completed")
+	#model_choise.demo_test()
 	if (os.access("/tmp/hackebds_model_table", os.F_OK | os.R_OK | os.W_OK)):
 		pass
 	else:
@@ -5141,6 +5143,9 @@ def main():
 		if (args.search == True):
 			model_choise.search_model(args.model)
 			return
+	
+	if args.model == None and args.CVE!= None:
+		model_choise.search_CVE(args.CVE)
 
 	if (args.res == None ):
 		log.info("please use -h View Help")

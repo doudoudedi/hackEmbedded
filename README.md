@@ -117,7 +117,7 @@ Ubuntu（debian）:
 
    ![image-20230106153459125](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png)
 
-   The list relationship between the output model and the architecture is added to the function of generating the back door of the specified model to facilitate the user to observe and modify. The output information will be enhanced after version 0.3.5, such as (60 device information, POC40+or so):
+   The list relationship between the output model and the architecture is added to the function of generating the back door of the specified model to facilitate the user to observe and modify. The output information will be enhanced after version 0.3.5, such as (100+ device information, POC80+or so):
    Function of equipment
    Architecture of equipment
    Device CPU manufacturer
@@ -137,7 +137,7 @@ Ubuntu（debian）:
 
    ![image-20230213151548871](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213151548871.png)
 
-   Add the retrieval of device information. Use - s to search for the - model parameter. This search is fuzzy and insensitive to case. Try to use the device information with the highest matching degree between lowercase output and input when inputting
+   Added retrieval of device information, using - s to search for the - model parameter. This search is fuzzy and case insensitive. Try to use lowercase when inputting, and finally output the device information with the highest matching degree with the input（The introduction of EXP and POC in version 0.3.7)
 
    If the following error occurs
 
@@ -169,6 +169,18 @@ Ubuntu（debian）:
    ```
 
    ![image-20230213105925356](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356.png)
+
+   Added search for CVE
+
+   ```
+   hackebds -CVE CVE-2019-17621
+   ```
+
+   ![image-20230530172408297](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/img/image-20230530172408297.png)
+
+   
+
+   
 
    If a vulnerability is found in the test and you want to add the basic information of a new device to this tool, you can use the - add function for POC files or "/tmp/model_tree_info/" The format of the directory directory of the new device under the info/directory can refer to the standard generated format. After the insertion, you can use the tool search and POC generation functions，Finally, if you need to fill in the POC file information, you can put it in "/tmp/model_tree_info/xxx/POC" directory will be read if retrieved again
 
@@ -345,6 +357,8 @@ Powerpc, sparc: qemu
  2023.1.29 0.3.3 -The power function adds support for bind_shell, bind_shell is more stable, and fixes some bugs in the execution of bind_shell and cmd_file files of the aarch64 architecture
 
 2023.3.7 0.3.6 Added support for the mipsn32 architecture (this architecture may be encountered in devices such as zyxel firewalls)
+
+2023.5.30 add the retrieval of CVE and output the content of EXP and POC files in the device information
 
 ## Problems to be solved
 
