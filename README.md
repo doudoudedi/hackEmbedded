@@ -33,7 +33,7 @@ sudo pip install -U hackebds
 
 local install:
 git clone https://github.com/doudoudedi/hackEmbedded
-sudo ./start.sh
+sudo ./start.sh（If you need to install 0.3.7 locally at this time, you need to delete the build directory before executing it）
 ```
 
 （If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
