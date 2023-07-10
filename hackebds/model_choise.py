@@ -26,7 +26,6 @@ information for model
 '''
 
 
-model_arch_tree["RV_340"] = "armelv7"
 
 
 
@@ -69,7 +68,7 @@ def data_base_init():
 
 	model_tree["TOTOLINK_X5000R"] = ['mipsel', "router", "linux","MediaTek", "MT7621AT", "lighttpd","False","False", 'root', 'cs2012',"unknow", "True", "True" , exp_database.model_exp_dic["TOTOLINK_X5000R"]]
 
-	model_tree["TOTOLINK_A8000RU"] = ['aarch64(armv8)', "router","linux", "MediaTek", "MT7622","lighttpd","False","False", 'root', 'cs2012', "unknow", "True", "True", {}]
+	model_tree["TOTOLINK_A8000RU"] = ['aarch64', "router","linux", "MediaTek", "MT7622","lighttpd","False","False", 'root', 'cs2012', "unknow", "True", "True", {}]
 
 	model_tree["TOTOLINK_A7000R"] = ['mipsel', 'router' ,"linux", "MediaTek","MT7621AT",'lighttpd',"False","False", 'root', 'cs2012',"unknow" ,"True", 'True' ,exp_database.model_exp_dic["TOTOLINK_A7000R"]]
 
@@ -131,7 +130,7 @@ def data_base_init():
 
 	model_tree["DSL-AC3100"] = ["armelv7","router", "linux", "Broadcom", "BCM63138", "httpd", "False", "False", "root", "NULL", "unknow", "True", "True", exp_database.model_exp_dic["DSL-AC3100"]]
 
-	model_tree["Buffalo_WSR-2533DHP2"] = ["aarch64(armv8)" ,"router", "linux", "MediaTek", "MT7622B", "unknow", "False", "False", "unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["DSL-AC3100"]]
+	model_tree["Buffalo_WSR-2533DHP2"] = ["aarch64" ,"router", "linux", "MediaTek", "MT7622B", "unknow", "False", "False", "unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["DSL-AC3100"]]
 
 
 	model_tree["Tenda_AC6v2"] = ["mipsel", "router", "linux", "Realtek", "RTL8197FN", "httpd(linke goahead)", "False", "False", "root", "unknow", "https://sourceforge.net/projects/rtl819x/","False", "True", exp_database.model_exp_dic["Tenda_AC6v2"]]
@@ -221,7 +220,7 @@ def data_base_init():
  
 	model_tree["ASUS_RT-AX56U"] = ["armelv7", "router", "linux", "Broadcom","BCM6755(Cortex-A9)","httpd(self)", "True", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["ASUS_RT-AX56U"]]
 
-	model_tree["GT-AC2900"] = ["aarch64(armv8)" ,"router","linux" ,"Broadcom", "BCM4906(Cortex-A53)", "httpd(self)", "True", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["GT-AC2900"]]
+	model_tree["GT-AC2900"] = ["aarch64" ,"router","linux" ,"Broadcom", "BCM4906(Cortex-A53)", "httpd(self)", "True", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["GT-AC2900"]]
 
 	model_tree["Netgear_WNR1000v3"] = ["mipsel", "router", "linux", "Broadcom", "BCM5356", "httpd(self)", "False", "False",  "admin", "Default passwd", "unknow", "True", "True", exp_database.model_exp_dic['Netgear_WNR1000v3']]
 	
@@ -275,6 +274,8 @@ def data_base_init():
 	model_tree["Netgear_R9000"] = ["armelv7", "router", "linux", "Annapurna Labs", "Annapurna Labs AL314", "uhttpd", "False", "False", "not support", "not support", "unknow", "True", "True", exp_database.model_exp_dic["Netgear_R9000"]]
 	
 	model_tree["TL-MR3020_V1"] = ['mips', "router", "linux", "Qualcomm Atheros", "AR9331", "httpd(self)", "False", "False", "root(Admin)", "5up", "unknow", "True", "True", exp_database.model_exp_dic["TL-MR3020_V1"]]
+	
+	model_tree["DIR-600_vB"] = ["mipsel", "router", "linux", "Realtek", "RTL8196E", "httpd(self)", "False", "False", "NULL", "NULL", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic['DIR-600_vB']]
 	'''
 	AP wifi
  	'''
@@ -290,7 +291,7 @@ def data_base_init():
 
 	model_tree["Buffalo_WSR-2533DHPL"] = ["mipsel", "Modem&&router", "linux", "MediaTek", "MT7621A", "httpd", "False", "False" ,"unknow", "unknow", "unknow", "True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
 
-	model_tree["Buffalo_WSR-3200AX4S"] = ["aarch64(armv8)", "Modem&&router", "linux", "MediaTek", "MT7622", "httpd", "False", "False", "root", "unknow", "unknow","True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
+	model_tree["Buffalo_WSR-3200AX4S"] = ["aarch64", "Modem&&router", "linux", "MediaTek", "MT7622", "httpd", "False", "False", "root", "unknow", "unknow","True", "True",exp_database.model_exp_dic["Buffalo_WSR-2533DHPL"]]
  
 	model_tree["Netgear_D7000v1"] = [ "armelv7" ,"Modem&&router" ,"linux", "Broadcom", "BCM63138(Cortex A9)", "mini_httpd", "False", "False", "root", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["Netgear_D7000v1"]]
 
@@ -316,6 +317,7 @@ def data_base_init():
 
 	model_tree["tenda_AC15"] = ["armelv7", "router", "linux", "Broadcom", "BCM4708A0", "httpd(like goahead)", "False", "False","root", "unknow", "unknow", "False", "True", exp_database.model_exp_dic['tenda_AC15']]
 	
+	model_tree["DIR-823G_A1"] = ["mipsel", "router", "linux", "Realtek", "RTL8197F", "goahead", "False", "False", "root", "NULL", "https://sourceforge.net/projects/rtl819x/", "False", "True", exp_database.model_exp_dic["DIR-823G_A1"]]
 	
 	'''
 	Firewall
@@ -371,6 +373,8 @@ def data_base_init():
 
 	model_tree["DI-713P"] = ["mipsel", "D-link integrated Access Device4", "linux", "Ralink", "RT3050", "unknow", "unknow", "unknow", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["DI-713P"]]
 
+	for key, value in model_tree.items():
+		model_arch_tree[key] = model_tree[key][0]
 
 
 def get_system_version():
@@ -452,10 +456,10 @@ def print_mmodel_dic():
 		log.success("model ----> arch:")
 
 		for key,value in dict_2.items():
-			print("-"*0x29)
-			print("|"+Fore.GREEN+key.ljust(15)+Fore.RESET+"----->    "+Fore.GREEN+value.ljust(14)+Fore.RESET+"|")
+			print("-"*0x45)
+			print("|"+Fore.GREEN+key.ljust(25)+Fore.RESET+"----->    "+Fore.GREEN+value.ljust(32)+Fore.RESET+"|")
 
-		print("-"*0x29)
+		print("-"*0x45)
 
 	except Exception as e:
 		print(e)

