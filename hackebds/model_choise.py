@@ -370,8 +370,16 @@ def data_base_init():
 	information for model
 	[arch, function ,os ,cpu_vender ,cpu , web_server, SSH_support,Eavesdropping, default_telnet_username, default_telnet_passwd ,sdk_link,support_for_openwrt, is_vulnerable]
 	'''
+	model_tree["Zyxel-NBG2105"] = ["unknow", "wifi router", "linux", "unknow", "unknow", "boa", "False", "False", "unknow", "unknow", "unknow", "False","True" , exp_database.model_exp_dic["Zyxel-NBG2105"]]
 
 	model_tree["DI-713P"] = ["mipsel", "D-link integrated Access Device4", "linux", "Ralink", "RT3050", "unknow", "unknow", "unknow", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["DI-713P"]]
+
+	model_tree["D-Link_DAP-X1860"] = ["mipsel", "wifi extender", "linux","MediaTek","MT7621A", "unknow", "unknow", "unknow", "unknow", "unknow", "unknow", "True", "True" ,exp_database.model_exp_dic["D-Link_DAP-X1860"]]
+
+	'''
+	plc
+	'''
+	model_tree["Vitogate_300"] = ["armelv5", "Viessmann Communication interface equipment", "linux", "Atmel","AT91SAM9G20-EK", "thttpd(myself)", "True", "False", "unknow", "unknow", "unknow", "False", "True", exp_database.model_exp_dic["Vitogate_300"]]
 
 	for key, value in model_tree.items():
 		model_arch_tree[key] = model_tree[key][0]

