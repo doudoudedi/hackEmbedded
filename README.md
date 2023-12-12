@@ -25,6 +25,13 @@ This tool is embedded in the security test of the device. There are two main fun
 
 ## install
 
+```
+use docker:
+docker pull doudoudedi/hackebds:3.8
+(This version will encounter issues with generating shellcode in armv5, and will be fixed in the next version)
+```
+
+
 Just use pip to install, if the installation fails, try to use sudo to install
 
 ```
