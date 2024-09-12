@@ -6,3 +6,5 @@ pwn
 pwntools==4.9.0
 pygments
 requests
+mako>=1.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
+pygments>=2.7.4 # not directly required, pinned by Snyk to avoid a vulnerability
