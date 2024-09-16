@@ -6,3 +6,4 @@ pwn
 pwntools==4.9.0
 pygments
 requests
+cryptography>=39.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
