@@ -11,9 +11,6 @@
 
 >In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
 
-## Regarding customized requirements, backdoor persistence
-Due to different CPUs, different instruction sets are required for generating backdoors. If there are customized CPU instruction sets, tools may fail. You can try contacting them 1398581885@qq.com Customize this tool，or How to achieve universal persistence of IOT backdoors
-
 ## fuction
 
 
