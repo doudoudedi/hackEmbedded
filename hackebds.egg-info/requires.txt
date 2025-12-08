@@ -6,3 +6,4 @@ pwn
 pwntools==4.9.0
 pygments
 requests
+urllib3>=2.6.0 # not directly required, pinned by Snyk to avoid a vulnerability
