@@ -21,7 +21,11 @@ This tool is embedded in the security test of the device. There are two main fun
 3. Generate bind of various architectures bind_Shell(only ELF) file, -power can persistent bind_shell（ If you need to use  -power parameter, you can specify the bash shell, and please do not hang the process in the background to prevent data redirection errors）
 4. Sort out the exploitable vulnerability POC or EXP of the embedded device, and search and output the basic information and POC of the device model in use: Function of equipment, Architecture of equipment,Device CPU manufacturer,Device CPU model,WEB service program of the device, and so on
 5. Support command line generation backdoor and shell code, Strong anti hunting ability,characterized by light, small, efficient and fast
-
+6. The following issues were fixed in version 0.4.0:
+    6.1 The issue of generating shellcode for armelv6.
+    6.2 The issue of error reporting when using models and device models in all uppercase letters cannot be resolved
+7. The --mcpu parameter is specific to MIPS and ARM, primarily intended for programs that incorporate specific architectures, such as 24Kf.
+8. Added --firmware parameter, mainly used to detect the firmware architecture information, directly providing the command to generate a backdoor
 
 ## install
 
