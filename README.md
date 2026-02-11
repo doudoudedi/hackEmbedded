@@ -22,10 +22,14 @@ This tool is embedded in the security test of the device. There are two main fun
 4. Sort out the exploitable vulnerability POC or EXP of the embedded device, and search and output the basic information and POC of the device model in use: Function of equipment, Architecture of equipment,Device CPU manufacturer,Device CPU model,WEB service program of the device, and so on
 5. Support command line generation backdoor and shell code, Strong anti hunting ability,characterized by light, small, efficient and fast
 6. The following issues were fixed in version 0.4.0:
+   
     6.1 The issue of generating shellcode for armelv6.
+   
     6.2 The issue of error reporting when using models and device models in all uppercase letters cannot be resolved
-7. The --mcpu parameter is specific to MIPS and ARM, primarily intended for programs that incorporate specific architectures, such as 24Kf.
-8. Added --firmware parameter, mainly used to detect the firmware architecture information, directly providing the command to generate a backdoor
+
+7. In version 0.4.0, the SQLite database was introduced to store the basic information of IoT devices and the corresponding CVE exploits or proofs of concept (POCs). The storage path is in the ~/.hackebds/hackebds.db file, which can be updated and content added manually. This file is not updated routinely. If you need the latest version of device information, POCs, and EXP, please check for updates on GitHub,
+8. The --mcpu parameter is specific to MIPS and ARM, primarily intended for programs that incorporate specific architectures, such as 24Kf.
+9. Added --firmware parameter, mainly used to detect the firmware architecture information, directly providing the command to generate a backdoor
 
 ## install
 
