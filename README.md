@@ -9,7 +9,7 @@
 
 ## foreword
 
->In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
+>In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell，bind_shell，socks5 is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
 
 ## fuction
 
@@ -30,6 +30,18 @@ This tool is embedded in the security test of the device. There are two main fun
 7. In version 0.4.0, the SQLite database was introduced to store the basic information of IoT devices and the corresponding CVE exploits or proofs of concept (POCs). The storage path is in the ~/.hackebds/hackebds.db file, which can be updated and content added manually. This file is not updated routinely. If you need the latest version of device information, POCs, and EXP, please check for updates on GitHub,
 8. The --mcpu parameter is specific to MIPS and ARM, primarily intended for programs that incorporate specific architectures, such as 24Kf.
 9. Added --firmware parameter, mainly used to detect the firmware architecture information, directly providing the command to generate a backdoor
+
+10. **New in version 0.4.1**: Major feature upgrade focused on encrypted traffic and proxying:
+
+    10.1 **ChaCha20 encrypted shell** — all shell I/O traffic is encrypted end-to-end using the ChaCha20 stream cipher. Key derivation is passphrase → SHA-256 → 256-bit key, with two separate nonces for bidirectional encryption (server→agent and agent→server). Implemented with a pipe+fork relay pattern across 6 architectures. Generated binaries are approximately 3–7KB depending on the architecture.
+
+    10.2 **SOCKS5 proxy binaries** — pure assembly ELF binaries (~2–5KB) that provide reverse and forward SOCKS5 proxy tunneling, with optional RFC 1929 username/password authentication. Useful for pivoting through embedded devices with a very small footprint.
+
+    10.3 **Full PTY terminal mode** for interactive sessions, so the reverse/bind shell behaves like a real terminal (job control, line editing, curses apps, etc.).
+
+    10.4 **Multi-session shell management** — a built-in console with tab completion and command history to manage multiple concurrent sessions from a single operator terminal.
+
+    10.5 **Unified server mode** that combines the SOCKS5 proxy server and the multi-session shell manager into a single console, so one process can handle both pivoting and shell sessions at the same time.
 
 ## install
 
@@ -383,6 +395,8 @@ Powerpc, sparc: qemu
 2023.5.30 add the retrieval of CVE and output the content of EXP and POC files in the device information
 
 2023.11.11 Fixed the issue of armv5 series backdoors not being able to generate shells in Vitogate_300  The rear doors  are operating normally，Simplified reverse_ Command parameters such as IP can be used with - lhost and - lport, Added some device vulnerabilities
+
+2026.4.7 0.4.1 Added ChaCha20 end-to-end encrypted reverse/bind shells across 6 architectures (passphrase → SHA-256 → 256-bit key, bidirectional nonces, ~3–7KB binaries); added pure-assembly SOCKS5 proxy ELF binaries (~2–5KB) supporting reverse/forward tunneling and RFC 1929 auth; added full PTY interactive terminal mode; added multi-session shell manager with tab completion and history; added a unified server mode combining SOCKS5 proxy and multi-session shell management in a single console
 
 ## Problems to be solved
 
